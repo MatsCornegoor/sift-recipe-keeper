@@ -19,7 +19,7 @@ Description: |
   * Clean, intuitive interface for a seamless cooking experience
   * Local-first storage—your data stays on your device
 RepoType: git
-Repo: /build
+Repo: https://github.com/matscornegoor/sift-recipe-keeper.git
 
 Builds:
   - versionName: "1.0.0"
