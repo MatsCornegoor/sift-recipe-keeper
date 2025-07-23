@@ -43,7 +43,7 @@ class RecipeExtractorService {
       this.models = fetchedModels;
       console.log('Model config loaded successfully:', this.models);
     } catch (error) {
-      console.error('Error loading model config:', error);
+      console.log('Error loading model config:', error);
       // Keep the hardcoded models as fallback
       console.log('Using hardcoded model config:', this.models);
     }
@@ -113,7 +113,7 @@ class RecipeExtractorService {
       // Parse and create recipe with local image
       return this.parseGPTResponse(gptResponse, localImageUri, url);
     } catch (error) {
-      console.error('Error extracting recipe:', error);
+      console.log('Error extracting recipe:', error);
       throw error;
     }
   }
@@ -288,7 +288,7 @@ class RecipeExtractorService {
 
       return imagePath;
     } catch (error) {
-      console.error('Error downloading image:', error);
+      console.log('Error downloading image:', error);
       return null;
     }
   }
