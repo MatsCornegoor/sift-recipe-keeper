@@ -33,7 +33,7 @@ Builds:
     #   - cp -a node-v18.18.2-linux-x64/. /usr/local/
     #   - npm -g install yarn@1.22.19
     init:
-      - npm install
+      - cd .. && npm install
     gradle:
       - release
     scandelete:
