@@ -38,5 +38,8 @@ ios/
 build/
 logs/
 repo/
+unsigned/
+tmp/
+srclibs/
 
 sift-recipe-keeper/

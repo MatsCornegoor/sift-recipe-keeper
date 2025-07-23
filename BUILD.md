@@ -36,7 +36,22 @@ All dependencies are open source and F-Droid compliant:
 - React Native (Apache 2.0)
 - All other dependencies are MIT/Apache 2.0 licensed
 
-## Notes
+## Personal Notes
 
-- The app is a standard React Native project.
-- Build process uses Gradle.
+To build with fdroid server, use the correct conda environment:
+
+```bash
+conda activate experiments
+```
+
+If not installed
+
+```bash
+python3 -m pip install fdroidserver
+```
+
+Run the build
+
+```bash
+python3 -m fdroidserver build com.matscornegoor.sift
+```
