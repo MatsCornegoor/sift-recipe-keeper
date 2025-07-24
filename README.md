@@ -29,4 +29,4 @@ Sift uses its own API endpoint, allowing us to:
 
 ## Build
 
-Sift is a React Native app that needs to be built using standard React Native build tools.Full documentation can be found at fdroid/BUILD.md
+Sift is a React Native app that needs to be built using standard React Native build tools. Full documentation can be found at BUILD.md

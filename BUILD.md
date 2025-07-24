@@ -53,5 +53,9 @@ python3 -m pip install fdroidserver
 Run the build
 
 ```bash
-python3 -m fdroidserver build com.matscornegoor.sift
+fdroid build -t com.matscornegoor.sift
+```
+
+```bash
+fdroid build com.matscornegoor.sift
 ```

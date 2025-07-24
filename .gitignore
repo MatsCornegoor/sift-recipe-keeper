@@ -35,11 +35,12 @@ app-example
 ios/
 
 # F-Droid build artifacts
-build/
-logs/
-repo/
-unsigned/
-tmp/
-srclibs/
-
-sift-recipe-keeper/
+/logs/
+/srclibs/
+/build/
+/tmp/
+/unsigned/
+/repo/
+/keystore.p12
+/config.py
+/config.yml
