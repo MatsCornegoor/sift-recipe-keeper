@@ -17,7 +17,7 @@ const Stack = createNativeStackNavigator();
 export default function AppNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade' }}>
         <Stack.Screen name="Recipes" component={RecipeList} />
         <Stack.Screen name="Settings" component={Settings} />
         <Stack.Screen name="AddRecipe" component={AddRecipe} />
