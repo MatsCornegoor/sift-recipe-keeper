@@ -45,3 +45,10 @@ ios/
 /keystore.p12
 /config.py
 /config.yml
+
+# Keystore files
+*.keystore
+
+# Gradle credentials
+android/gradle.properties
+android/app/gradle.properties
