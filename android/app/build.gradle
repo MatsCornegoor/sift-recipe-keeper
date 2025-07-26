@@ -2,6 +2,14 @@ apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local-gradle.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
 def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
 
 static def versionToNumber(major, minor, patch) {
@@ -119,11 +127,11 @@ android {
             keyPassword 'android'
         }
         release {
-            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
-                storeFile file(MYAPP_RELEASE_STORE_FILE)
-                storePassword MYAPP_RELEASE_STORE_PASSWORD
-                keyAlias MYAPP_RELEASE_KEY_ALIAS
-                keyPassword MYAPP_RELEASE_KEY_PASSWORD
+            if (localProperties.getProperty('MYAPP_RELEASE_STORE_FILE') != null) {
+                storeFile file(localProperties.getProperty('MYAPP_RELEASE_STORE_FILE'))
+                storePassword localProperties.getProperty('MYAPP_RELEASE_STORE_PASSWORD')
+                keyAlias localProperties.getProperty('MYAPP_RELEASE_KEY_ALIAS')
+                keyPassword localProperties.getProperty('MYAPP_RELEASE_KEY_PASSWORD')
             }
         }
     }

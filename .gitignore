@@ -25,6 +25,7 @@ yarn-error.*
 
 # local env files
 .env*.local
+local-gradle.properties
 
 # typescript
 *.tsbuildinfo
@@ -50,5 +51,4 @@ ios/
 *.keystore
 
 # Gradle credentials
-android/gradle.properties
 android/app/gradle.properties
