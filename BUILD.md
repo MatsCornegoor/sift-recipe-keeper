@@ -1,46 +1,47 @@
 # Build Instructions for Sift Recipe Keeper
 
-## Overview
+This document provides instructions for building the Sift Recipe Keeper app from source.
 
-Sift is a React Native app that needs to be built using standard React Native build tools.
-
-## Build Requirements
+## Prerequisites
 
 - Node.js 18+
-- npm
+- npm or yarn
 - Android SDK (for Android builds)
+- Java Development Kit (JDK)
 
-## Build Process
+## Building the App
 
 ### 1. Install Dependencies
+
+Navigate to the project's root directory and run:
 
 ```bash
 npm install
 ```
 
-### 2. Build Commands
+### 2. Build the Android App
 
-For production builds, first make sure you are in the `android` directory:
+For production builds, you will need to create a release key and add your signing information to `android/local-gradle.properties`.
 
-```bash
-cd android
-./gradlew assembleRelease
-```
-
-This will generate an APK file that can be distributed. The APK will be located at `android/app/build/outputs/apk/release/app-release.apk`.
-
-
-## Personal Notes
-
-To build with f-droid:
-
-make sure it is installed (also the gradlew-fdroid wrapper)
-```bash
-python3 -m pip install fdroidserver
-```
-
-Run the build
+Once your signing configuration is in place, run the following command from the project's root directory:
 
 ```bash
-fdroid build com.matscornegoor.sift
+cd android && ./gradlew assembleRelease
 ```
+
+This will generate a signed APK at `android/app/build/outputs/apk/release/app-release.apk`.
+
+## F-Droid Build Instructions
+
+To build the app for F-Droid, you will need to have the `fdroidserver` tools installed.
+
+1.  **Install fdroidserver:**
+    ```bash
+    python3 -m pip install fdroidserver
+    ```
+
+2.  **Run the Build:**
+    From the project's root directory, run:
+    ```bash
+    fdroid build app.siftrecipes
+    ```
