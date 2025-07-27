@@ -44,9 +44,3 @@ Run the build
 ```bash
 fdroid build com.matscornegoor.sift
 ```
-
-sign with debug key (update with current app name and location)
-
-```bash
-/Users/mats/Library/Android/sdk/build-tools/36.0.0/apksigner sign --ks /Users/mats/Documents/Apps/sift-recipe-keeper/android/app/debug.keystore --ks-key-alias androiddebugkey --ks-pass pass:android --out signed/com.matscornegoor.sift_2.apk unsigned/com.matscornegoor.sift_2.apk
-```
