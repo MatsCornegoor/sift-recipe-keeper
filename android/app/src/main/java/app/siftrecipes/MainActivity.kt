@@ -1,4 +1,4 @@
-package com.matscornegoor.sift
+package app.siftrecipes
 
 import android.os.Build
 import android.os.Bundle
