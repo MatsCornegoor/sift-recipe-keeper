@@ -13,9 +13,6 @@ Sift is a minimalist recipe app for saving, organizing, and accessing your favor
 - **Clean & Intuitive Interface**: A distraction-free cooking experience designed to help you focus.
 - **Privacy-Focused**: No tracking and no unnecessary permissions. Your data is yours.
 
-## How It Works
-
-Sift uses a custom API to intelligently parse recipe information from websites, giving you just the ingredients and instructions without the clutter. This allows the app to remain completely free and ensures you always get the best possible recipe extraction.
 
 ## Getting Started
 
