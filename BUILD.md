@@ -45,3 +45,8 @@ To build the app for F-Droid, you will need to have the `fdroidserver` tools ins
     ```bash
     fdroid build app.siftrecipes
     ```
+
+3. **To clear cache**
+    ```bash
+    rm -rf logs/ srclibs/ build/ tmp/ unsigned/ signed/
+    ```

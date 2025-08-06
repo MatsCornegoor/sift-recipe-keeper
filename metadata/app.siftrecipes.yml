@@ -8,10 +8,10 @@ IssueTracker: https://github.com/matscornegoor/sift-recipe-keeper/issues
 Name: Sift
 AutoName: Sift
 
-Summary: A minimalist, open-source recipe keeper.
+Summary: A minimalist, open-source recipe keeper
 Description: |
   Sift is a minimalist recipe app for saving, organizing, and accessing your favorite recipes without ads or distractions.
-  
+
   Features:
   * Import recipes from any website
   * Edit and organize recipes with custom tags
@@ -27,12 +27,13 @@ Builds:
     commit: v1.0.1
     subdir: android
     output: app/build/outputs/apk/release/app-release-unsigned.apk
-    # sudo:
-    #   - curl -Lo node.tar.gz https://nodejs.org/dist/v18.18.2/node-v18.18.2-linux-x64.tar.gz
-    #   - echo "a44c3e7f8bf91e852c928e5d8bd67ca316b35e27eec1d8acbe3b9dbe03688dab node.tar.gz" | sha256sum -c -
-    #   - tar xzf node.tar.gz
-    #   - cp -a node-v18.18.2-linux-x64/. /usr/local/
-    #   - npm -g install yarn@1.22.19
+    sudo:
+      - sysctl fs.inotify.max_user_watches=524288
+      - curl -Lo node.tar.gz https://nodejs.org/dist/v18.18.2/node-v18.18.2-linux-x64.tar.gz
+      - echo "a44c3e7f8bf91e852c928e5d8bd67ca316b35e27eec1d8acbe3b9dbe03688dab node.tar.gz" | sha256sum -c -
+      - tar xzf node.tar.gz
+      - cp -a node-v18.18.2-linux-x64/. /usr/local/
+      - npm -g install yarn@1.22.19
     init:
       - cd .. && npm install
     gradle:
