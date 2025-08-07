@@ -10,7 +10,7 @@ import {
   Image,
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
-import { Recipe, Ingredient } from '../models/Recipe';
+import { Recipe, Ingredient, RecipeStep } from '../models/Recipe';
 import RecipeStore from '../store/RecipeStore';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -18,9 +18,14 @@ import { useTheme } from '../hooks/useTheme';
 import Header from '../components/Header';
 import CustomPopup from '../components/CustomPopup';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { NestableScrollContainer, NestableDraggableFlatList } from 'react-native-draggable-flatlist';
+import { NestableScrollContainer } from 'react-native-draggable-flatlist';
 import ContentWrapper from '../components/ContentWrapper';
 import { CURRENT_SCHEMA_VERSION } from '../models/RecipeMigrations';
+import GroupsEditor, { GroupDraft } from '../components/GroupsEditor';
+
+function generateId(): string {
+  return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+}
 
 export default function EditRecipe() {
   const navigation = useNavigation<any>();
@@ -35,13 +40,25 @@ export default function EditRecipe() {
 
   const [name, setName] = useState(originalRecipe.name);
   const [imageUri, setImageUri] = useState<string | null>(originalRecipe.imageUri);
-  const [ingredients, setIngredients] = useState<Ingredient[]>([
-    ...originalRecipe.ingredients,
-    new Ingredient('')  // Add empty ingredient at the end
-  ]);
-  const [instructions, setInstructions] = useState<Ingredient[]>(() => {
-    const instructionsList = originalRecipe.instructions.map(inst => new Ingredient(inst));
-    return [...instructionsList, new Ingredient('')];
+  const [ingredientGroups, setIngredientGroups] = useState<GroupDraft[]>(() => {
+    const steps = Array.isArray(originalRecipe.steps) && originalRecipe.steps.length > 0
+      ? originalRecipe.steps
+      : [new RecipeStep({ title: '', ingredients: originalRecipe.ingredients, instructions: originalRecipe.instructions })];
+    return steps.map((s) => ({
+      id: generateId(),
+      title: s.title || '',
+      items: (s.ingredients || []).map((ing) => ({ id: generateId(), text: ing.name })),
+    }));
+  });
+  const [instructionGroups, setInstructionGroups] = useState<GroupDraft[]>(() => {
+    const steps = Array.isArray(originalRecipe.steps) && originalRecipe.steps.length > 0
+      ? originalRecipe.steps
+      : [new RecipeStep({ title: '', ingredients: originalRecipe.ingredients, instructions: originalRecipe.instructions })];
+    return steps.map((s) => ({
+      id: generateId(),
+      title: s.title || '',
+      items: (s.instructions || []).map((txt) => ({ id: generateId(), text: txt })),
+    }));
   });
   const [cookingTime, setCookingTime] = useState(originalRecipe.cookingTime || '');
   const [calories, setCalories] = useState(originalRecipe.calories || '');
@@ -69,63 +86,28 @@ export default function EditRecipe() {
     }
   };
 
-  const handleIngredientChange = (text: string, index: number) => {
-    const updatedIngredients = [...ingredients];
-    
-    // Update the ingredient's name directly instead of creating a new object
-    if (index < ingredients.length) {
-      updatedIngredients[index] = {
-        ...updatedIngredients[index],
-        name: text
-      };
+  const buildStepsFromGroups = (): RecipeStep[] => {
+    type Acc = { ingredients: string[]; instructions: string[] };
+    const acc = new Map<string, Acc>();
+
+    const norm = (t: string) => (t || '').trim();
+
+    for (const g of ingredientGroups) {
+      const key = norm(g.title);
+      if (!acc.has(key)) acc.set(key, { ingredients: [], instructions: [] });
+      acc.get(key)!.ingredients.push(...g.items.map(i => i.text.trim()).filter(Boolean));
+    }
+    for (const g of instructionGroups) {
+      const key = norm(g.title);
+      if (!acc.has(key)) acc.set(key, { ingredients: [], instructions: [] });
+      acc.get(key)!.instructions.push(...g.items.map(i => i.text.trim()).filter(Boolean));
     }
 
-    // Ensure there's always an empty ingredient at the end
-    const lastIngredient = updatedIngredients[updatedIngredients.length - 1];
-    if (lastIngredient.name.trim() !== '') {
-      updatedIngredients.push(new Ingredient(''));
-    }
-
-    setIngredients(updatedIngredients);
-  };
-
-  const handleIngredientFocus = (index: number) => {
-    // Only add a new ingredient if focusing on the last (empty) box
-    if (index === ingredients.length - 1) {
-      const lastIngredient = ingredients[ingredients.length - 1];
-      
-      // If the last box has content, create a new empty one
-      if (lastIngredient.name.trim() !== '') {
-        setIngredients([...ingredients, new Ingredient('')]);
-      }
-    }
-  };
-
-  const handleInstructionChange = (text: string, index: number) => {
-    const updatedInstructions = [...instructions];
-    
-    if (index < instructions.length) {
-      updatedInstructions[index] = {
-        ...updatedInstructions[index],
-        name: text
-      };
-    }
-
-    const lastInstruction = updatedInstructions[updatedInstructions.length - 1];
-    if (lastInstruction.name.trim() !== '') {
-      updatedInstructions.push(new Ingredient(''));
-    }
-
-    setInstructions(updatedInstructions);
-  };
-
-  const handleInstructionFocus = (index: number) => {
-    if (index === instructions.length - 1) {
-      const lastInstruction = instructions[instructions.length - 1];
-      if (lastInstruction.name.trim() !== '') {
-        setInstructions([...instructions, new Ingredient('')]);
-      }
-    }
+    return Array.from(acc.entries()).map(([title, val]) => new RecipeStep({
+      title: title || undefined,
+      ingredients: val.ingredients.map(txt => new Ingredient(txt)),
+      instructions: val.instructions,
+    }));
   };
 
   const handleAddTag = () => {
@@ -140,10 +122,6 @@ export default function EditRecipe() {
   };
 
   const handleSave = () => {
-    const nonEmptyIngredients = ingredients.slice(0, -1).filter(ing => ing.name.trim() !== '');
-    const nonEmptyInstructions = instructions.slice(0, -1).filter(inst => inst.name.trim() !== '');
-    
-
     if (!name.trim()) {
       setPopupConfig({
         title: 'Missing Information',
@@ -159,18 +137,19 @@ export default function EditRecipe() {
       return;
     }
 
-
+    const steps = buildStepsFromGroups();
     const updatedRecipe = new Recipe({
       id: originalRecipe.id,
       name: name.trim(),
       imageUri,
-      ingredients: nonEmptyIngredients,
-      instructions: nonEmptyInstructions.map(inst => inst.name.trim()),
+      ingredients: [],
+      instructions: [],
       sourceUrl: sourceUrl.trim() || undefined,
       cookingTime: cookingTime.trim() || undefined,
       calories: calories.trim() || undefined,
       tags,
       schemaVersion: CURRENT_SCHEMA_VERSION,
+      steps,
     });
 
     RecipeStore.updateRecipe(updatedRecipe);
@@ -217,154 +196,20 @@ export default function EditRecipe() {
                   </Text>
                 </TouchableOpacity>
 
-                <Text style={[styles.sectionTitle, { color: colors.text }]}>Ingredients</Text>
-                <NestableDraggableFlatList
-                  data={ingredients}
-                  keyExtractor={(item) => item.id}
-                  activationDistance={20}
-                  autoscrollThreshold={0}
-                  containerStyle={{ height: 'auto' }}
-                  dragHitSlop={{ top: 0, bottom: 0, left: 0, right: 0 }}
-                  scrollEnabled={false}
-                  onDragBegin={() => setIsScrollEnabled(false)}
-                  onDragEnd={({ data }) => {
-                    setIngredients(data);
-                    setIsScrollEnabled(true);
-                  }}
-                  dragItemOverflow={false}
-                  renderItem={({ item: ingredient, drag, isActive, getIndex }) => {
-                    const index = getIndex() ?? 0;
-                    return (
-                      <View style={[
-                        styles.ingredientRow,
-                        { 
-                          backgroundColor: colors.background,
-                          opacity: isActive ? 0.5 : 1  // Keep opacity feedback only
-                        }
-                      ]}>
-                        <TextInput
-                          style={[
-                            styles.input,
-                            {
-                              flex: 1,
-                              backgroundColor: colors.inputBackground,
-                              borderColor: colors.inputBorder,
-                              color: colors.text,
-                              marginBottom: 8,
-                              marginRight: index === ingredients.length - 1 ? 0 : 8,
-                              height: 'auto',
-                              minHeight: 48,
-                              textAlignVertical: 'center',
-                              padding: 12,
-                              lineHeight: 20,
-                            },
-                          ]}
-                          placeholder={index === ingredients.length - 1 ? "Add new ingredient" : ""}
-                          placeholderTextColor={colors.placeholderText}
-                          value={ingredient.name}
-                          onChangeText={(text) => handleIngredientChange(text, index)}
-                          onFocus={() => handleIngredientFocus(index)}
-                          multiline={true}
-                        />
-                        {index !== ingredients.length - 1 && (
-                          <TouchableOpacity
-                            onPressIn={drag}
-                            disabled={isActive}
-                            style={[
-                              styles.dragHandle, 
-                              { 
-                                backgroundColor: colors.tint,
-                                minHeight: 48,
-                                alignSelf: 'stretch',
-                                marginBottom: 8,
-                              }
-                            ]}
-                          >
-                            <Ionicons 
-                              name="apps"  // Change to 4-dot grid icon
-                              size={20}    // Slightly smaller size
-                              color={colors.background}
-                            />
-                          </TouchableOpacity>
-                        )}
-                      </View>
-                    );
-                  }}
+                <GroupsEditor
+                  title="Ingredients"
+                  groups={ingredientGroups}
+                  onChange={setIngredientGroups}
+                  placeholderNewGroup="e.g. Sauce"
+                  placeholderItem="e.g. 200g tomatoes"
                 />
 
-                <Text style={[styles.sectionTitle, { color: colors.text }]}>Instructions</Text>
-                <NestableDraggableFlatList
-                  data={instructions}
-                  keyExtractor={(item) => item.id}
-                  activationDistance={20}
-                  autoscrollThreshold={0}
-                  containerStyle={{ height: 'auto' }}
-                  dragHitSlop={{ top: 0, bottom: 0, left: 0, right: 0 }}
-                  scrollEnabled={false}
-                  onDragBegin={() => setIsScrollEnabled(false)}
-                  onDragEnd={({ data }) => {
-                    setInstructions(data);
-                    setIsScrollEnabled(true);
-                  }}
-                  dragItemOverflow={false}
-                  renderItem={({ item: instruction, drag, isActive, getIndex }) => {
-                    const index = getIndex() ?? 0;
-                    return (
-                      <View style={[
-                        styles.ingredientRow,
-                        { 
-                          backgroundColor: colors.background,
-                          opacity: isActive ? 0.5 : 1
-                        }
-                      ]}>
-                        <TextInput
-                          style={[
-                            styles.input,
-                            {
-                              flex: 1,
-                              backgroundColor: colors.inputBackground,
-                              borderColor: colors.inputBorder,
-                              color: colors.text,
-                              marginBottom: 8,
-                              marginRight: index === instructions.length - 1 ? 0 : 8,
-                              height: 'auto',
-                              minHeight: 48,
-                              textAlignVertical: 'center',
-                              padding: 12,
-                              lineHeight: 20,
-                            },
-                          ]}
-                          placeholder={index === instructions.length - 1 ? "Add new instruction" : `${index + 1}. `}
-                          placeholderTextColor={colors.placeholderText}
-                          value={instruction.name}
-                          onChangeText={(text) => handleInstructionChange(text, index)}
-                          onFocus={() => handleInstructionFocus(index)}
-                          multiline={true}
-                        />
-                        {index !== instructions.length - 1 && (
-                          <TouchableOpacity
-                            onPressIn={drag}
-                            disabled={isActive}
-                            style={[
-                              styles.dragHandle, 
-                              { 
-                                backgroundColor: colors.tint,
-                                minHeight: 48,
-                                alignSelf: 'stretch',
-                                marginBottom: 8,
-                              }
-                            ]}
-                          >
-                            <Ionicons 
-                              name="apps"
-                              size={20}
-                              color={colors.background}
-                            />
-                          </TouchableOpacity>
-                        )}
-                      </View>
-                    );
-                  }}
+                <GroupsEditor
+                  title="Instructions"
+                  groups={instructionGroups}
+                  onChange={setInstructionGroups}
+                  placeholderNewGroup="e.g. Sauce"
+                  placeholderItem="e.g. Sauté onions until soft"
                 />
 
                 <Text style={[styles.sectionTitle, { color: colors.text }]}>Details</Text>
