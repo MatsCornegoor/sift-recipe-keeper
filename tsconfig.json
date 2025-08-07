@@ -8,11 +8,18 @@
       ]
     },
     "esModuleInterop": true,
-    "jsx": "react-native"
+    "jsx": "react-native",
+    "skipLibCheck": true
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     "types/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "android/build",
+    "ios/build"
   ]
 }

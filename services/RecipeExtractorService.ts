@@ -1,4 +1,4 @@
-import { Recipe, Ingredient } from '../models/Recipe';
+import { Recipe, Ingredient, RecipeStep } from '../models/Recipe';
 import { Platform } from 'react-native';
 import RNFS from 'react-native-fs';
 
@@ -74,36 +74,45 @@ class RecipeExtractorService {
       
       // Prepare GPT prompt
       const prompt = `
-        Extract recipe information from the following content and respond ONLY with valid JSON in this exact format:
+        Extract recipe information from the following content and respond ONLY with valid JSON in this exact format. Prefer a step-based structure when the recipe has sections (e.g., "Dough", "Sauce", "Filling"). If there are no clear sections, return a single-step recipe.
 
+        Allowed output schemas (return one JSON object matching either Schema V2 or Schema V1):
+
+        // Schema V2 (preferred)
+        {
+          "schemaVersion": 2,
+          "name": "Recipe Name",
+          "steps": [
+            {
+              "title": "Optional Step Title",
+              "ingredients": ["ingredient1", "ingredient2"],
+              "instructions": ["step1", "step2"]
+            }
+          ],
+          "tags": ["tag1", "tag2"],
+          "cookingTime": "30 min",
+          "calories": "250 kcal"
+        }
+
+        // Schema V1 (legacy fallback)
         {
           "name": "Recipe Name",
           "ingredients": ["ingredient1", "ingredient2"],
           "instructions": ["step1", "step2"],
-          "tags": ["tag1", "tag2"], 
-          "cookingTime": "total time in minutes (e.g., '30 min', '1 hour 15 min')",
-          "calories": "calories per serving with unit (e.g., '250 kcal', '300 calories (estimated)')"
+          "tags": ["tag1", "tag2"],
+          "cookingTime": "30 min",
+          "calories": "250 kcal"
         }
 
-        **CRITICAL: Respond with ONLY the JSON object. No explanations, no additional text.**
+        CRITICAL:
+        - Respond with ONLY the JSON object; no extra text.
+        - Ingredients: include quantities/units; convert to metric and put converted amount in parentheses.
+        - Instructions: step-by-step without omission.
+        - Tags: 3-5 relevant tags.
+        - Calories: estimate if missing.
+        - If multiple sections are detected, return Schema V2 with multiple steps; otherwise return a single step array with one item.
 
-        **Requirements:**
-        * **Ingredients:** Include all ingredients with their quantities and units. Convert all ingredients to metric units and place the converted amount in parentheses. (e.g. 1/2 cup (113g) of butter)
-        * **Instructions:** Provide a step-by-step list of instructions. Do not summarize or omit steps. 
-        * **Tags:** Choose 3-5 relevant tags that describe the recipe (e.g., ["vegetarian", "quick", "italian", "pasta"]). Examples: cuisine type, dietary restrictions, meal type, cooking method.
-        * **Calories:** If calorie information is not explicitly stated, estimate it based on common ingredient proportions and nutritional data.
-
-        **Example output:**
-        {
-          "name": "Classic Spaghetti Carbonara",
-          "ingredients": ["200g (7 oz) spaghetti", "100g (3.5 oz) pancetta", "2 large eggs", "50g (1.8 oz) pecorino cheese", "Black pepper to taste"],
-          "instructions": ["Bring a large pot of salted water to boil", "Cook spaghetti according to package directions", "Meanwhile, cook pancetta until crispy", "Beat eggs with cheese and pepper", "Drain pasta and immediately toss with egg mixture"],
-          "tags": ["italian", "pasta", "quick", "dinner"],
-          "cookingTime": "20 min",
-          "calories": "450 kcal"
-        }
-
-        **Content:** 
+        Content:
         ${cleanContent}
       `;
 
@@ -316,25 +325,61 @@ class RecipeExtractorService {
       console.log('Parsed GPT response:', data);
       console.log('Tags from response:', data.tags);
       
-      // Validate required fields
-      if (!data.name || !data.ingredients || !data.instructions) {
-        console.error('Missing required fields in parsed data:', data);
-        throw new Error('Missing required fields in recipe data');
+      // Validate required fields for either schema
+      if (!data.name) {
+        console.error('Missing name in parsed data:', data);
+        throw new Error('Missing name in recipe data');
+      }
+
+      const schemaVersion = typeof data.schemaVersion === 'number' ? data.schemaVersion : (data.steps ? 2 : 1);
+
+      let steps: RecipeStep[] = [];
+      let ingredients: Ingredient[] = [];
+      let instructions: string[] = [];
+
+      if (schemaVersion === 2 && Array.isArray(data.steps)) {
+        steps = data.steps.map((s: any) => new RecipeStep({
+          title: s.title,
+          ingredients: (s.ingredients || []).map((ingStr: string) => new Ingredient(ingStr)),
+          instructions: s.instructions || [],
+        }));
+
+        // Aggregate for compatibility
+        steps.forEach((step) => {
+          step.ingredients.forEach((ing) => ingredients.push(new Ingredient(ing.name)));
+          step.instructions.forEach((inst) => instructions.push(inst));
+        });
+      } else {
+        // Legacy V1
+        if (!Array.isArray(data.ingredients) || !Array.isArray(data.instructions)) {
+          console.error('Missing ingredients or instructions in legacy schema:', data);
+          throw new Error('Missing required fields in recipe data');
+        }
+        ingredients = data.ingredients.map((ing: string) => new Ingredient(ing));
+        instructions = data.instructions;
+
+        // Create a single step for uniform downstream handling
+        steps = [
+          new RecipeStep({
+            title: undefined,
+            ingredients: ingredients.map((i) => new Ingredient(i.name)),
+            instructions: [...instructions],
+          })
+        ];
       }
       
-      // Create ingredients from strings
-      const ingredients = data.ingredients.map((ing: string) => new Ingredient(ing));
-      
-      // Create and return recipe with all fields including image
+      // Create and return recipe with all fields including image, steps and version
       const recipe = new Recipe({
         name: data.name,
         ingredients,
-        instructions: data.instructions,
+        instructions,
         imageUri: imageUrl,
         tags: data.tags || [],
         cookingTime: data.cookingTime || undefined,
         calories: data.calories || undefined,
         sourceUrl: sourceUrl,
+        steps,
+        schemaVersion,
       });
       
       console.log('Created recipe with tags:', recipe.tags);

@@ -18,8 +18,7 @@ import Colors from '../constants/Colors';
 import Header from '../components/Header';
 import CustomPopup from '../components/CustomPopup';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { NestableScrollContainer } from 'react-native-draggable-flatlist/src/components/NestableScrollContainer';
-import { NestableDraggableFlatList } from 'react-native-draggable-flatlist/src/components/NestableDraggableFlatList';
+import { NestableScrollContainer, NestableDraggableFlatList } from 'react-native-draggable-flatlist';
 import ContentWrapper from '../components/ContentWrapper';
 
 export default function AddRecipe() {
@@ -129,6 +128,7 @@ export default function AddRecipe() {
       cookingTime: cookingTime.trim() || undefined,
       calories: calories.trim() || undefined,
       tags,
+      schemaVersion: 1,
     });
 
     RecipeStore.addRecipe(recipe);
@@ -168,7 +168,7 @@ export default function AddRecipe() {
                   style={[styles.imageButton, { backgroundColor: colors.tint }]}
                   onPress={handleAddImage}
                 >
-                  <Text style={[styles.imageButtonText, { color: colors.background }]}>
+                  <Text style={[styles.imageButtonText, { color: colors.background }]}> 
                     {imageUri ? 'Change Image' : 'Select Image'}
                   </Text>
                 </TouchableOpacity>
@@ -191,7 +191,7 @@ export default function AddRecipe() {
                   renderItem={({ item: ingredient, drag, isActive, getIndex }) => {
                     const index = getIndex() ?? 0;
                     return (
-                      <View style={[
+                      <View style={[ 
                         styles.ingredientRow,
                         { 
                           backgroundColor: colors.background,
@@ -225,7 +225,7 @@ export default function AddRecipe() {
                           <TouchableOpacity
                             onPressIn={drag}
                             disabled={isActive}
-                            style={[
+                            style={[ 
                               styles.dragHandle, 
                               { 
                                 backgroundColor: colors.tint,
@@ -265,7 +265,7 @@ export default function AddRecipe() {
                   renderItem={({ item: instruction, drag, isActive, getIndex }) => {
                     const index = getIndex() ?? 0;
                     return (
-                      <View style={[
+                      <View style={[ 
                         styles.ingredientRow,
                         { 
                           backgroundColor: colors.background,
@@ -299,7 +299,7 @@ export default function AddRecipe() {
                           <TouchableOpacity
                             onPressIn={drag}
                             disabled={isActive}
-                            style={[
+                            style={[ 
                               styles.dragHandle, 
                               { 
                                 backgroundColor: colors.tint,

@@ -18,8 +18,7 @@ import { useTheme } from '../hooks/useTheme';
 import Header from '../components/Header';
 import CustomPopup from '../components/CustomPopup';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { NestableScrollContainer } from 'react-native-draggable-flatlist/src/components/NestableScrollContainer';
-import { NestableDraggableFlatList } from 'react-native-draggable-flatlist/src/components/NestableDraggableFlatList';
+import { NestableScrollContainer, NestableDraggableFlatList } from 'react-native-draggable-flatlist';
 import ContentWrapper from '../components/ContentWrapper';
 
 export default function EditRecipe() {
@@ -170,6 +169,7 @@ export default function EditRecipe() {
       cookingTime: cookingTime.trim() || undefined,
       calories: calories.trim() || undefined,
       tags,
+      schemaVersion: 1,
     });
 
     RecipeStore.updateRecipe(updatedRecipe);
@@ -211,7 +211,7 @@ export default function EditRecipe() {
                   style={[styles.imageButton, { backgroundColor: colors.tint }]}
                   onPress={handleAddImage}
                 >
-                  <Text style={[styles.imageButtonText, { color: colors.background }]}>
+                  <Text style={[styles.imageButtonText, { color: colors.background }]}> 
                     {imageUri ? 'Change Image' : 'Select Image'}
                   </Text>
                 </TouchableOpacity>
