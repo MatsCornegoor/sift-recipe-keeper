@@ -1,4 +1,4 @@
-import { Recipe, Ingredient, RecipeStep } from '../models/Recipe';
+import { Recipe, Ingredient, RecipeStep, IngredientGroup, InstructionGroup } from '../models/Recipe';
 import { Platform } from 'react-native';
 import RNFS from 'react-native-fs';
 import { CURRENT_SCHEMA_VERSION } from '../models/RecipeMigrations';
@@ -73,19 +73,23 @@ class RecipeExtractorService {
       // Clean and prepare content
       const cleanContent = this.cleanWebPageContent(html);
       
-      // Prepare GPT prompt
+      // Prepare GPT prompt for groups schema (v2)
       const prompt = `
-        Extract recipe information from the following content and respond ONLY with valid JSON matching Schema V2 EXACTLY. Do not return any other schema.
+        Extract recipe information from the following content and respond ONLY with valid JSON matching this schema exactly.
 
-        // Schema V2 (required)
         {
           "schemaVersion": 2,
           "name": "Recipe Name",
-          "steps": [
+          "ingredientsGroups": [
             {
-              "title": "Optional Step Title",
-              "ingredients": ["ingredient1", "ingredient2"],
-              "instructions": ["sub-step 1", "sub-step 2", "sub-step 3"]
+              "title": "Optional group title (e.g., Sauce)",
+              "items": ["ingredient1", "ingredient2"]
+            }
+          ],
+          "instructionGroups": [
+            {
+              "title": "Optional group title (e.g., Sauce)",
+              "items": ["short sub-step 1", "short sub-step 2"]
             }
           ],
           "tags": ["tag1", "tag2"],
@@ -95,11 +99,12 @@ class RecipeExtractorService {
 
         CRITICAL:
         - Respond with ONLY the JSON object; no extra text.
+        - Group titles may be empty; use empty string if not present, but include the group object.
         - Ingredients: include quantities/units; convert to metric and put converted amount in parentheses.
-        - Instructions: return a list of short, granular sub-steps. DO NOT return one large paragraph. Split into multiple numbered or bulleted steps as needed.
+        - Instructions: return lists of short, granular sub-steps per group.
         - Tags: 3-5 relevant tags.
         - Calories: estimate if missing.
-        - If multiple sections are detected, return multiple steps; otherwise return a single step array with one item.
+        - If the source has sectioned content, create corresponding groups; otherwise return a single group with empty title.
 
         Content:
         ${cleanContent}
@@ -126,12 +131,10 @@ class RecipeExtractorService {
     // Remove extra whitespace
     content = content.replace(/\s+/g, ' ').trim();
     // Limit content length
-    // return content.slice(0, 16000);
     return content.slice(0, 20000);
   }
 
   private async callGPTAPI(prompt: string): Promise<string> {
-    // Try each model in order until one works
     for (const model of this.models) {
       try {
         console.log(`Trying model: ${model.model}`);
@@ -141,8 +144,6 @@ class RecipeExtractorService {
         continue;
       }
     }
-    
-    // If all models fail, throw an error
     throw new Error('All models failed to respond');
   }
 
@@ -150,32 +151,23 @@ class RecipeExtractorService {
     const requestBody: any = {
       model: modelConfig.model,
       messages: [
-        {
-          role: 'system',
-          content: 'You are a recipe extraction assistant. You MUST respond with ONLY valid JSON. Never include explanations, markdown, or any text outside the JSON object. Always format your response as a single JSON object. The response must be parseable by JSON.parse().',
-        },
-        {
-          role: 'user',
-          content: prompt,
-        },
+        { role: 'system', content: 'You are a recipe extraction assistant. You MUST respond with ONLY valid JSON. Never include explanations, markdown, or any text outside the JSON object. Always format your response as a single JSON object. The response must be parseable by JSON.parse().' },
+        { role: 'user', content: prompt },
       ],
       temperature: modelConfig.temperature,
       seed: modelConfig.seed,
       max_tokens: 4000,
     };
 
-    // Only add response_format if the model supports it
     if ('supportsResponseFormat' in modelConfig && modelConfig.supportsResponseFormat) {
-      requestBody.response_format = { type: "json_object" };
+      requestBody.response_format = { type: 'json_object' };
     }
-    
+
     console.log(`API request body for ${modelConfig.model}:`, JSON.stringify(requestBody, null, 2));
-    
+
     const response = await fetch(this.endpoint, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestBody),
     });
 
@@ -185,39 +177,35 @@ class RecipeExtractorService {
 
     const data = await response.json();
     console.log(`GPT API response for ${modelConfig.model}:`, data);
-    
-    // Check for API errors
+
     if (data.error) {
       console.error(`API Error for ${modelConfig.model}:`, data.error);
       throw new Error(`API Error: ${data.error.message || 'Unknown error'}`);
     }
-    
-    // Add better error handling and logging
+
     if (!data.choices || !data.choices[0] || !data.choices[0].message) {
       console.error(`Invalid response structure for ${modelConfig.model}:`, data);
       throw new Error('Invalid API response structure');
     }
-    
+
     const content = data.choices[0].message.content;
     console.log(`GPT API content for ${modelConfig.model}:`, content);
-    
+
     if (!content || content.trim() === '') {
       console.error(`Empty content in API response for ${modelConfig.model}`);
       throw new Error('Empty content in API response');
     }
-    
+
     return content;
   }
 
   private extractFirstImage(html: string, baseUrl: string): string | null {
     try {
-      // Look for og:image meta tag first
       const ogImageMatch = html.match(/<meta[^>]*property=\"og:image\"[^>]*content=\"([^\"]*)\"[^>]*>/);
       if (ogImageMatch && ogImageMatch[1]) {
         return this.resolveUrl(ogImageMatch[1], baseUrl);
       }
 
-      // Then look for regular img tags
       const imgMatch = html.match(/<img[^>]*src=\"([^\"]*)\"[^>]*>/);
       if (imgMatch && imgMatch[1]) {
         return this.resolveUrl(imgMatch[1], baseUrl);
@@ -232,17 +220,9 @@ class RecipeExtractorService {
 
   private resolveUrl(imageUrl: string, baseUrl: string): string {
     try {
-      // Handle absolute URLs
-      if (imageUrl.startsWith('http')) {
-        return imageUrl;
-      }
-      
-      // Handle protocol-relative URLs
-      if (imageUrl.startsWith('//')) {
-        return 'https:' + imageUrl;
-      }
+      if (imageUrl.startsWith('http')) return imageUrl;
+      if (imageUrl.startsWith('//')) return 'https:' + imageUrl;
 
-      // Handle relative URLs
       const base = new URL(baseUrl);
       if (imageUrl.startsWith('/')) {
         return `${base.protocol}//${base.host}${imageUrl}`;
@@ -259,27 +239,20 @@ class RecipeExtractorService {
     try {
       if (!imageUrl) return null;
 
-      // Generate a unique filename for the image
       const fileName = `${Date.now()}.jpg`;
       const imageDirectory = `${RNFS.DocumentDirectoryPath}/recipe-images`;
       const imagePath = `${imageDirectory}/${fileName}`;
       
-      // Ensure the images directory exists
       const dirExists = await RNFS.exists(imageDirectory);
       if (!dirExists) {
         await RNFS.mkdir(imageDirectory);
       }
 
-      // Download the image
-      const downloadResult = RNFS.downloadFile({
-        fromUrl: imageUrl,
-        toFile: imagePath,
-      });
+      const downloadResult = RNFS.downloadFile({ fromUrl: imageUrl, toFile: imagePath });
       await downloadResult.promise;
 
       console.log('Image downloaded successfully to:', imagePath);
 
-      // For native platforms, prefix with 'file://' is required for the Image component.
       if (Platform.OS === 'android' || Platform.OS === 'ios') {
         return 'file://' + imagePath;
       }
@@ -303,10 +276,8 @@ class RecipeExtractorService {
 
       for (const item of rawList) {
         if (!item || typeof item !== 'string') continue;
-        // Split by line breaks first
         const lines = item.split(/\r?\n+/).map(s => s.trim()).filter(Boolean);
         for (const line of lines) {
-          // Further split by inline enumerations (1. , 1) , -, *, •)
           const parts = line
             .split(/(?=(?:\d+\.\s|\d+\)\s|[-*•]\s))/)
             .map(s => s.trim())
@@ -319,9 +290,7 @@ class RecipeExtractorService {
       }
 
       const result = substeps.filter(Boolean);
-      return result.length > 0
-        ? result
-        : rawList.map(s => (typeof s === 'string' ? s.trim() : '')).filter(Boolean);
+      return result.length > 0 ? result : rawList.map(s => (typeof s === 'string' ? s.trim() : '')).filter(Boolean);
     } catch (e) {
       return Array.isArray(input) ? input : typeof input === 'string' ? [input] : [];
     }
@@ -331,10 +300,8 @@ class RecipeExtractorService {
     try {
       console.log('Raw response to parse:', response);
       
-      // Try to find JSON in the response - look for the most complete JSON object
       let jsonMatch = response.match(/\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/);
       if (!jsonMatch) {
-        // Fallback to simpler regex
         jsonMatch = response.match(/\{[^{}]*\}/);
       }
       
@@ -355,46 +322,52 @@ class RecipeExtractorService {
         throw new Error('Missing name in recipe data');
       }
 
-      // Build steps strictly in V2 format; fallback to single step if steps missing
-      let steps: RecipeStep[] = [];
-      if (Array.isArray(data.steps) && data.steps.length > 0) {
-        steps = data.steps.map((s: any) => new RecipeStep({
-          title: s.title,
-          ingredients: (s.ingredients || []).map((ingStr: string) => new Ingredient(ingStr)),
-          instructions: this.normalizeInstructions(s.instructions),
+      // Read groups (required), fallback to steps/legacy if absent
+      let ingredientsGroups: IngredientGroup[] = [];
+      let instructionGroups: InstructionGroup[] = [];
+
+      if (Array.isArray(data.ingredientsGroups) || Array.isArray(data.instructionGroups)) {
+        ingredientsGroups = (data.ingredientsGroups || []).map((g: any) => new IngredientGroup({
+          title: g.title || undefined,
+          items: (g.items || []).map((txt: string) => new Ingredient(txt)),
         }));
+        instructionGroups = (data.instructionGroups || []).map((g: any) => new InstructionGroup({
+          title: g.title || undefined,
+          items: this.normalizeInstructions(g.items),
+        }));
+      } else if (Array.isArray(data.steps)) {
+        // Fallback: convert steps
+        const steps = data.steps as any[];
+        ingredientsGroups = steps.map((s) => new IngredientGroup({ title: s.title, items: (s.ingredients || []).map((txt: string) => new Ingredient(txt)) }));
+        instructionGroups = steps.map((s) => new InstructionGroup({ title: s.title, items: this.normalizeInstructions(s.instructions) }));
       } else {
-        const legacyIngredients = Array.isArray(data.ingredients) ? data.ingredients : [];
-        const legacyInstructions = this.normalizeInstructions(data.instructions);
-        steps = [new RecipeStep({
-          title: undefined,
-          ingredients: legacyIngredients.map((ing: string) => new Ingredient(ing)),
-          instructions: legacyInstructions,
-        })];
+        // Legacy
+        const ingredients = Array.isArray(data.ingredients) ? data.ingredients : [];
+        const instructions = this.normalizeInstructions(data.instructions);
+        ingredientsGroups = [new IngredientGroup({ items: ingredients.map((txt: string) => new Ingredient(txt)) })];
+        instructionGroups = [new InstructionGroup({ items: instructions })];
       }
 
-      // Aggregate for compatibility
-      const ingredients: Ingredient[] = [];
-      const instructions: string[] = [];
-      steps.forEach((step) => {
-        step.ingredients.forEach((ing) => ingredients.push(new Ingredient(ing.name)));
-        step.instructions.forEach((inst) => instructions.push(inst));
-      });
-      
-      // Create and return recipe with all fields including image, steps and version
+      // Aggregate top-level
+      const ingredientsAgg: Ingredient[] = [];
+      ingredientsGroups.forEach(g => g.items.forEach(ing => ingredientsAgg.push(new Ingredient(ing.name))));
+      const instructionsAgg: string[] = [];
+      instructionGroups.forEach(g => g.items.forEach(inst => instructionsAgg.push(inst)));
+
       const recipe = new Recipe({
         name: data.name,
-        ingredients,
-        instructions,
+        ingredients: ingredientsAgg,
+        instructions: instructionsAgg,
         imageUri: imageUrl,
         tags: data.tags || [],
         cookingTime: data.cookingTime || undefined,
         calories: data.calories || undefined,
         sourceUrl: sourceUrl,
-        steps,
+        ingredientsGroups,
+        instructionGroups,
         schemaVersion: CURRENT_SCHEMA_VERSION,
       });
-      
+
       console.log('Created recipe with tags:', recipe.tags);
       return recipe;
     } catch (error) {
