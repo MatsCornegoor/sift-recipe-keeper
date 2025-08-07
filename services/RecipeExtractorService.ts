@@ -1,6 +1,7 @@
 import { Recipe, Ingredient, RecipeStep } from '../models/Recipe';
 import { Platform } from 'react-native';
 import RNFS from 'react-native-fs';
+import { CURRENT_SCHEMA_VERSION } from '../models/RecipeMigrations';
 
 interface ModelConfig {
   model: string;
@@ -74,11 +75,9 @@ class RecipeExtractorService {
       
       // Prepare GPT prompt
       const prompt = `
-        Extract recipe information from the following content and respond ONLY with valid JSON in this exact format. Prefer a step-based structure when the recipe has sections (e.g., "Dough", "Sauce", "Filling"). If there are no clear sections, return a single-step recipe.
+        Extract recipe information from the following content and respond ONLY with valid JSON matching Schema V2 EXACTLY. Do not return any other schema.
 
-        Allowed output schemas (return one JSON object matching either Schema V2 or Schema V1):
-
-        // Schema V2 (preferred)
+        // Schema V2 (required)
         {
           "schemaVersion": 2,
           "name": "Recipe Name",
@@ -94,23 +93,13 @@ class RecipeExtractorService {
           "calories": "250 kcal"
         }
 
-        // Schema V1 (legacy fallback)
-        {
-          "name": "Recipe Name",
-          "ingredients": ["ingredient1", "ingredient2"],
-          "instructions": ["sub-step 1", "sub-step 2", "sub-step 3"],
-          "tags": ["tag1", "tag2"],
-          "cookingTime": "30 min",
-          "calories": "250 kcal"
-        }
-
         CRITICAL:
         - Respond with ONLY the JSON object; no extra text.
         - Ingredients: include quantities/units; convert to metric and put converted amount in parentheses.
         - Instructions: return a list of short, granular sub-steps. DO NOT return one large paragraph. Split into multiple numbered or bulleted steps as needed.
         - Tags: 3-5 relevant tags.
         - Calories: estimate if missing.
-        - If multiple sections are detected, return Schema V2 with multiple steps; otherwise return a single step array with one item.
+        - If multiple sections are detected, return multiple steps; otherwise return a single step array with one item.
 
         Content:
         ${cleanContent}
@@ -223,13 +212,13 @@ class RecipeExtractorService {
   private extractFirstImage(html: string, baseUrl: string): string | null {
     try {
       // Look for og:image meta tag first
-      const ogImageMatch = html.match(/<meta[^>]*property="og:image"[^>]*content="([^"]*)"[^>]*>/);
+      const ogImageMatch = html.match(/<meta[^>]*property=\"og:image\"[^>]*content=\"([^\"]*)\"[^>]*>/);
       if (ogImageMatch && ogImageMatch[1]) {
         return this.resolveUrl(ogImageMatch[1], baseUrl);
       }
 
       // Then look for regular img tags
-      const imgMatch = html.match(/<img[^>]*src="([^"]*)"[^>]*>/);
+      const imgMatch = html.match(/<img[^>]*src=\"([^\"]*)\"[^>]*>/);
       if (imgMatch && imgMatch[1]) {
         return this.resolveUrl(imgMatch[1], baseUrl);
       }
@@ -361,52 +350,36 @@ class RecipeExtractorService {
       console.log('Parsed GPT response:', data);
       console.log('Tags from response:', data.tags);
       
-      // Validate required fields for either schema
       if (!data.name) {
         console.error('Missing name in parsed data:', data);
         throw new Error('Missing name in recipe data');
       }
 
-      const schemaVersion = typeof data.schemaVersion === 'number' ? data.schemaVersion : (data.steps ? 2 : 1);
-
+      // Build steps strictly in V2 format; fallback to single step if steps missing
       let steps: RecipeStep[] = [];
-      let ingredients: Ingredient[] = [];
-      let instructions: string[] = [];
-
-      if (schemaVersion === 2 && Array.isArray(data.steps)) {
-        steps = data.steps.map((s: any) => {
-          const stepIngredients = (s.ingredients || []).map((ingStr: string) => new Ingredient(ingStr));
-          const stepInstructions = this.normalizeInstructions(s.instructions);
-          return new RecipeStep({
-            title: s.title,
-            ingredients: stepIngredients,
-            instructions: stepInstructions,
-          });
-        });
-
-        // Aggregate for compatibility
-        steps.forEach((step) => {
-          step.ingredients.forEach((ing) => ingredients.push(new Ingredient(ing.name)));
-          step.instructions.forEach((inst) => instructions.push(inst));
-        });
+      if (Array.isArray(data.steps) && data.steps.length > 0) {
+        steps = data.steps.map((s: any) => new RecipeStep({
+          title: s.title,
+          ingredients: (s.ingredients || []).map((ingStr: string) => new Ingredient(ingStr)),
+          instructions: this.normalizeInstructions(s.instructions),
+        }));
       } else {
-        // Legacy V1
-        if (!Array.isArray(data.ingredients) || (!Array.isArray(data.instructions) && typeof data.instructions !== 'string')) {
-          console.error('Missing ingredients or instructions in legacy schema:', data);
-          throw new Error('Missing required fields in recipe data');
-        }
-        ingredients = data.ingredients.map((ing: string) => new Ingredient(ing));
-        instructions = this.normalizeInstructions(data.instructions);
-
-        // Create a single step for uniform downstream handling
-        steps = [
-          new RecipeStep({
-            title: undefined,
-            ingredients: ingredients.map((i) => new Ingredient(i.name)),
-            instructions: [...instructions],
-          })
-        ];
+        const legacyIngredients = Array.isArray(data.ingredients) ? data.ingredients : [];
+        const legacyInstructions = this.normalizeInstructions(data.instructions);
+        steps = [new RecipeStep({
+          title: undefined,
+          ingredients: legacyIngredients.map((ing: string) => new Ingredient(ing)),
+          instructions: legacyInstructions,
+        })];
       }
+
+      // Aggregate for compatibility
+      const ingredients: Ingredient[] = [];
+      const instructions: string[] = [];
+      steps.forEach((step) => {
+        step.ingredients.forEach((ing) => ingredients.push(new Ingredient(ing.name)));
+        step.instructions.forEach((inst) => instructions.push(inst));
+      });
       
       // Create and return recipe with all fields including image, steps and version
       const recipe = new Recipe({
@@ -419,7 +392,7 @@ class RecipeExtractorService {
         calories: data.calories || undefined,
         sourceUrl: sourceUrl,
         steps,
-        schemaVersion,
+        schemaVersion: CURRENT_SCHEMA_VERSION,
       });
       
       console.log('Created recipe with tags:', recipe.tags);

@@ -20,6 +20,7 @@ import CustomPopup from '../components/CustomPopup';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NestableScrollContainer, NestableDraggableFlatList } from 'react-native-draggable-flatlist';
 import ContentWrapper from '../components/ContentWrapper';
+import { CURRENT_SCHEMA_VERSION } from '../models/RecipeMigrations';
 
 export default function AddRecipe() {
   const router = useNavigation();
@@ -128,7 +129,7 @@ export default function AddRecipe() {
       cookingTime: cookingTime.trim() || undefined,
       calories: calories.trim() || undefined,
       tags,
-      schemaVersion: 1,
+      schemaVersion: CURRENT_SCHEMA_VERSION,
     });
 
     RecipeStore.addRecipe(recipe);

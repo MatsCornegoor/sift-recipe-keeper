@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Recipe } from '../models/Recipe';
 import RNFS from 'react-native-fs';
+import { migrateRecipeToLatest } from '../models/RecipeMigrations';
 
 type Listener = (recipes: Recipe[]) => void;
 
@@ -12,10 +13,26 @@ class RecipeStore {
     try {
       const data = await AsyncStorage.getItem('SavedRecipes');
       if (data) {
-        // Parse and reconstruct Recipe objects
         const parsedData = JSON.parse(data);
-        this.recipes = parsedData.map((item: any) => new Recipe(item));
+        let didMigrate = false;
+
+        const migrated = parsedData.map((item: any) => {
+          const latest = migrateRecipeToLatest(item);
+          // Construct Recipe class which normalizes aggregated fields
+          const recipe = new Recipe(latest);
+          if ((item?.schemaVersion ?? 1) !== (latest?.schemaVersion ?? 1)) {
+            didMigrate = true;
+          }
+          return recipe;
+        });
+
+        this.recipes = migrated;
         this.notifyListeners();
+
+        if (didMigrate) {
+          // Persist migrated data
+          await this.saveRecipes();
+        }
       }
     } catch (error) {
       console.error('Failed to load recipes:', error);
@@ -80,7 +97,8 @@ class RecipeStore {
   }
 
   getRecipeById(id: string) {
-    return this.recipes.find(recipe => recipe.id === id);
+    const found = this.recipes.find(recipe => recipe.id === id);
+    return found ? new Recipe(found) : undefined;
   }
 
   getRecipeCount(): number {
@@ -88,7 +106,7 @@ class RecipeStore {
   }
 
   getAllRecipes(): Recipe[] {
-    return [...this.recipes];
+    return this.recipes.map(r => new Recipe(r));
   }
 }
 
