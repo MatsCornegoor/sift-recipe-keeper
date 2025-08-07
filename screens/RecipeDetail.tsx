@@ -269,16 +269,17 @@ export default function RecipeDetail() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
       <Header 
         title={recipe.name}
         rightElement={<MenuButton />}
       />
       <ScrollView 
         style={{ flex: 1 }}
-        contentContainerStyle={Platform.select({
-          web: { minHeight: '100%' }
-        })}
+        contentContainerStyle={[
+          { flexGrow: 1 },
+          Platform.select({ web: { minHeight: '100%' } }) as any,
+        ]}
       >
         <ContentWrapper>
           <View style={[styles.container, { backgroundColor: colors.background }]}> 
