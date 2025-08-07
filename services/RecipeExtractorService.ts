@@ -86,7 +86,7 @@ class RecipeExtractorService {
             {
               "title": "Optional Step Title",
               "ingredients": ["ingredient1", "ingredient2"],
-              "instructions": ["step1", "step2"]
+              "instructions": ["sub-step 1", "sub-step 2", "sub-step 3"]
             }
           ],
           "tags": ["tag1", "tag2"],
@@ -98,7 +98,7 @@ class RecipeExtractorService {
         {
           "name": "Recipe Name",
           "ingredients": ["ingredient1", "ingredient2"],
-          "instructions": ["step1", "step2"],
+          "instructions": ["sub-step 1", "sub-step 2", "sub-step 3"],
           "tags": ["tag1", "tag2"],
           "cookingTime": "30 min",
           "calories": "250 kcal"
@@ -107,7 +107,7 @@ class RecipeExtractorService {
         CRITICAL:
         - Respond with ONLY the JSON object; no extra text.
         - Ingredients: include quantities/units; convert to metric and put converted amount in parentheses.
-        - Instructions: step-by-step without omission.
+        - Instructions: return a list of short, granular sub-steps. DO NOT return one large paragraph. Split into multiple numbered or bulleted steps as needed.
         - Tags: 3-5 relevant tags.
         - Calories: estimate if missing.
         - If multiple sections are detected, return Schema V2 with multiple steps; otherwise return a single step array with one item.
@@ -302,6 +302,42 @@ class RecipeExtractorService {
     }
   }
 
+  private normalizeInstructions(input: any): string[] {
+    try {
+      const rawList: string[] = Array.isArray(input)
+        ? input
+        : typeof input === 'string'
+          ? [input]
+          : [];
+
+      const substeps: string[] = [];
+
+      for (const item of rawList) {
+        if (!item || typeof item !== 'string') continue;
+        // Split by line breaks first
+        const lines = item.split(/\r?\n+/).map(s => s.trim()).filter(Boolean);
+        for (const line of lines) {
+          // Further split by inline enumerations (1. , 1) , -, *, •)
+          const parts = line
+            .split(/(?=(?:\d+\.\s|\d+\)\s|[-*•]\s))/)
+            .map(s => s.trim())
+            .filter(Boolean);
+          for (let part of parts) {
+            part = part.replace(/^(?:\d+\.\s|\d+\)\s|[-*•]\s)/, '').trim();
+            if (part) substeps.push(part);
+          }
+        }
+      }
+
+      const result = substeps.filter(Boolean);
+      return result.length > 0
+        ? result
+        : rawList.map(s => (typeof s === 'string' ? s.trim() : '')).filter(Boolean);
+    } catch (e) {
+      return Array.isArray(input) ? input : typeof input === 'string' ? [input] : [];
+    }
+  }
+
   private parseGPTResponse(response: string, imageUrl: string | null, sourceUrl?: string): Recipe {
     try {
       console.log('Raw response to parse:', response);
@@ -338,11 +374,15 @@ class RecipeExtractorService {
       let instructions: string[] = [];
 
       if (schemaVersion === 2 && Array.isArray(data.steps)) {
-        steps = data.steps.map((s: any) => new RecipeStep({
-          title: s.title,
-          ingredients: (s.ingredients || []).map((ingStr: string) => new Ingredient(ingStr)),
-          instructions: s.instructions || [],
-        }));
+        steps = data.steps.map((s: any) => {
+          const stepIngredients = (s.ingredients || []).map((ingStr: string) => new Ingredient(ingStr));
+          const stepInstructions = this.normalizeInstructions(s.instructions);
+          return new RecipeStep({
+            title: s.title,
+            ingredients: stepIngredients,
+            instructions: stepInstructions,
+          });
+        });
 
         // Aggregate for compatibility
         steps.forEach((step) => {
@@ -351,12 +391,12 @@ class RecipeExtractorService {
         });
       } else {
         // Legacy V1
-        if (!Array.isArray(data.ingredients) || !Array.isArray(data.instructions)) {
+        if (!Array.isArray(data.ingredients) || (!Array.isArray(data.instructions) && typeof data.instructions !== 'string')) {
           console.error('Missing ingredients or instructions in legacy schema:', data);
           throw new Error('Missing required fields in recipe data');
         }
         ingredients = data.ingredients.map((ing: string) => new Ingredient(ing));
-        instructions = data.instructions;
+        instructions = this.normalizeInstructions(data.instructions);
 
         // Create a single step for uniform downstream handling
         steps = [
