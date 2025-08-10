@@ -215,7 +215,7 @@ export default function RecipeDetail() {
           {(recipe.ingredientsGroups || []).map((group, gi) => (
             <View key={group.id || `${gi}`} style={{ marginBottom: 8 }}>
               {group.title ? (
-                <View style={[styles.headerCard, { backgroundColor: colors.cardBackground }]}>
+                <View style={styles.headerCard}>
                   <Text style={[styles.headerCardText, { color: colors.text }]}>{group.title}</Text>
                 </View>
               ) : null}
@@ -248,7 +248,7 @@ export default function RecipeDetail() {
           {(recipe.instructionGroups || []).map((group, gi) => (
             <View key={group.id || `${gi}`} style={{ marginBottom: 8 }}>
               {group.title ? (
-                <View style={[styles.headerCard, { backgroundColor: colors.cardBackground }]}>
+                <View style={styles.headerCard}>
                   <Text style={[styles.headerCardText, { color: colors.text }]}>{group.title}</Text>
                 </View>
               ) : null}
