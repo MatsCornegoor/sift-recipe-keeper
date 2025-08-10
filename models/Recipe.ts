@@ -135,6 +135,11 @@ export class Recipe {
     this.ingredientsGroups = normalizedIngredientGroups;
     this.instructionGroups = normalizedInstructionGroups;
 
+    // Preserve provided steps regardless of whether we derived groups from them
+    if (steps && steps.length > 0) {
+      this.steps = steps.map(s => new RecipeStep(s));
+    }
+
     // Aggregate top-level ingredients/instructions based on groups if present
     if (this.ingredientsGroups.length > 0 || this.instructionGroups.length > 0) {
       const aggregatedIngredients: Ingredient[] = [];
@@ -157,7 +162,8 @@ export class Recipe {
       steps.forEach(step => step.instructions.forEach(inst => aggregatedInstructions.push(inst)));
       this.ingredients = aggregatedIngredients.length > 0 ? aggregatedIngredients : ingredients;
       this.instructions = aggregatedInstructions.length > 0 ? aggregatedInstructions : instructions;
-      this.steps = steps.map(s => new RecipeStep(s));
+      // Steps already set above; keep this for backward compatibility
+      this.steps = this.steps && this.steps.length > 0 ? this.steps : steps.map(s => new RecipeStep(s));
     } else {
       // Legacy/simple recipe (v1)
       this.ingredients = ingredients;

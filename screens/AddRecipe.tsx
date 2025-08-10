@@ -199,6 +199,8 @@ export default function AddRecipe() {
       tags,
       schemaVersion: CURRENT_SCHEMA_VERSION,
       steps,
+      ingredientsGroups: [],
+      instructionGroups: [],
     });
 
     RecipeStore.addRecipe(recipe);

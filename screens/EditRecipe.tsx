@@ -45,21 +45,35 @@ export default function EditRecipe() {
     const steps = Array.isArray(originalRecipe.steps) && originalRecipe.steps.length > 0
       ? originalRecipe.steps
       : [new RecipeStep({ title: '', ingredients: originalRecipe.ingredients, instructions: originalRecipe.instructions })];
-    return steps.map((s) => ({
-      id: generateId(),
-      title: s.title || '',
-      items: (s.ingredients || []).map((ing) => ({ id: generateId(), text: ing.name })),
-    }));
+
+    const combined: GroupDraft = { id: generateId(), title: '', items: [] };
+    steps.forEach((s) => {
+      if (s.title && s.title.trim()) {
+        combined.items.push({ id: generateId(), text: s.title.trim(), isHeader: true });
+      }
+      (s.ingredients || []).forEach((ing) => {
+        combined.items.push({ id: generateId(), text: ing.name });
+      });
+    });
+
+    return [combined];
   });
   const [instructionGroups, setInstructionGroups] = useState<GroupDraft[]>(() => {
     const steps = Array.isArray(originalRecipe.steps) && originalRecipe.steps.length > 0
       ? originalRecipe.steps
       : [new RecipeStep({ title: '', ingredients: originalRecipe.ingredients, instructions: originalRecipe.instructions })];
-    return steps.map((s) => ({
-      id: generateId(),
-      title: s.title || '',
-      items: (s.instructions || []).map((txt) => ({ id: generateId(), text: txt })),
-    }));
+
+    const combined: GroupDraft = { id: generateId(), title: '', items: [] };
+    steps.forEach((s) => {
+      if (s.title && s.title.trim()) {
+        combined.items.push({ id: generateId(), text: s.title.trim(), isHeader: true });
+      }
+      (s.instructions || []).forEach((txt) => {
+        combined.items.push({ id: generateId(), text: txt });
+      });
+    });
+
+    return [combined];
   });
   const [cookingTime, setCookingTime] = useState(originalRecipe.cookingTime || '');
   const [calories, setCalories] = useState(originalRecipe.calories || '');
@@ -221,6 +235,8 @@ export default function EditRecipe() {
       tags,
       schemaVersion: CURRENT_SCHEMA_VERSION,
       steps,
+      ingredientsGroups: [],
+      instructionGroups: [],
     });
 
     RecipeStore.updateRecipe(updatedRecipe);
