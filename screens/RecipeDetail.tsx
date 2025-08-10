@@ -485,7 +485,8 @@ const styles = StyleSheet.create({
     opacity: 0.75,
   },
   headerCard: {
-    padding: 12,
+    padding: 16,
+    paddingLeft: 0,
     borderRadius: 10,
     marginBottom: 8,
   },
