@@ -246,39 +246,29 @@ export default function EditRecipe() {
                   </Text>
                 </TouchableOpacity>
 
+                <Text style={[styles.sectionTitle, { color: colors.text }]}>Ingredients</Text>
                 <GroupsEditor
                   title="Ingredients"
                   groups={ingredientGroups}
                   onChange={setIngredientGroups}
                   placeholderNewGroup="e.g. Sauce"
                   placeholderItem="e.g. 200g tomatoes"
-                  onAddItemRequest={(groupId) => handleOpenAddItem('ingredients', groupId)}
                   onEditItemRequest={(groupId, itemId, currentText) => handleOpenEditItem('ingredients', groupId, itemId, currentText)}
+                  onAddItemRequest={(groupId) => handleOpenAddItem('ingredients', groupId)}
+                  singleGroup
                 />
 
-                <TouchableOpacity
-                  style={[styles.addButton, { backgroundColor: colors.tint, alignSelf: 'flex-start' }]}
-                  onPress={() => handleOpenAddItem('ingredients')}
-                >
-                  <Ionicons name="add" size={28} color={colors.background} />
-                </TouchableOpacity>
-
+                <Text style={[styles.sectionTitle, { color: colors.text }]}>Instructions</Text>
                 <GroupsEditor
                   title="Instructions"
                   groups={instructionGroups}
                   onChange={setInstructionGroups}
                   placeholderNewGroup="e.g. Sauce"
                   placeholderItem="e.g. Sauté onions until soft"
-                  onAddItemRequest={(groupId) => handleOpenAddItem('instructions', groupId)}
                   onEditItemRequest={(groupId, itemId, currentText) => handleOpenEditItem('instructions', groupId, itemId, currentText)}
+                  onAddItemRequest={(groupId) => handleOpenAddItem('instructions', groupId)}
+                  singleGroup
                 />
-
-                <TouchableOpacity
-                  style={[styles.addButton, { backgroundColor: colors.tint, alignSelf: 'flex-start' }]}
-                  onPress={() => handleOpenAddItem('instructions')}
-                >
-                  <Ionicons name="add" size={28} color={colors.background} />
-                </TouchableOpacity>
 
                 <Text style={[styles.sectionTitle, { color: colors.text }]}>Details</Text>
                 <View style={styles.detailsRow}>

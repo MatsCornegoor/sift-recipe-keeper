@@ -25,13 +25,14 @@ export interface GroupsEditorProps {
   placeholderItem?: string;
   onAddItemRequest?: (groupId: string) => void;
   onEditItemRequest?: (groupId: string, itemId: string, currentText: string) => void;
+  singleGroup?: boolean;
 }
 
 function generateId(): string {
   return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 }
 
-export default function GroupsEditor({ title, groups, onChange, placeholderNewGroup = 'New section', placeholderItem = 'Add new item', onAddItemRequest, onEditItemRequest }: GroupsEditorProps) {
+export default function GroupsEditor({ title, groups, onChange, placeholderNewGroup = 'New section', placeholderItem = 'Add new item', onAddItemRequest, onEditItemRequest, singleGroup = false }: GroupsEditorProps) {
   const { colors } = useTheme();
 
   const styles = useMemo(() => StyleSheet.create({
@@ -153,6 +154,43 @@ export default function GroupsEditor({ title, groups, onChange, placeholderNewGr
   const toggleCollapse = (groupId: string) => {
     onChange(groups.map(g => g.id === groupId ? { ...g, collapsed: !g.collapsed } : g));
   };
+
+  if (singleGroup) {
+    const group = groups[0];
+    const items = group?.items ?? [];
+    const groupIndex = 0;
+
+    return (
+      <View style={styles.container}>
+        <NestableDraggableFlatList
+          data={items}
+          keyExtractor={(it) => it.id}
+          onDragEnd={({ data }) => {
+            if (!group) return;
+            const next = [...groups];
+            next[groupIndex] = { ...group, items: data };
+            onChange(next);
+          }}
+          renderItem={({ item: it, drag: dragItem, isActive: isItemActive, getIndex: getItemIndex }) => (
+            <View style={[styles.itemRow, { opacity: isItemActive ? 0.5 : 1 }] }>
+              <TouchableOpacity
+                style={styles.itemCard}
+                onPress={() => group && onEditItemRequest?.(group.id, it.id, it.text)}
+                onLongPress={dragItem}
+                delayLongPress={300}
+              >
+                <Text style={styles.itemCardText}>{it.text || placeholderItem}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
+        <TouchableOpacity onPress={() => onAddItemRequest?.(group?.id ?? '')} style={styles.addItemButton}>
+          <Ionicons name="add" size={18} color={colors.background} />
+          <Text style={styles.addItemText}>Add</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

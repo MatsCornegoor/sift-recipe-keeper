@@ -33,10 +33,10 @@ export default function AddRecipe() {
   const [name, setName] = useState('');
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [ingredientGroups, setIngredientGroups] = useState<GroupDraft[]>([
-    { id: generateId(), title: '', items: [{ id: generateId(), text: '' }] }
+    { id: generateId(), title: '', items: [] }
   ]);
   const [instructionGroups, setInstructionGroups] = useState<GroupDraft[]>([
-    { id: generateId(), title: '', items: [{ id: generateId(), text: '' }] }
+    { id: generateId(), title: '', items: [] }
   ]);
   const [sourceUrl, setSourceUrl] = useState('');
   const [cookingTime, setCookingTime] = useState('');
@@ -67,14 +67,10 @@ export default function AddRecipe() {
   };
 
   const handleOpenAddItem = (section: SectionKey, groupId?: string) => {
+    // In singleGroup mode, we no longer expose add UI; keep handler for future or programmatic use
     const groups = findGroupsBySection(section);
-    let targetGroupId = groupId || (groups[groups.length - 1]?.id ?? null);
-    // If no groups exist, create one first
-    if (!targetGroupId) {
-      const newGroup: GroupDraft = { id: generateId(), title: '', items: [] };
-      setGroupsBySection(section, [...groups, newGroup]);
-      targetGroupId = newGroup.id;
-    }
+    const targetGroupId = groupId || groups[0]?.id || null;
+    if (!targetGroupId) return;
     setItemEditor({ visible: true, mode: 'add', section, groupId: targetGroupId, initialText: '' });
   };
 
@@ -239,16 +235,9 @@ export default function AddRecipe() {
                   onChange={setIngredientGroups}
                   placeholderNewGroup="e.g. Sauce"
                   placeholderItem="e.g. 200g tomatoes"
-                  onAddItemRequest={(groupId) => handleOpenAddItem('ingredients', groupId)}
                   onEditItemRequest={(groupId, itemId, currentText) => handleOpenEditItem('ingredients', groupId, itemId, currentText)}
+                  singleGroup
                 />
-
-                <TouchableOpacity
-                  style={[styles.addButton, { backgroundColor: colors.tint, alignSelf: 'flex-start' }]}
-                  onPress={() => handleOpenAddItem('ingredients')}
-                >
-                  <Ionicons name="add" size={28} color={colors.background} />
-                </TouchableOpacity>
 
                 <GroupsEditor
                   title="Instructions"
@@ -256,16 +245,9 @@ export default function AddRecipe() {
                   onChange={setInstructionGroups}
                   placeholderNewGroup="e.g. Sauce"
                   placeholderItem="e.g. Sauté onions until soft"
-                  onAddItemRequest={(groupId) => handleOpenAddItem('instructions', groupId)}
                   onEditItemRequest={(groupId, itemId, currentText) => handleOpenEditItem('instructions', groupId, itemId, currentText)}
+                  singleGroup
                 />
-
-                <TouchableOpacity
-                  style={[styles.addButton, { backgroundColor: colors.tint, alignSelf: 'flex-start' }]}
-                  onPress={() => handleOpenAddItem('instructions')}
-                >
-                  <Ionicons name="add" size={28} color={colors.background} />
-                </TouchableOpacity>
 
                 <Text style={[styles.sectionTitle, { color: colors.text }]}>Details</Text>
                 <View style={styles.detailsRow}>
