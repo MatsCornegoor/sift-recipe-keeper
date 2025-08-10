@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Modal, View, Text, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from 'react-native';
+import { Modal, View, Text, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, NativeSyntheticEvent, TextInputSelectionChangeEventData } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
 
 interface TextInputPopupProps {
@@ -26,18 +26,30 @@ export default function TextInputPopup({
   const { colors } = useTheme();
   const [value, setValue] = useState(initialValue);
   const inputRef = useRef<TextInput>(null);
+  const [initialSelection, setInitialSelection] = useState<{ start: number; end: number } | undefined>(undefined);
 
   useEffect(() => {
     if (visible) {
       setValue(initialValue);
-      // Delay focus slightly to ensure modal is mounted
+      setInitialSelection({ start: initialValue.length, end: initialValue.length });
       const id = setTimeout(() => inputRef.current?.focus(), 50);
       return () => clearTimeout(id);
+    } else {
+      setInitialSelection(undefined);
     }
   }, [visible, initialValue]);
 
   const handleConfirm = () => {
     onConfirm(value);
+  };
+
+  const handleSelectionChange = (
+    _e: NativeSyntheticEvent<TextInputSelectionChangeEventData>
+  ) => {
+    if (initialSelection) {
+      // Stop controlling selection after the first real selection event
+      setInitialSelection(undefined);
+    }
   };
 
   return (
@@ -57,6 +69,8 @@ export default function TextInputPopup({
                   onChangeText={setValue}
                   returnKeyType="done"
                   onSubmitEditing={handleConfirm}
+                  selection={initialSelection}
+                  onSelectionChange={handleSelectionChange}
                 />
                 <View style={styles.buttonsRow}>
                   <TouchableOpacity style={[styles.button, styles.cancel]} onPress={onCancel}>

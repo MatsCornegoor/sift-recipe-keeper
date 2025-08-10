@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NestableDraggableFlatList, NestableScrollContainer } from 'react-native-draggable-flatlist';
 import { useTheme } from '../hooks/useTheme';
+// Long-press drag is handled via TouchableOpacity onLongPress
 
 export interface GroupItemDraft {
   id: string;
@@ -111,14 +112,7 @@ export default function GroupsEditor({ title, groups, onChange, placeholderNewGr
       color: colors.text,
       fontSize: 16,
     },
-    dragHandle: {
-      width: 38,
-      height: 44,
-      borderRadius: 8,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: colors.tint,
-    },
+    // dragHandle removed; card is draggable via long press
     addItemButton: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -220,14 +214,11 @@ export default function GroupsEditor({ title, groups, onChange, placeholderNewGr
                           <TouchableOpacity
                             style={styles.itemCard}
                             onPress={() => onEditItemRequest?.(group.id, it.id, it.text)}
+                            onLongPress={dragItem}
+                            delayLongPress={300}
                           >
                             <Text style={styles.itemCardText}>{it.text || placeholderItem}</Text>
                           </TouchableOpacity>
-                          {itemIndex !== items.length - 1 && (
-                            <TouchableOpacity onPressIn={dragItem} disabled={isItemActive} style={styles.dragHandle}>
-                              <Ionicons name="apps" size={18} color={colors.background} />
-                            </TouchableOpacity>
-                          )}
                         </View>
                       );
                     }}
