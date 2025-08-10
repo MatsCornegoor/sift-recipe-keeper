@@ -22,13 +22,15 @@ export interface GroupsEditorProps {
   onChange: (next: GroupDraft[]) => void;
   placeholderNewGroup?: string;
   placeholderItem?: string;
+  onAddItemRequest?: (groupId: string) => void;
+  onEditItemRequest?: (groupId: string, itemId: string, currentText: string) => void;
 }
 
 function generateId(): string {
   return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 }
 
-export default function GroupsEditor({ title, groups, onChange, placeholderNewGroup = 'New section', placeholderItem = 'Add new item' }: GroupsEditorProps) {
+export default function GroupsEditor({ title, groups, onChange, placeholderNewGroup = 'New section', placeholderItem = 'Add new item', onAddItemRequest, onEditItemRequest }: GroupsEditorProps) {
   const { colors } = useTheme();
 
   const styles = useMemo(() => StyleSheet.create({
@@ -96,16 +98,18 @@ export default function GroupsEditor({ title, groups, onChange, placeholderNewGr
       gap: 8,
       marginBottom: 8,
     },
-    itemInput: {
+    itemCard: {
       flex: 1,
       borderWidth: 1,
       borderRadius: 8,
-      paddingHorizontal: 10,
-      paddingVertical: 10,
+      paddingHorizontal: 12,
+      paddingVertical: 12,
       borderColor: colors.inputBorder,
       backgroundColor: colors.inputBackground,
+    },
+    itemCardText: {
       color: colors.text,
-      minHeight: 44,
+      fontSize: 16,
     },
     dragHandle: {
       width: 38,
@@ -114,6 +118,21 @@ export default function GroupsEditor({ title, groups, onChange, placeholderNewGr
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: colors.tint,
+    },
+    addItemButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignSelf: 'flex-start',
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      borderRadius: 8,
+      backgroundColor: colors.tint,
+      marginTop: 4,
+    },
+    addItemText: {
+      color: colors.background,
+      fontWeight: '600',
+      marginLeft: 6,
     },
     subsectionTitle: {
       fontSize: 15,
@@ -124,14 +143,6 @@ export default function GroupsEditor({ title, groups, onChange, placeholderNewGr
       marginTop: 4,
     },
   }), [colors]);
-
-  const ensureTrailingEmptyItem = (items: GroupItemDraft[]): GroupItemDraft[] => {
-    const cloned = [...items];
-    if (cloned.length === 0 || cloned[cloned.length - 1].text.trim() !== '') {
-      cloned.push({ id: generateId(), text: '' });
-    }
-    return cloned;
-  };
 
   const handleAddGroup = () => {
     const next = [
@@ -165,7 +176,7 @@ export default function GroupsEditor({ title, groups, onChange, placeholderNewGr
         onDragEnd={({ data }) => onChange(data)}
         renderItem={({ item: group, drag, isActive, getIndex }) => {
           const groupIndex = getIndex() ?? 0;
-          const items = ensureTrailingEmptyItem(group.items);
+          const items = group.items; // no trailing empty now
           return (
             <View style={[styles.groupCard, { opacity: isActive ? 0.5 : 1 }] }>
               <View style={styles.groupHeader}>
@@ -198,29 +209,20 @@ export default function GroupsEditor({ title, groups, onChange, placeholderNewGr
                     data={items}
                     keyExtractor={(it) => it.id}
                     onDragEnd={({ data }) => {
-                      const sanitized = data.filter((d, idx) => d.text.trim() !== '' || idx === data.length - 1);
                       const next = [...groups];
-                      next[groupIndex] = { ...group, items: sanitized };
+                      next[groupIndex] = { ...group, items: data };
                       onChange(next);
                     }}
                     renderItem={({ item: it, drag: dragItem, isActive: isItemActive, getIndex: getItemIndex }) => {
                       const itemIndex = getItemIndex() ?? 0;
                       return (
                         <View style={[styles.itemRow, { opacity: isItemActive ? 0.5 : 1 }] }>
-                          <TextInput
-                            style={styles.itemInput}
-                            placeholder={placeholderItem}
-                            placeholderTextColor={colors.placeholderText}
-                            value={it.text}
-                            onChangeText={(txt) => {
-                              const next = [...groups];
-                              const groupItems = [...items];
-                              groupItems[itemIndex] = { ...it, text: txt };
-                              next[groupIndex] = { ...group, items: groupItems };
-                              onChange(next);
-                            }}
-                            multiline
-                          />
+                          <TouchableOpacity
+                            style={styles.itemCard}
+                            onPress={() => onEditItemRequest?.(group.id, it.id, it.text)}
+                          >
+                            <Text style={styles.itemCardText}>{it.text || placeholderItem}</Text>
+                          </TouchableOpacity>
                           {itemIndex !== items.length - 1 && (
                             <TouchableOpacity onPressIn={dragItem} disabled={isItemActive} style={styles.dragHandle}>
                               <Ionicons name="apps" size={18} color={colors.background} />
@@ -230,6 +232,10 @@ export default function GroupsEditor({ title, groups, onChange, placeholderNewGr
                       );
                     }}
                   />
+                  <TouchableOpacity onPress={() => onAddItemRequest?.(group.id)} style={styles.addItemButton}>
+                    <Ionicons name="add" size={18} color={colors.background} />
+                    <Text style={styles.addItemText}>Add</Text>
+                  </TouchableOpacity>
                 </View>
               )}
             </View>

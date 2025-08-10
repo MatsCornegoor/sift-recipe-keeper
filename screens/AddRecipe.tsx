@@ -17,6 +17,7 @@ import { useTheme } from '../hooks/useTheme';
 import Colors from '../constants/Colors';
 import Header from '../components/Header';
 import CustomPopup from '../components/CustomPopup';
+import TextInputPopup from '../components/TextInputPopup';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NestableScrollContainer } from 'react-native-draggable-flatlist';
 import ContentWrapper from '../components/ContentWrapper';
@@ -49,6 +50,56 @@ export default function AddRecipe() {
     buttons: [] as Array<{ text: string; onPress: () => void }>,
   });
   const [isScrollEnabled, setIsScrollEnabled] = useState(true);
+
+  type SectionKey = 'ingredients' | 'instructions';
+  const [itemEditor, setItemEditor] = useState<{
+    visible: boolean;
+    mode: 'add' | 'edit';
+    section: SectionKey;
+    groupId: string | null;
+    itemId?: string;
+    initialText: string;
+  }>({ visible: false, mode: 'add', section: 'ingredients', groupId: null, initialText: '' });
+
+  const findGroupsBySection = (section: SectionKey) => section === 'ingredients' ? ingredientGroups : instructionGroups;
+  const setGroupsBySection = (section: SectionKey, next: GroupDraft[]) => {
+    if (section === 'ingredients') setIngredientGroups(next); else setInstructionGroups(next);
+  };
+
+  const handleOpenAddItem = (section: SectionKey, groupId?: string) => {
+    const groups = findGroupsBySection(section);
+    let targetGroupId = groupId || (groups[groups.length - 1]?.id ?? null);
+    // If no groups exist, create one first
+    if (!targetGroupId) {
+      const newGroup: GroupDraft = { id: generateId(), title: '', items: [] };
+      setGroupsBySection(section, [...groups, newGroup]);
+      targetGroupId = newGroup.id;
+    }
+    setItemEditor({ visible: true, mode: 'add', section, groupId: targetGroupId, initialText: '' });
+  };
+
+  const handleOpenEditItem = (section: SectionKey, groupId: string, itemId: string, currentText: string) => {
+    setItemEditor({ visible: true, mode: 'edit', section, groupId, itemId, initialText: currentText });
+  };
+
+  const handleConfirmItemEditor = (text: string) => {
+    const { section, groupId, mode, itemId } = itemEditor;
+    const groups = findGroupsBySection(section);
+    const idx = groups.findIndex(g => g.id === groupId);
+    if (idx === -1) { setItemEditor(prev => ({ ...prev, visible: false })); return; }
+    const group = groups[idx];
+    const items = [...group.items];
+    if (mode === 'add') {
+      items.push({ id: generateId(), text: text.trim() });
+    } else if (mode === 'edit' && itemId) {
+      const i = items.findIndex(it => it.id === itemId);
+      if (i !== -1) items[i] = { ...items[i], text: text };
+    }
+    const next = [...groups];
+    next[idx] = { ...group, items };
+    setGroupsBySection(section, next);
+    setItemEditor(prev => ({ ...prev, visible: false }));
+  };
 
   // const colorScheme = useColorScheme() ?? 'light';
   // const colors = Colors[colorScheme];
@@ -188,7 +239,16 @@ export default function AddRecipe() {
                   onChange={setIngredientGroups}
                   placeholderNewGroup="e.g. Sauce"
                   placeholderItem="e.g. 200g tomatoes"
+                  onAddItemRequest={(groupId) => handleOpenAddItem('ingredients', groupId)}
+                  onEditItemRequest={(groupId, itemId, currentText) => handleOpenEditItem('ingredients', groupId, itemId, currentText)}
                 />
+
+                <TouchableOpacity
+                  style={[styles.addButton, { backgroundColor: colors.tint, alignSelf: 'flex-start' }]}
+                  onPress={() => handleOpenAddItem('ingredients')}
+                >
+                  <Ionicons name="add" size={28} color={colors.background} />
+                </TouchableOpacity>
 
                 <GroupsEditor
                   title="Instructions"
@@ -196,7 +256,16 @@ export default function AddRecipe() {
                   onChange={setInstructionGroups}
                   placeholderNewGroup="e.g. Sauce"
                   placeholderItem="e.g. Sauté onions until soft"
+                  onAddItemRequest={(groupId) => handleOpenAddItem('instructions', groupId)}
+                  onEditItemRequest={(groupId, itemId, currentText) => handleOpenEditItem('instructions', groupId, itemId, currentText)}
                 />
+
+                <TouchableOpacity
+                  style={[styles.addButton, { backgroundColor: colors.tint, alignSelf: 'flex-start' }]}
+                  onPress={() => handleOpenAddItem('instructions')}
+                >
+                  <Ionicons name="add" size={28} color={colors.background} />
+                </TouchableOpacity>
 
                 <Text style={[styles.sectionTitle, { color: colors.text }]}>Details</Text>
                 <View style={styles.detailsRow}>
@@ -313,6 +382,15 @@ export default function AddRecipe() {
         message={popupConfig.message}
         buttons={popupConfig.buttons}
         onClose={() => setShowPopup(false)}
+      />
+      <TextInputPopup
+        visible={itemEditor.visible}
+        title={itemEditor.mode === 'add' ? 'Add item' : 'Edit item'}
+        initialValue={itemEditor.initialText}
+        placeholder={itemEditor.section === 'ingredients' ? 'e.g. 200g tomatoes' : 'e.g. Sauté onions until soft'}
+        confirmText={itemEditor.mode === 'add' ? 'Add' : 'Save'}
+        onConfirm={handleConfirmItemEditor}
+        onCancel={() => setItemEditor(prev => ({ ...prev, visible: false }))}
       />
     </GestureHandlerRootView>
   );
