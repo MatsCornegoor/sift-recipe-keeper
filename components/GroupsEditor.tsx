@@ -65,7 +65,7 @@ export default function GroupsEditor({
         },
         headerText: {
           color: colors.text,
-          fontSize: 16,
+          fontSize: 18,
           fontWeight: '700',
           opacity: 0.9,
         },

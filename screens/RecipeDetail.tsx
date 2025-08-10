@@ -215,7 +215,9 @@ export default function RecipeDetail() {
           {(recipe.ingredientsGroups || []).map((group, gi) => (
             <View key={group.id || `${gi}`} style={{ marginBottom: 8 }}>
               {group.title ? (
-                <Text style={[styles.groupTitle, { color: colors.text }]}>{group.title}</Text>
+                <View style={[styles.headerCard, { backgroundColor: colors.cardBackground }]}>
+                  <Text style={[styles.headerCardText, { color: colors.text }]}>{group.title}</Text>
+                </View>
               ) : null}
               {group.items.map((ingredient) => {
                 const isChecked = checkedIngredients.has(ingredient.id);
@@ -246,7 +248,9 @@ export default function RecipeDetail() {
           {(recipe.instructionGroups || []).map((group, gi) => (
             <View key={group.id || `${gi}`} style={{ marginBottom: 8 }}>
               {group.title ? (
-                <Text style={[styles.groupTitle, { color: colors.text }]}>{group.title}</Text>
+                <View style={[styles.headerCard, { backgroundColor: colors.cardBackground }]}>
+                  <Text style={[styles.headerCardText, { color: colors.text }]}>{group.title}</Text>
+                </View>
               ) : null}
               {group.items.map((instruction, idx) => (
                 <View 
@@ -479,6 +483,16 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 8,
     opacity: 0.75,
+  },
+  headerCard: {
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 8,
+  },
+  headerCardText: {
+    fontSize: 18,
+    fontWeight: '700',
+    opacity: 0.9,
   },
   ingredientRow: {
     flexDirection: 'row',

@@ -143,27 +143,40 @@ export default function EditRecipe() {
     const acc = new Map<string, Acc>();
     const norm = (t: string) => (t || '').trim();
 
+    // Traverse ingredient groups and split by in-list headers
     for (const g of ingredientGroups) {
-      const key = norm(g.title);
-      if (!acc.has(key)) acc.set(key, { ingredients: [], instructions: [] });
-      const bucket = acc.get(key)!;
-      bucket.ingredients.push(
-        ...g.items.filter(i => !i.isHeader).map(i => i.text.trim()).filter(Boolean)
-      );
+      let currentTitle = norm(g.title);
+      for (const it of g.items) {
+        if (it.isHeader) {
+          currentTitle = norm(it.text);
+          if (!acc.has(currentTitle)) acc.set(currentTitle, { ingredients: [], instructions: [] });
+          continue;
+        }
+        const key = currentTitle;
+        if (!acc.has(key)) acc.set(key, { ingredients: [], instructions: [] });
+        acc.get(key)!.ingredients.push(norm(it.text));
+      }
     }
+
+    // Traverse instruction groups and split by in-list headers
     for (const g of instructionGroups) {
-      const key = norm(g.title);
-      if (!acc.has(key)) acc.set(key, { ingredients: [], instructions: [] });
-      const bucket = acc.get(key)!;
-      bucket.instructions.push(
-        ...g.items.filter(i => !i.isHeader).map(i => i.text.trim()).filter(Boolean)
-      );
+      let currentTitle = norm(g.title);
+      for (const it of g.items) {
+        if (it.isHeader) {
+          currentTitle = norm(it.text);
+          if (!acc.has(currentTitle)) acc.set(currentTitle, { ingredients: [], instructions: [] });
+          continue;
+        }
+        const key = currentTitle;
+        if (!acc.has(key)) acc.set(key, { ingredients: [], instructions: [] });
+        acc.get(key)!.instructions.push(norm(it.text));
+      }
     }
 
     const steps = Array.from(acc.entries()).map(([title, val]) => new RecipeStep({
       title: (title || undefined),
-      ingredients: val.ingredients.map(txt => new Ingredient(txt)),
-      instructions: val.instructions,
+      ingredients: val.ingredients.filter(Boolean).map(txt => new Ingredient(txt)),
+      instructions: val.instructions.filter(Boolean),
     }));
     return steps;
   };
