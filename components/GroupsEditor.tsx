@@ -7,6 +7,7 @@ import { useTheme } from '../hooks/useTheme';
 export interface GroupItemDraft {
   id: string;
   text: string;
+  isHeader?: boolean;
 }
 
 export interface GroupDraft {
@@ -23,7 +24,7 @@ export interface GroupsEditorProps {
   placeholderNewGroup?: string; // kept for compatibility
   placeholderItem?: string;
   onAddItemRequest?: (groupId: string) => void;
-  onEditItemRequest?: (groupId: string, itemId: string, currentText: string) => void;
+  onEditItemRequest?: (groupId: string, itemId: string, currentText: string, isHeader?: boolean) => void;
   singleGroup?: boolean; // kept for compatibility
 }
 
@@ -62,6 +63,12 @@ export default function GroupsEditor({
           color: colors.text,
           fontSize: 16,
         },
+        headerText: {
+          color: colors.text,
+          fontSize: 16,
+          fontWeight: '700',
+          opacity: 0.9,
+        },
         addItemButton: {
           flexDirection: 'row',
           alignItems: 'center',
@@ -99,11 +106,11 @@ export default function GroupsEditor({
           <View style={[styles.itemRow, { opacity: isItemActive ? 0.5 : 1 }] }>
             <TouchableOpacity
               style={styles.itemCard}
-              onPress={() => group && onEditItemRequest?.(group.id, it.id, it.text)}
+              onPress={() => group && onEditItemRequest?.(group.id, it.id, it.text, it.isHeader)}
               onLongPress={dragItem}
               delayLongPress={300}
             >
-              <Text style={styles.itemCardText}>{it.text || placeholderItem}</Text>
+              <Text style={it.isHeader ? styles.headerText : styles.itemCardText}>{it.text || placeholderItem}</Text>
             </TouchableOpacity>
           </View>
         )}

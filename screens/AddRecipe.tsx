@@ -59,6 +59,7 @@ export default function AddRecipe() {
     groupId: string | null;
     itemId?: string;
     initialText: string;
+    isHeader?: boolean;
   }>({ visible: false, mode: 'add', section: 'ingredients', groupId: null, initialText: '' });
 
   const findGroupsBySection = (section: SectionKey) => section === 'ingredients' ? ingredientGroups : instructionGroups;
@@ -71,25 +72,26 @@ export default function AddRecipe() {
     const groups = findGroupsBySection(section);
     const targetGroupId = groupId || groups[0]?.id || null;
     if (!targetGroupId) return;
-    setItemEditor({ visible: true, mode: 'add', section, groupId: targetGroupId, initialText: '' });
+    setItemEditor({ visible: true, mode: 'add', section, groupId: targetGroupId, initialText: '', isHeader: false });
   };
 
-  const handleOpenEditItem = (section: SectionKey, groupId: string, itemId: string, currentText: string) => {
-    setItemEditor({ visible: true, mode: 'edit', section, groupId, itemId, initialText: currentText });
+  const handleOpenEditItem = (section: SectionKey, groupId: string, itemId: string, currentText: string, isHeader?: boolean) => {
+    setItemEditor({ visible: true, mode: 'edit', section, groupId, itemId, initialText: currentText, isHeader: !!isHeader });
   };
 
-  const handleConfirmItemEditor = (text: string) => {
+  const handleConfirmItemEditor = (text: string, type: 'item' | 'header') => {
     const { section, groupId, mode, itemId } = itemEditor;
     const groups = findGroupsBySection(section);
     const idx = groups.findIndex(g => g.id === groupId);
     if (idx === -1) { setItemEditor(prev => ({ ...prev, visible: false })); return; }
     const group = groups[idx];
+
     const items = [...group.items];
     if (mode === 'add') {
-      items.push({ id: generateId(), text: text.trim() });
+      items.push({ id: generateId(), text: text.trim(), isHeader: type === 'header' });
     } else if (mode === 'edit' && itemId) {
       const i = items.findIndex(it => it.id === itemId);
-      if (i !== -1) items[i] = { ...items[i], text: text };
+      if (i !== -1) items[i] = { ...items[i], text: text, isHeader: type === 'header' } as any;
     }
     const next = [...groups];
     next[idx] = { ...group, items };
@@ -124,7 +126,7 @@ export default function AddRecipe() {
       if (!acc.has(key)) acc.set(key, { ingredients: [], instructions: [] });
       const bucket = acc.get(key)!;
       bucket.ingredients.push(
-        ...g.items.map(i => i.text.trim()).filter(Boolean)
+        ...g.items.filter(i => !i.isHeader).map(i => i.text.trim()).filter(Boolean)
       );
     }
     for (const g of instructionGroups) {
@@ -132,7 +134,7 @@ export default function AddRecipe() {
       if (!acc.has(key)) acc.set(key, { ingredients: [], instructions: [] });
       const bucket = acc.get(key)!;
       bucket.instructions.push(
-        ...g.items.map(i => i.text.trim()).filter(Boolean)
+        ...g.items.filter(i => !i.isHeader).map(i => i.text.trim()).filter(Boolean)
       );
     }
 
@@ -235,7 +237,7 @@ export default function AddRecipe() {
                   onChange={setIngredientGroups}
                   placeholderNewGroup="e.g. Sauce"
                   placeholderItem="e.g. 200g tomatoes"
-                  onEditItemRequest={(groupId, itemId, currentText) => handleOpenEditItem('ingredients', groupId, itemId, currentText)}
+                  onEditItemRequest={(groupId, itemId, currentText, isHeader) => handleOpenEditItem('ingredients', groupId, itemId, currentText, isHeader)}
                   singleGroup
                 />
 
@@ -245,7 +247,7 @@ export default function AddRecipe() {
                   onChange={setInstructionGroups}
                   placeholderNewGroup="e.g. Sauce"
                   placeholderItem="e.g. Sauté onions until soft"
-                  onEditItemRequest={(groupId, itemId, currentText) => handleOpenEditItem('instructions', groupId, itemId, currentText)}
+                  onEditItemRequest={(groupId, itemId, currentText, isHeader) => handleOpenEditItem('instructions', groupId, itemId, currentText, isHeader)}
                   singleGroup
                 />
 
@@ -373,6 +375,7 @@ export default function AddRecipe() {
         confirmText={itemEditor.mode === 'add' ? 'Add' : 'Save'}
         onConfirm={handleConfirmItemEditor}
         onCancel={() => setItemEditor(prev => ({ ...prev, visible: false }))}
+        initialType={itemEditor.isHeader ? 'header' : 'item'}
       />
     </GestureHandlerRootView>
   );

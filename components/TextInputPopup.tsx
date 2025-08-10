@@ -9,8 +9,9 @@ interface TextInputPopupProps {
   placeholder?: string;
   confirmText?: string;
   cancelText?: string;
-  onConfirm: (value: string) => void;
+  onConfirm: (value: string, type: 'item' | 'header') => void;
   onCancel?: () => void;
+  initialType?: 'item' | 'header';
 }
 
 export default function TextInputPopup({
@@ -22,25 +23,28 @@ export default function TextInputPopup({
   cancelText = 'Cancel',
   onConfirm,
   onCancel,
+  initialType = 'item',
 }: TextInputPopupProps) {
   const { colors } = useTheme();
   const [value, setValue] = useState(initialValue);
   const inputRef = useRef<TextInput>(null);
   const [initialSelection, setInitialSelection] = useState<{ start: number; end: number } | undefined>(undefined);
+  const [selectedType, setSelectedType] = useState<'item' | 'header'>(initialType);
 
   useEffect(() => {
     if (visible) {
       setValue(initialValue);
       setInitialSelection({ start: initialValue.length, end: initialValue.length });
+      setSelectedType(initialType || 'item');
       const id = setTimeout(() => inputRef.current?.focus(), 50);
       return () => clearTimeout(id);
     } else {
       setInitialSelection(undefined);
     }
-  }, [visible, initialValue]);
+  }, [visible, initialValue, initialType]);
 
   const handleConfirm = () => {
-    onConfirm(value);
+    onConfirm(value, selectedType);
   };
 
   const handleSelectionChange = (
@@ -52,6 +56,8 @@ export default function TextInputPopup({
     }
   };
 
+  const effectivePlaceholder = selectedType === 'header' ? 'Enter header title' : placeholder;
+
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
       <TouchableWithoutFeedback onPress={onCancel}>
@@ -60,10 +66,24 @@ export default function TextInputPopup({
             <TouchableWithoutFeedback>
               <View style={[styles.sheet, { backgroundColor: colors.background }]}>
                 {!!title && <Text style={[styles.title, { color: colors.text }]}>{title}</Text>}
+                <View style={styles.tabsRow}>
+                  <TouchableOpacity
+                    onPress={() => setSelectedType('item')}
+                    style={[styles.tab, { borderColor: colors.inputBorder, backgroundColor: selectedType === 'item' ? colors.tint : 'transparent' }]}
+                  >
+                    <Text style={[styles.tabText, { color: selectedType === 'item' ? colors.background : colors.text }]}>Item</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => setSelectedType('header')}
+                    style={[styles.tab, { borderColor: colors.inputBorder, backgroundColor: selectedType === 'header' ? colors.tint : 'transparent' }]}
+                  >
+                    <Text style={[styles.tabText, { color: selectedType === 'header' ? colors.background : colors.text }]}>Header</Text>
+                  </TouchableOpacity>
+                </View>
                 <TextInput
                   ref={inputRef}
                   style={[styles.input, { backgroundColor: colors.inputBackground, borderColor: colors.inputBorder, color: colors.text }]}
-                  placeholder={placeholder}
+                  placeholder={effectivePlaceholder}
                   placeholderTextColor={colors.placeholderText}
                   value={value}
                   onChangeText={setValue}
@@ -112,6 +132,22 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 12,
+  },
+  tabsRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 12,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  tabText: {
+    fontSize: 14,
+    fontWeight: '600',
   },
   input: {
     borderWidth: 1,
