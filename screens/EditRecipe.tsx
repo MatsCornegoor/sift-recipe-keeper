@@ -357,12 +357,6 @@ export default function EditRecipe() {
                      onChangeText={setNewTag}
                      onSubmitEditing={handleAddTag}
                    />
-                  <TouchableOpacity
-                    style={[styles.addButton, { backgroundColor: colors.tint }]}
-                    onPress={handleAddTag}
-                  >
-                    <Ionicons name="add" size={24} color={colors.background} />
-                  </TouchableOpacity>
                 </View>
                 <ScrollView 
                   horizontal 
