@@ -12,6 +12,8 @@ interface TextInputPopupProps {
   onConfirm: (value: string, type: 'item' | 'header') => void;
   onCancel?: () => void;
   initialType?: 'item' | 'header';
+  onDelete?: () => void;
+  deleteText?: string;
 }
 
 export default function TextInputPopup({
@@ -24,6 +26,8 @@ export default function TextInputPopup({
   onConfirm,
   onCancel,
   initialType = 'item',
+  onDelete,
+  deleteText = 'Delete',
 }: TextInputPopupProps) {
   const { colors } = useTheme();
   const [value, setValue] = useState(initialValue);
@@ -93,6 +97,11 @@ export default function TextInputPopup({
                   onSelectionChange={handleSelectionChange}
                 />
                 <View style={styles.buttonsRow}>
+                  {onDelete ? (
+                    <TouchableOpacity style={[styles.button, { backgroundColor: colors.deleteButton }]} onPress={onDelete}>
+                      <Text style={[styles.buttonText, { color: colors.background }]}>{deleteText}</Text>
+                    </TouchableOpacity>
+                  ) : null}
                   <TouchableOpacity style={[styles.button, styles.cancel]} onPress={onCancel}>
                     <Text style={[styles.buttonText, { color: colors.text }]}>{cancelText}</Text>
                   </TouchableOpacity>

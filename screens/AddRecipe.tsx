@@ -390,6 +390,19 @@ export default function AddRecipe() {
         onConfirm={handleConfirmItemEditor}
         onCancel={() => setItemEditor(prev => ({ ...prev, visible: false }))}
         initialType={itemEditor.isHeader ? 'header' : 'item'}
+        onDelete={itemEditor.mode === 'edit' && itemEditor.itemId ? (() => {
+          const { section, groupId, itemId } = itemEditor;
+          const groups = findGroupsBySection(section);
+          const idx = groups.findIndex(g => g.id === groupId);
+          if (idx === -1) { setItemEditor(prev => ({ ...prev, visible: false })); return; }
+          const group = groups[idx];
+          const nextItems = group.items.filter(it => it.id !== itemId);
+          const next = [...groups];
+          next[idx] = { ...group, items: nextItems };
+          setGroupsBySection(section, next);
+          setItemEditor(prev => ({ ...prev, visible: false }));
+        }) : undefined}
+        deleteText={'Delete'}
       />
     </GestureHandlerRootView>
   );
