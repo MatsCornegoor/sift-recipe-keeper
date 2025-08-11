@@ -371,8 +371,8 @@ export default function EditRecipe() {
                   contentContainerStyle={styles.tagsContainer}
                 >
                   {tags.map((tag) => (
-                    <View key={tag} style={[styles.tagContainer, { backgroundColor: colors.tint }]}>
-                      <Text style={[styles.tagText, { color: colors.background }]}>{tag}</Text>
+                    <View key={tag} style={[styles.tagContainer, { backgroundColor: colors.cardBackground, borderWidth: 1, borderColor: colors.inputBorder }]}> 
+                      <Text style={[styles.tagText, { color: colors.text }]}>{tag}</Text>
                       <TouchableOpacity 
                         style={styles.tagDeleteButton} 
                         onPress={() => handleDeleteTag(tag)}
@@ -380,7 +380,7 @@ export default function EditRecipe() {
                         <Ionicons 
                           name="close-circle" 
                           size={24} 
-                          color={colors.background} 
+                          color={colors.deleteButton} 
                           style={styles.tagDeleteIcon} 
                         />
                       </TouchableOpacity>
