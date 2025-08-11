@@ -73,15 +73,21 @@ export default function TextInputPopup({
                 <View style={styles.tabsRow}>
                   <TouchableOpacity
                     onPress={() => setSelectedType('item')}
-                    style={[styles.tab, { borderColor: colors.inputBorder, backgroundColor: selectedType === 'item' ? colors.tint : 'transparent' }]}
+                    style={[
+                      styles.tab,
+                      { borderColor: colors.inputBorder, backgroundColor: selectedType === 'item' ? colors.inputBackground : 'transparent', opacity: selectedType === 'item' ? 1 : 0.5 },
+                    ]}
                   >
-                    <Text style={[styles.tabText, { color: selectedType === 'item' ? colors.background : colors.text }]}>Item</Text>
+                    <Text style={[styles.tabText, { color: colors.text }]}>Item</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => setSelectedType('header')}
-                    style={[styles.tab, { borderColor: colors.inputBorder, backgroundColor: selectedType === 'header' ? colors.tint : 'transparent' }]}
+                    style={[
+                      styles.tab,
+                      { borderColor: colors.inputBorder, backgroundColor: selectedType === 'header' ? colors.inputBackground : 'transparent', opacity: selectedType === 'header' ? 1 : 0.5 },
+                    ]}
                   >
-                    <Text style={[styles.tabText, { color: selectedType === 'header' ? colors.background : colors.text }]}>Header</Text>
+                    <Text style={[styles.tabText, { color: colors.text }]}>Header</Text>
                   </TouchableOpacity>
                 </View>
                 <TextInput
