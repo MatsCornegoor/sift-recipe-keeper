@@ -565,13 +565,14 @@ const styles = StyleSheet.create({
   tagDeleteIcon: {
     opacity: 0.8,
   },
-  ingredientInput: {
-    flexDirection: 'row',
-    marginBottom: 24,
-  },
+    ingredientInput: {
+     flexDirection: 'row',
+     alignItems: 'center',
+     marginBottom: 24,
+   },
   addButton: {
     backgroundColor: '#007AFF',
-    width: 46,
+    width: 48,
     height: 48,
     borderRadius: 8,
     marginLeft: 8,

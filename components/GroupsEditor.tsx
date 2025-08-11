@@ -67,23 +67,19 @@ export default function GroupsEditor({
           color: colors.text,
           fontSize: 18,
           fontWeight: '700',
-          opacity: 0.9,
+          opacity: 0.6,
         },
         addItemButton: {
-          flexDirection: 'row',
-          alignItems: 'center',
-          alignSelf: 'flex-start',
-          paddingHorizontal: 12,
-          paddingVertical: 8,
-          borderRadius: 8,
-          backgroundColor: colors.tint,
-          marginTop: 4,
-        },
-        addItemText: {
-          color: colors.background,
-          fontWeight: '600',
-          marginLeft: 6,
-        },
+           alignSelf: 'flex-start',
+           width: 48,
+           height: 48,
+           borderRadius: 8,
+           justifyContent: 'center',
+           alignItems: 'center',
+           backgroundColor: colors.tint,
+           marginTop: 12,
+           marginBottom: 12,
+         }
       }),
     [colors]
   );
@@ -116,8 +112,7 @@ export default function GroupsEditor({
         )}
       />
       <TouchableOpacity onPress={() => onAddItemRequest?.(group?.id ?? '')} style={styles.addItemButton}>
-        <Ionicons name="add" size={18} color={colors.background} />
-        <Text style={styles.addItemText}>Add</Text>
+        <Ionicons name="add" size={24} color={colors.background} />
       </TouchableOpacity>
     </View>
   );

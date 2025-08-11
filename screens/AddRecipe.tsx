@@ -317,7 +317,7 @@ export default function AddRecipe() {
                     style={[styles.addButton, { backgroundColor: colors.tint }]}
                     onPress={handleAddTag}
                   >
-                    <Ionicons name="add" size={28} color={colors.background} />
+                    <Ionicons name="add" size={24} color={colors.background} />
                   </TouchableOpacity>
                 </View>
                 <ScrollView
@@ -445,14 +445,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     flex: 1,
   },
-  ingredientInput: {
-    flexDirection: 'row',
-    marginBottom: 24,
-  },
+    ingredientInput: {
+     flexDirection: 'row',
+     alignItems: 'center',
+     marginBottom: 24,
+   },
   addButton: {
     backgroundColor: '#007AFF',
-    width: 46,
-    height: 48,  // Match TextInput height
+    width: 48,
+    height: 48,
     borderRadius: 8,
     marginLeft: 8,
     justifyContent: 'center',
