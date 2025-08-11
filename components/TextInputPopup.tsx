@@ -22,7 +22,6 @@ export default function TextInputPopup({
   initialValue = '',
   placeholder = 'Enter text',
   confirmText = 'Save',
-  cancelText = 'Cancel',
   onConfirm,
   onCancel,
   initialType = 'item',
@@ -92,7 +91,7 @@ export default function TextInputPopup({
                 </View>
                 <TextInput
                   ref={inputRef}
-                  style={[styles.input, { backgroundColor: colors.inputBackground, borderColor: colors.inputBorder, color: colors.text }]}
+                  style={[styles.input, { borderColor: colors.inputBorder, color: colors.text }]}
                   placeholder={effectivePlaceholder}
                   placeholderTextColor={colors.placeholderText}
                   value={value}
@@ -104,14 +103,11 @@ export default function TextInputPopup({
                 />
                 <View style={styles.buttonsRow}>
                   {onDelete ? (
-                    <TouchableOpacity style={[styles.button, { backgroundColor: colors.deleteButton }]} onPress={onDelete}>
-                      <Text style={[styles.buttonText, { color: colors.background }]}>{deleteText}</Text>
+                    <TouchableOpacity style={[styles.button]} onPress={onDelete}>
+                      <Text style={[styles.buttonText, { color: colors.text }]}>{deleteText}</Text>
                     </TouchableOpacity>
                   ) : null}
-                  <TouchableOpacity style={[styles.button, styles.cancel]} onPress={onCancel}>
-                    <Text style={[styles.buttonText, { color: colors.text }]}>{cancelText}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={[styles.button, { backgroundColor: colors.tint }]} onPress={handleConfirm}>
+                  <TouchableOpacity style={[styles.button, styles.confirm, { backgroundColor: colors.tint }]} onPress={handleConfirm}>
                     <Text style={[styles.buttonText, { color: colors.background }]}>{confirmText}</Text>
                   </TouchableOpacity>
                 </View>
@@ -166,15 +162,16 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   input: {
-    borderWidth: 1,
-    borderRadius: 8,
+    borderBottomWidth: 1,
+    borderWidth: 0,
+    borderRadius: 0,
     paddingHorizontal: 12,
     paddingVertical: 12,
     fontSize: 16,
   },
   buttonsRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     marginTop: 24,
     gap: 8,
   },
@@ -183,8 +180,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 8,
   },
-  cancel: {
-    backgroundColor: 'transparent',
+  confirm: {
+    marginLeft: 'auto',
   },
   buttonText: {
     fontSize: 16,

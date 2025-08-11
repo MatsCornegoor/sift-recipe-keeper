@@ -218,7 +218,6 @@ export default function AddRecipe() {
                 <Text style={[styles.sectionTitle, { color: colors.text }]}>Name</Text>
                 <TextInput
                   style={[styles.input, {
-                    backgroundColor: colors.inputBackground,
                     borderColor: colors.inputBorder,
                     color: colors.text,
                   }]}
@@ -271,7 +270,6 @@ export default function AddRecipe() {
                     <Text style={[styles.detailLabel, { color: colors.text }]}>Cooking Time</Text>
                     <TextInput
                       style={[styles.input, {
-                        backgroundColor: colors.inputBackground,
                         borderColor: colors.inputBorder,
                         color: colors.text,
                         marginBottom: 0,
@@ -286,7 +284,6 @@ export default function AddRecipe() {
                     <Text style={[styles.detailLabel, { color: colors.text }]}>Calories</Text>
                     <TextInput
                       style={[styles.input, {
-                        backgroundColor: colors.inputBackground,
                         borderColor: colors.inputBorder,
                         color: colors.text,
                         marginBottom: 0,
@@ -302,21 +299,20 @@ export default function AddRecipe() {
 
                 <Text style={[styles.detailLabel, { color: colors.text }]}>Tags</Text>
                 <View style={styles.ingredientInput}>
-                  <TextInput
-                    style={[styles.input, {
-                      flex: 1,
-                      marginBottom: 0,
-                      backgroundColor: colors.inputBackground,
-                      borderColor: colors.inputBorder,
-                      color: colors.text,
-                      height: 48,  // Fixed height to match EditRecipe
-                    }]}
-                    placeholder="e.g. vegetarian"
-                    placeholderTextColor={colors.placeholderText}
-                    value={newTag}
-                    onChangeText={setNewTag}
-                    onSubmitEditing={handleAddTag}
-                  />
+                                    <TextInput
+                     style={[styles.input, {
+                       flex: 1,
+                       marginBottom: 0,
+                       borderColor: colors.inputBorder,
+                       color: colors.text,
+                       height: 48,  // Fixed height to match EditRecipe
+                     }]}
+                     placeholder="e.g. vegetarian"
+                     placeholderTextColor={colors.placeholderText}
+                     value={newTag}
+                     onChangeText={setNewTag}
+                     onSubmitEditing={handleAddTag}
+                   />
                   <TouchableOpacity
                     style={[styles.addButton, { backgroundColor: colors.tint }]}
                     onPress={handleAddTag}
@@ -349,19 +345,18 @@ export default function AddRecipe() {
                 </ScrollView>
 
                 <Text style={[styles.detailLabel, { color: colors.text }]}>Source URL</Text>
-                <TextInput
-                  style={[styles.input, {
-                    backgroundColor: colors.inputBackground,
-                    borderColor: colors.inputBorder,
-                    color: colors.text,
-                  }]}
-                  placeholder="www.cookingwebite.com"
-                  placeholderTextColor={colors.placeholderText}
-                  value={sourceUrl}
-                  onChangeText={setSourceUrl}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                />
+                                <TextInput
+                   style={[styles.input, {
+                     borderColor: colors.inputBorder,
+                     color: colors.text,
+                   }]}
+                   placeholder="www.cookingwebite.com"
+                   placeholderTextColor={colors.placeholderText}
+                   value={sourceUrl}
+                   onChangeText={setSourceUrl}
+                   autoCapitalize="none"
+                   autoCorrect={false}
+                 />
 
                 <TouchableOpacity
                   style={[styles.saveButton, { backgroundColor: colors.tint }]}
@@ -416,9 +411,10 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   input: {
-    borderWidth: 1,
+    borderBottomWidth: 1,
+    borderWidth: 0,
     borderColor: '#ddd',
-    borderRadius: 8,
+    borderRadius: 0,
     marginBottom: 16,
     fontSize: 16,
     minHeight: 48,

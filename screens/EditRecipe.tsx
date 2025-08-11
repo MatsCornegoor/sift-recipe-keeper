@@ -253,18 +253,17 @@ export default function EditRecipe() {
               <View style={styles.form}>
                 <Text style={[styles.sectionTitle, { color: colors.text }]}>Name</Text>
 
-                <TextInput
-                  style={[styles.input, {
-                    backgroundColor: colors.inputBackground,
-                    borderColor: colors.inputBorder,
-                    color: colors.text,
-                    height: 'auto',
-                  }]}
-                  placeholder="e.g. Spaghetti Carbonara"
-                  placeholderTextColor={colors.placeholderText}
-                  value={name}
-                  onChangeText={setName}
-                />
+                                <TextInput
+                   style={[styles.input, {
+                     borderColor: colors.inputBorder,
+                     color: colors.text,
+                     height: 'auto',
+                   }]}
+                   placeholder="e.g. Spaghetti Carbonara"
+                   placeholderTextColor={colors.placeholderText}
+                   value={name}
+                   onChangeText={setName}
+                 />
 
                 <Text style={[styles.sectionTitle, { color: colors.text }]}>Image</Text>
 
@@ -311,56 +310,53 @@ export default function EditRecipe() {
                 <View style={styles.detailsRow}>
                   <View style={styles.detailInput}>
                     <Text style={[styles.detailLabel, { color: colors.text }]}>Cooking Time</Text>
-                    <TextInput
-                      style={[styles.input, {
-                        backgroundColor: colors.inputBackground,
-                        borderColor: colors.inputBorder,
-                        color: colors.text,
-                        marginBottom: 0,
-                        height: 'auto',
-                      }]}
-                      placeholder="e.g. 30 min"
-                      placeholderTextColor={colors.placeholderText}
-                      value={cookingTime}
-                      onChangeText={setCookingTime}
-                    />
+                                        <TextInput
+                       style={[styles.input, {
+                         borderColor: colors.inputBorder,
+                         color: colors.text,
+                         marginBottom: 0,
+                         height: 'auto',
+                       }]}
+                       placeholder="e.g. 30 min"
+                       placeholderTextColor={colors.placeholderText}
+                       value={cookingTime}
+                       onChangeText={setCookingTime}
+                     />
                   </View>
                   <View style={styles.detailInput}>
                     <Text style={[styles.detailLabel, { color: colors.text }]}>Calories</Text>
-                    <TextInput
-                      style={[styles.input, {
-                        backgroundColor: colors.inputBackground,
-                        borderColor: colors.inputBorder,
-                        color: colors.text,
-                        marginBottom: 0,
-                        height: 'auto',
-                      }]}
-                      placeholder="e.g. 250 kcal"
-                      placeholderTextColor={colors.placeholderText}
-                      value={calories}
-                      onChangeText={setCalories}
-                      // keyboardType="numeric"
-                    />
+                                        <TextInput
+                       style={[styles.input, {
+                         borderColor: colors.inputBorder,
+                         color: colors.text,
+                         marginBottom: 0,
+                         height: 'auto',
+                       }]}
+                       placeholder="e.g. 250 kcal"
+                       placeholderTextColor={colors.placeholderText}
+                       value={calories}
+                       onChangeText={setCalories}
+                       // keyboardType="numeric"
+                     />
                   </View>
                 </View>
 
                 <Text style={[styles.detailLabel, { color: colors.text }]}>Tags</Text>
                 <View style={styles.ingredientInput}>
-                  <TextInput
-                    style={[styles.input, { 
-                      flex: 1, 
-                      marginBottom: 0,
-                      backgroundColor: colors.inputBackground,
-                      borderColor: colors.inputBorder,
-                      color: colors.text,
-                      height: 48,
-                    }]}
-                    placeholder="e.g. vegetarian"
-                    placeholderTextColor={colors.placeholderText}
-                    value={newTag}
-                    onChangeText={setNewTag}
-                    onSubmitEditing={handleAddTag}
-                  />
+                                    <TextInput
+                     style={[styles.input, { 
+                       flex: 1, 
+                       marginBottom: 0,
+                       borderColor: colors.inputBorder,
+                       color: colors.text,
+                       height: 48,
+                     }]}
+                     placeholder="e.g. vegetarian"
+                     placeholderTextColor={colors.placeholderText}
+                     value={newTag}
+                     onChangeText={setNewTag}
+                     onSubmitEditing={handleAddTag}
+                   />
                   <TouchableOpacity
                     style={[styles.addButton, { backgroundColor: colors.tint }]}
                     onPress={handleAddTag}
@@ -393,20 +389,19 @@ export default function EditRecipe() {
                 </ScrollView>
 
                 <Text style={[styles.detailLabel, { color: colors.text }]}>Source URL</Text>
-                <TextInput
-                  style={[styles.input, {
-                    backgroundColor: colors.inputBackground,
-                    borderColor: colors.inputBorder,
-                    color: colors.text,
-                    height: 'auto',
-                  }]}
-                  placeholder="www.cookingwebite.com"
-                  placeholderTextColor={colors.placeholderText}
-                  value={sourceUrl}
-                  onChangeText={setSourceUrl}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                />
+                                <TextInput
+                   style={[styles.input, {
+                     borderColor: colors.inputBorder,
+                     color: colors.text,
+                     height: 'auto',
+                   }]}
+                   placeholder="www.cookingwebite.com"
+                   placeholderTextColor={colors.placeholderText}
+                   value={sourceUrl}
+                   onChangeText={setSourceUrl}
+                   autoCapitalize="none"
+                   autoCorrect={false}
+                 />
 
                 <TouchableOpacity
                   style={[styles.saveButton, { backgroundColor: colors.tint }]}
@@ -462,9 +457,10 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   input: {
-    borderWidth: 1,
+    borderBottomWidth: 1,
+    borderWidth: 0,
     borderColor: '#ddd',
-    borderRadius: 8,
+    borderRadius: 0,
     marginBottom: 16,
     fontSize: 16,
     minHeight: 48,
