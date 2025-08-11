@@ -65,7 +65,7 @@ export default function TextInputPopup({
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.kav}>
             <TouchableWithoutFeedback>
               <View style={[styles.sheet, { backgroundColor: colors.background }]}>
-                {!!title && <Text style={[styles.title, { color: colors.text }]}>{title}</Text>}
+
                 <View style={styles.tabsRow}>
                   <TouchableOpacity
                     onPress={() => setSelectedType('item')}
@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
   },
   sheet: {
     padding: 16,
+    paddingTop: 32,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
     shadowColor: '#000',
@@ -136,7 +137,7 @@ const styles = StyleSheet.create({
   tabsRow: {
     flexDirection: 'row',
     gap: 8,
-    marginBottom: 12,
+    marginBottom: 24,
   },
   tab: {
     flex: 1,
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
   buttonsRow: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginTop: 12,
+    marginTop: 24,
     gap: 8,
   },
   button: {
