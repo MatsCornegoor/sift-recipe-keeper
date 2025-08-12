@@ -419,7 +419,7 @@ export default function EditRecipe() {
           title={itemEditor.mode === 'add' ? 'Add item' : 'Edit item'}
           initialValue={itemEditor.initialText}
           placeholder={itemEditor.section === 'ingredients' ? 'e.g. 200g tomatoes' : 'e.g. Sauté onions until soft'}
-          confirmText={itemEditor.mode === 'add' ? 'Add' : 'Save'}
+          confirmText={itemEditor.mode === 'add' ? 'Save' : 'Save'}
           onConfirm={handleConfirmItemEditor}
           onCancel={() => setItemEditor(prev => ({ ...prev, visible: false }))}
           initialType={itemEditor.isHeader ? 'header' : 'item'}
