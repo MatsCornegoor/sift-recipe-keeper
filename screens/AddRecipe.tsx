@@ -9,7 +9,7 @@ import {
   Image,
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
-import { Recipe, Ingredient, RecipeStep } from '../models/Recipe';
+import { Recipe, Ingredient, IngredientGroup, InstructionGroup } from '../models/Recipe';
 import RecipeStore from '../store/RecipeStore';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -114,51 +114,6 @@ export default function AddRecipe() {
     }
   };
 
-  const buildStepsFromGroups = (): RecipeStep[] => {
-    type Acc = { ingredients: string[]; instructions: string[] };
-    const acc = new Map<string, Acc>();
-
-    const norm = (t: string) => (t || '').trim();
-
-    // Traverse ingredient groups and split by in-list headers
-    for (const g of ingredientGroups) {
-      let currentTitle = norm(g.title);
-      for (const it of g.items) {
-        if (it.isHeader) {
-          currentTitle = norm(it.text);
-          if (!acc.has(currentTitle)) acc.set(currentTitle, { ingredients: [], instructions: [] });
-          continue;
-        }
-        const key = currentTitle; // may be ''
-        if (!acc.has(key)) acc.set(key, { ingredients: [], instructions: [] });
-        acc.get(key)!.ingredients.push(norm(it.text));
-      }
-    }
-
-    // Traverse instruction groups and split by in-list headers
-    for (const g of instructionGroups) {
-      let currentTitle = norm(g.title);
-      for (const it of g.items) {
-        if (it.isHeader) {
-          currentTitle = norm(it.text);
-          if (!acc.has(currentTitle)) acc.set(currentTitle, { ingredients: [], instructions: [] });
-          continue;
-        }
-        const key = currentTitle;
-        if (!acc.has(key)) acc.set(key, { ingredients: [], instructions: [] });
-        acc.get(key)!.instructions.push(norm(it.text));
-      }
-    }
-
-    // Build steps in the map's insertion order
-    const steps = Array.from(acc.entries()).map(([title, val]) => new RecipeStep({
-      title: (title || undefined),
-      ingredients: val.ingredients.filter(Boolean).map(txt => new Ingredient(txt)),
-      instructions: val.instructions.filter(Boolean),
-    }));
-    return steps;
-  };
-
   const handleAddTag = () => {
     if (newTag.trim()) {
       setTags([...tags, newTag.trim()]);
@@ -168,6 +123,20 @@ export default function AddRecipe() {
 
   const handleDeleteTag = (tagToDelete: string) => {
     setTags(tags.filter(tag => tag !== tagToDelete));
+  };
+
+  const toIngredientGroups = (drafts: GroupDraft[]): IngredientGroup[] => {
+    return drafts.map((g) => new IngredientGroup({
+      title: (g.title || '').trim() || undefined,
+      items: g.items.filter(it => !it.isHeader).map(it => new Ingredient((it.text || '').trim())).filter(ing => ing.name)
+    }));
+  };
+
+  const toInstructionGroups = (drafts: GroupDraft[]): InstructionGroup[] => {
+    return drafts.map((g) => new InstructionGroup({
+      title: (g.title || '').trim() || undefined,
+      items: g.items.filter(it => !it.isHeader).map(it => (it.text || '').trim()).filter(Boolean)
+    }));
   };
 
   const handleSave = () => {
@@ -186,7 +155,8 @@ export default function AddRecipe() {
       return;
     }
 
-    const steps = buildStepsFromGroups();
+    const ingredientsGroupsOut = toIngredientGroups(ingredientGroups);
+    const instructionGroupsOut = toInstructionGroups(instructionGroups);
 
     const recipe = new Recipe({
       name: name.trim(),
@@ -198,9 +168,8 @@ export default function AddRecipe() {
       calories: calories.trim() || undefined,
       tags,
       schemaVersion: CURRENT_SCHEMA_VERSION,
-      steps,
-      ingredientsGroups: [],
-      instructionGroups: [],
+      ingredientsGroups: ingredientsGroupsOut,
+      instructionGroups: instructionGroupsOut,
     });
 
     RecipeStore.addRecipe(recipe);
@@ -327,7 +296,7 @@ export default function AddRecipe() {
                   contentContainerStyle={styles.tagsContainer}
                 >
                   {tags.map((tag) => (
-                    <View key={tag} style={[styles.tagContainer, { backgroundColor: colors.tint }]}>
+                    <View key={tag} style={[styles.tagContainer, { backgroundColor: colors.tint }]}> 
                       <Text style={[styles.tagText, { color: colors.background }]}>{tag}</Text>
                       <TouchableOpacity
                         style={styles.tagDeleteButton}

@@ -70,6 +70,8 @@ export class InstructionGroup {
   }
 }
 
+import { CURRENT_SCHEMA_VERSION } from './RecipeMigrations';
+
 export interface Recipe {
   id: string;
   name: string;
@@ -81,10 +83,11 @@ export interface Recipe {
   calories?: string;
   tags: string[];
   userId?: string;
-  schemaVersion?: number; // versioning for future migrations
-  steps?: RecipeStep[]; // optional step-based structure for complex recipes (v2)
-  ingredientsGroups?: IngredientGroup[]; // v3 grouped ingredients
-  instructionGroups?: InstructionGroup[]; // v3 grouped instructions
+  schemaVersion?: number; // persisted schema version
+  // Steps are retained for backward-compatibility in type shape only; constructor no longer derives from them
+  steps?: RecipeStep[];
+  ingredientsGroups?: IngredientGroup[];
+  instructionGroups?: InstructionGroup[];
 }
 
 export class Recipe {
@@ -106,7 +109,7 @@ export class Recipe {
   constructor({
     id = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     name = '',
-    imageUri = '',
+    imageUri = null,
     ingredients = [],
     instructions = [],
     sourceUrl,
@@ -115,7 +118,7 @@ export class Recipe {
     tags = [],
     userId,
     schemaVersion,
-    steps = [],
+    steps, // accepted but not used to derive fields
     ingredientsGroups = [],
     instructionGroups = [],
   }: Partial<Recipe> = {}) {
@@ -123,51 +126,30 @@ export class Recipe {
     this.name = name;
     this.imageUri = imageUri;
 
-    // Prefer v3 groups over steps; if groups empty and steps provided, derive groups from steps for compatibility
-    let normalizedIngredientGroups: IngredientGroup[] = (ingredientsGroups || []).map(g => new IngredientGroup(g));
-    let normalizedInstructionGroups: InstructionGroup[] = (instructionGroups || []).map(g => new InstructionGroup(g));
-
-    if ((normalizedIngredientGroups.length === 0 && normalizedInstructionGroups.length === 0) && (steps && steps.length > 0)) {
-      normalizedIngredientGroups = steps.map(s => new IngredientGroup({ title: s.title, items: s.ingredients }));
-      normalizedInstructionGroups = steps.map(s => new InstructionGroup({ title: s.title, items: s.instructions }));
-    }
+    // Normalize groups only (canonical v2 shape)
+    const normalizedIngredientGroups: IngredientGroup[] = (ingredientsGroups || []).map(g => new IngredientGroup(g));
+    const normalizedInstructionGroups: InstructionGroup[] = (instructionGroups || []).map(g => new InstructionGroup(g));
 
     this.ingredientsGroups = normalizedIngredientGroups;
     this.instructionGroups = normalizedInstructionGroups;
 
-    // Preserve provided steps regardless of whether we derived groups from them
-    if (steps && steps.length > 0) {
+    // Aggregate top-level ingredients/instructions from groups only
+    const aggregatedIngredients: Ingredient[] = [];
+    normalizedIngredientGroups.forEach(group => {
+      group.items.forEach(ing => aggregatedIngredients.push({ id: ing.id, name: ing.name }));
+    });
+
+    const aggregatedInstructions: string[] = [];
+    normalizedInstructionGroups.forEach(group => {
+      group.items.forEach(inst => aggregatedInstructions.push(inst));
+    });
+
+    this.ingredients = aggregatedIngredients.length > 0 ? aggregatedIngredients : ingredients;
+    this.instructions = aggregatedInstructions.length > 0 ? aggregatedInstructions : instructions;
+
+    // Accept but do not derive from steps; preserve if provided
+    if (Array.isArray(steps) && steps.length > 0) {
       this.steps = steps.map(s => new RecipeStep(s));
-    }
-
-    // Aggregate top-level ingredients/instructions based on groups if present
-    if (this.ingredientsGroups.length > 0 || this.instructionGroups.length > 0) {
-      const aggregatedIngredients: Ingredient[] = [];
-      this.ingredientsGroups.forEach(group => {
-        group.items.forEach(ing => aggregatedIngredients.push({ id: ing.id, name: ing.name }));
-      });
-
-      const aggregatedInstructions: string[] = [];
-      this.instructionGroups.forEach(group => {
-        group.items.forEach(inst => aggregatedInstructions.push(inst));
-      });
-
-      this.ingredients = aggregatedIngredients.length > 0 ? aggregatedIngredients : ingredients;
-      this.instructions = aggregatedInstructions.length > 0 ? aggregatedInstructions : instructions;
-    } else if (steps && steps.length > 0) {
-      // Legacy v2 fallback: aggregate from steps
-      const aggregatedIngredients: Ingredient[] = [];
-      steps.forEach(step => step.ingredients.forEach(ing => aggregatedIngredients.push({ id: ing.id, name: ing.name })));
-      const aggregatedInstructions: string[] = [];
-      steps.forEach(step => step.instructions.forEach(inst => aggregatedInstructions.push(inst)));
-      this.ingredients = aggregatedIngredients.length > 0 ? aggregatedIngredients : ingredients;
-      this.instructions = aggregatedInstructions.length > 0 ? aggregatedInstructions : instructions;
-      // Steps already set above; keep this for backward compatibility
-      this.steps = this.steps && this.steps.length > 0 ? this.steps : steps.map(s => new RecipeStep(s));
-    } else {
-      // Legacy/simple recipe (v1)
-      this.ingredients = ingredients;
-      this.instructions = instructions;
     }
 
     this.sourceUrl = sourceUrl;
@@ -176,15 +158,7 @@ export class Recipe {
     this.tags = tags;
     this.userId = userId;
 
-    // Infer schemaVersion
-    if (typeof schemaVersion === 'number') {
-      this.schemaVersion = schemaVersion;
-    } else if (this.ingredientsGroups.length > 0 || this.instructionGroups.length > 0) {
-      this.schemaVersion = 3;
-    } else if (this.steps && this.steps.length > 0) {
-      this.schemaVersion = 2;
-    } else {
-      this.schemaVersion = 1;
-    }
+    // Use provided schemaVersion or default to current
+    this.schemaVersion = typeof schemaVersion === 'number' ? schemaVersion : CURRENT_SCHEMA_VERSION;
   }
 } 

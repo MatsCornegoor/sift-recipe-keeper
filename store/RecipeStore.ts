@@ -75,11 +75,11 @@ class RecipeStore {
     this.notifyListeners();
   }
 
-  updateRecipe(updatedRecipe: Recipe) {
+  async updateRecipe(updatedRecipe: Recipe) {
     const index = this.recipes.findIndex(recipe => recipe.id === updatedRecipe.id);
     if (index !== -1) {
       this.recipes[index] = updatedRecipe;
-      this.saveRecipes();
+      await this.saveRecipes();
       this.notifyListeners();
     }
   }

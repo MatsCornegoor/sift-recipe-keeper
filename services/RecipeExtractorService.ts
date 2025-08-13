@@ -372,7 +372,7 @@ class RecipeExtractorService {
         throw new Error('Missing name in recipe data');
       }
 
-      // Read groups (required), fallback to steps/legacy if absent
+      // Read groups (required), fallback to legacy if absent
       let ingredientsGroups: IngredientGroup[] = [];
       let instructionGroups: InstructionGroup[] = [];
 
@@ -385,11 +385,6 @@ class RecipeExtractorService {
           title: g.title || undefined,
           items: this.normalizeInstructions(g.items),
         }));
-      } else if (Array.isArray(data.steps)) {
-        // Fallback: convert steps
-        const steps = data.steps as any[];
-        ingredientsGroups = steps.map((s) => new IngredientGroup({ title: s.title, items: (s.ingredients || []).map((txt: string) => new Ingredient(txt)) }));
-        instructionGroups = steps.map((s) => new InstructionGroup({ title: s.title, items: this.normalizeInstructions(s.instructions) }));
       } else {
         // Legacy
         const ingredients = Array.isArray(data.ingredients) ? data.ingredients : [];

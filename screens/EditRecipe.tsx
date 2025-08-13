@@ -10,7 +10,7 @@ import {
   Image,
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
-import { Recipe, Ingredient, RecipeStep } from '../models/Recipe';
+import { Recipe, Ingredient, IngredientGroup, InstructionGroup } from '../models/Recipe';
 import RecipeStore from '../store/RecipeStore';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -42,7 +42,7 @@ export default function EditRecipe() {
   const [name, setName] = useState(originalRecipe.name);
   const [imageUri, setImageUri] = useState<string | null>(originalRecipe.imageUri);
   const [ingredientGroups, setIngredientGroups] = useState<GroupDraft[]>(() => {
-    // Prefer v3 grouped structure: flatten into one list with in-list headers
+    // Prefer grouped structure: flatten into one list with in-list headers
     if (Array.isArray(originalRecipe.ingredientsGroups) && originalRecipe.ingredientsGroups.length > 0) {
       const combined: GroupDraft = { id: generateId(), title: '', items: [] };
       originalRecipe.ingredientsGroups.forEach((g) => {
@@ -55,7 +55,7 @@ export default function EditRecipe() {
       if (combined.items.length > 0) return [combined];
     }
 
-    // Fallback to steps (v2)
+    // Fallback to steps (legacy) to populate editor view
     if (Array.isArray(originalRecipe.steps) && originalRecipe.steps.length > 0) {
       const combined: GroupDraft = { id: generateId(), title: '', items: [] };
       originalRecipe.steps.forEach((s) => {
@@ -77,7 +77,7 @@ export default function EditRecipe() {
     return [combined];
   });
   const [instructionGroups, setInstructionGroups] = useState<GroupDraft[]>(() => {
-    // Prefer v3 grouped structure: flatten into one list with in-list headers
+    // Prefer grouped structure: flatten into one list with in-list headers
     if (Array.isArray(originalRecipe.instructionGroups) && originalRecipe.instructionGroups.length > 0) {
       const combined: GroupDraft = { id: generateId(), title: '', items: [] };
       originalRecipe.instructionGroups.forEach((g) => {
@@ -90,7 +90,7 @@ export default function EditRecipe() {
       if (combined.items.length > 0) return [combined];
     }
 
-    // Fallback to steps (v2)
+    // Fallback to steps (legacy)
     if (Array.isArray(originalRecipe.steps) && originalRecipe.steps.length > 0) {
       const combined: GroupDraft = { id: generateId(), title: '', items: [] };
       originalRecipe.steps.forEach((s) => {
@@ -188,47 +188,18 @@ export default function EditRecipe() {
     }
   };
 
-  const buildStepsFromGroups = (): RecipeStep[] => {
-    type Acc = { ingredients: string[]; instructions: string[] };
-    const acc = new Map<string, Acc>();
-    const norm = (t: string) => (t || '').trim();
-
-    // Traverse ingredient groups and split by in-list headers
-    for (const g of ingredientGroups) {
-      let currentTitle = norm(g.title);
-      for (const it of g.items) {
-        if (it.isHeader) {
-          currentTitle = norm(it.text);
-          if (!acc.has(currentTitle)) acc.set(currentTitle, { ingredients: [], instructions: [] });
-          continue;
-        }
-        const key = currentTitle;
-        if (!acc.has(key)) acc.set(key, { ingredients: [], instructions: [] });
-        acc.get(key)!.ingredients.push(norm(it.text));
-      }
-    }
-
-    // Traverse instruction groups and split by in-list headers
-    for (const g of instructionGroups) {
-      let currentTitle = norm(g.title);
-      for (const it of g.items) {
-        if (it.isHeader) {
-          currentTitle = norm(it.text);
-          if (!acc.has(currentTitle)) acc.set(currentTitle, { ingredients: [], instructions: [] });
-          continue;
-        }
-        const key = currentTitle;
-        if (!acc.has(key)) acc.set(key, { ingredients: [], instructions: [] });
-        acc.get(key)!.instructions.push(norm(it.text));
-      }
-    }
-
-    const steps = Array.from(acc.entries()).map(([title, val]) => new RecipeStep({
-      title: (title || undefined),
-      ingredients: val.ingredients.filter(Boolean).map(txt => new Ingredient(txt)),
-      instructions: val.instructions.filter(Boolean),
+  const toIngredientGroups = (drafts: GroupDraft[]): IngredientGroup[] => {
+    return drafts.map((g) => new IngredientGroup({
+      title: (g.title || '').trim() || undefined,
+      items: g.items.filter(it => !it.isHeader).map(it => new Ingredient((it.text || '').trim())).filter(ing => ing.name)
     }));
-    return steps;
+  };
+
+  const toInstructionGroups = (drafts: GroupDraft[]): InstructionGroup[] => {
+    return drafts.map((g) => new InstructionGroup({
+      title: (g.title || '').trim() || undefined,
+      items: g.items.filter(it => !it.isHeader).map(it => (it.text || '').trim()).filter(Boolean)
+    }));
   };
 
   const handleAddTag = () => {
@@ -258,7 +229,9 @@ export default function EditRecipe() {
       return;
     }
 
-    const steps = buildStepsFromGroups();
+    const ingredientsGroupsOut = toIngredientGroups(ingredientGroups);
+    const instructionGroupsOut = toInstructionGroups(instructionGroups);
+
     const updatedRecipe = new Recipe({
       id: originalRecipe.id,
       name: name.trim(),
@@ -270,9 +243,8 @@ export default function EditRecipe() {
       calories: calories.trim() || undefined,
       tags,
       schemaVersion: CURRENT_SCHEMA_VERSION,
-      steps,
-      ingredientsGroups: [],
-      instructionGroups: [],
+      ingredientsGroups: ingredientsGroupsOut,
+      instructionGroups: instructionGroupsOut,
     });
 
     RecipeStore.updateRecipe(updatedRecipe);

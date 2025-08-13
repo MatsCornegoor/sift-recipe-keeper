@@ -40,6 +40,28 @@ function migrateV1ToV2(v1: AnyStoredRecipe): AnyStoredRecipe {
   } as AnyStoredRecipe;
 }
 
+function migrateStepsToV2(vAny: AnyStoredRecipe): AnyStoredRecipe {
+  const steps = Array.isArray(vAny.steps) ? vAny.steps : [];
+  if (steps.length === 0) return vAny;
+
+  const ingredientsGroups = steps.map((s: any) => new IngredientGroup({
+    title: typeof s.title === 'string' ? s.title : undefined,
+    items: (Array.isArray(s.ingredients) ? s.ingredients : []).map(ensureIngredientObject)
+  }));
+
+  const instructionGroups = steps.map((s: any) => new InstructionGroup({
+    title: typeof s.title === 'string' ? s.title : undefined,
+    items: normalizeListOfStrings(s.instructions)
+  }));
+
+  return {
+    ...vAny,
+    ingredientsGroups,
+    instructionGroups,
+    schemaVersion: 2,
+  } as AnyStoredRecipe;
+}
+
 type Migrator = (r: AnyStoredRecipe) => AnyStoredRecipe;
 
 const migrations: Record<number, Migrator> = {
@@ -60,11 +82,19 @@ export function migrateRecipeToLatest(input: AnyStoredRecipe): AnyStoredRecipe {
   }
 
   // Final normalization for latest schema (groups)
-  if (!Array.isArray(out.ingredientsGroups) && Array.isArray(out.ingredients)) {
-    out.ingredientsGroups = [new IngredientGroup({ items: out.ingredients.map(ensureIngredientObject) })];
+  if (!Array.isArray(out.ingredientsGroups)) {
+    if (Array.isArray(out.steps) && out.steps.length > 0) {
+      out = migrateStepsToV2(out);
+    } else if (Array.isArray(out.ingredients)) {
+      out.ingredientsGroups = [new IngredientGroup({ items: out.ingredients.map(ensureIngredientObject) })];
+    }
   }
-  if (!Array.isArray(out.instructionGroups) && (Array.isArray(out.instructions) || typeof out.instructions === 'string')) {
-    out.instructionGroups = [new InstructionGroup({ items: normalizeListOfStrings(out.instructions) })];
+  if (!Array.isArray(out.instructionGroups)) {
+    if (Array.isArray(out.steps) && out.steps.length > 0) {
+      out = migrateStepsToV2(out);
+    } else if (Array.isArray(out.instructions) || typeof out.instructions === 'string') {
+      out.instructionGroups = [new InstructionGroup({ items: normalizeListOfStrings(out.instructions) })];
+    }
   }
 
   out.schemaVersion = CURRENT_SCHEMA_VERSION;
