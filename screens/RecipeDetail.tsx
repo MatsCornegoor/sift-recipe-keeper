@@ -352,9 +352,9 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 12,
+    marginBottom: 20,
     marginTop: 40,
     opacity: 0.7,
   },
