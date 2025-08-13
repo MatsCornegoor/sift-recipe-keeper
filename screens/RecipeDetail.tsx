@@ -18,7 +18,7 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RecipeStore from '../store/RecipeStore';
-import { Recipe, RecipeStep, IngredientGroup, InstructionGroup } from '../models/Recipe';
+import { Recipe, IngredientGroup, InstructionGroup } from '../models/Recipe';
 import { useTheme } from '../hooks/useTheme';
 import Header from '../components/Header';
 import CustomPopup from '../components/CustomPopup';
@@ -138,74 +138,6 @@ export default function RecipeDetail() {
       overflow: 'hidden' as const,
     }
   ];
-
-  const hasGroups = (Array.isArray(recipe.ingredientsGroups) && recipe.ingredientsGroups.length > 0) ||
-                    (Array.isArray(recipe.instructionGroups) && recipe.instructionGroups.length > 0);
-  const hasSteps = Array.isArray(recipe.steps) && recipe.steps.length > 0;
-
-  const renderStepSection = (step: RecipeStep, stepIndex: number) => {
-    return (
-      <View key={step.id}>
-        <View style={styles.sectionHeaderRow}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
-            {step.title ? step.title : `Step ${stepIndex + 1}`}
-          </Text>
-        </View>
-
-        {step.ingredients.length > 0 && (
-          <View style={styles.section}>
-            <Text style={[styles.subSectionTitle, { color: colors.text }]}>Ingredients</Text>
-            {step.ingredients.map((ingredient) => {
-              const isChecked = checkedIngredients.has(ingredient.id);
-              return (
-                <View key={ingredient.id} style={styles.ingredientRow}>
-                  <TouchableOpacity 
-                    onPress={() => handleIngredientCheck(ingredient.id)}
-                    style={styles.checkboxContainer}
-                  >
-                    <Ionicons 
-                      name={isChecked ? 'checkbox' : 'square-outline'} 
-                      size={25} 
-                      color={isChecked ? colors.tint : colors.text} 
-                    />
-                  </TouchableOpacity>
-                  <Text style={[
-                    styles.ingredient, 
-                    { color: colors.text },
-                    isChecked && { opacity: 0.3 }
-                  ]}>
-                    {ingredient.name}
-                  </Text>
-                </View>
-              );
-            })}
-          </View>
-        )}
-
-        {step.instructions.length > 0 && (
-          <View style={styles.section}>
-            <Text style={[styles.subSectionTitle, { color: colors.text }]}>Instructions</Text>
-            {step.instructions.map((instruction, idx) => (
-              <View 
-                key={`${step.id}-${idx}`} 
-                style={[
-                  styles.instructionCard, 
-                  { backgroundColor: colors.cardBackground }
-                ]}
-              >
-                <Text style={[styles.instructionNumber, { color: colors.tint }]}>
-                  {idx + 1}
-                </Text>
-                <Text style={[styles.instruction, { color: colors.text }]}>
-                  {instruction}
-                </Text>
-              </View>
-            ))}
-          </View>
-        )}
-      </View>
-    );
-  };
 
   const renderGroups = () => {
     return (
@@ -345,53 +277,7 @@ export default function RecipeDetail() {
                 </ScrollView>
               )}
 
-              {hasGroups ? (
-                renderGroups()
-              ) : hasSteps ? (
-                <View>
-                  {recipe.steps!.map((step, idx) => renderStepSection(step, idx))}
-                </View>
-              ) : (
-                <>
-                  <View style={styles.section}>
-                    <Text style={[styles.sectionTitle, { color: colors.text }]}>Ingredients</Text>
-                    {recipe.ingredients.map((ingredient) => {
-                      const isChecked = checkedIngredients.has(ingredient.id);
-                      return (
-                        <View key={ingredient.id} style={styles.ingredientRow}>
-                          <TouchableOpacity 
-                            onPress={() => handleIngredientCheck(ingredient.id)}
-                            style={styles.checkboxContainer}
-                          >
-                            <Ionicons 
-                              name={isChecked ? 'checkbox' : 'square-outline'} 
-                              size={25} 
-                              color={isChecked ? colors.tint : colors.text} 
-                            />
-                          </TouchableOpacity>
-                          <Text style={[styles.ingredient, { color: colors.text }, isChecked && { opacity: 0.3 }]}>
-                            {ingredient.name}
-                          </Text>
-                        </View>
-                      );
-                    })}
-                  </View>
-
-                  <View style={styles.section}>
-                    <Text style={[styles.sectionTitle, { color: colors.text }]}>Instructions</Text>
-                    {recipe.instructions.map((instruction, index) => (
-                      <View key={index} style={[styles.instructionCard, { backgroundColor: colors.cardBackground }]}>
-                        <Text style={[styles.instructionNumber, { color: colors.tint }]}>
-                          {index + 1}
-                        </Text>
-                        <Text style={[styles.instruction, { color: colors.text }]}>
-                          {instruction}
-                        </Text>
-                      </View>
-                    ))}
-                  </View>
-                </>
-              )}
+              {renderGroups()}
             </View>
           </View>
         </ContentWrapper>
