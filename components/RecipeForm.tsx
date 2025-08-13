@@ -27,7 +27,7 @@ export default function RecipeForm({ mode, initialRecipe, onSave }: RecipeFormPr
 
   const [ingredientGroups, setIngredientGroups] = useState<GroupDraft[]>(() => {
     if (initialRecipe) {
-      // Prefer grouped structure when available; flatten to single list with optional in-list headers
+      // Use v2+ grouped structure only; flatten to single list with optional in-list headers
       if (Array.isArray(initialRecipe.ingredientsGroups) && initialRecipe.ingredientsGroups.length > 0) {
         const combined: GroupDraft = { id: generateId(), title: '', items: [] };
         initialRecipe.ingredientsGroups.forEach((g) => {
@@ -37,19 +37,8 @@ export default function RecipeForm({ mode, initialRecipe, onSave }: RecipeFormPr
         });
         if (combined.items.length > 0) return [combined];
       }
-      // Fallback legacy: steps
-      if (Array.isArray(initialRecipe.steps) && initialRecipe.steps.length > 0) {
-        const combined: GroupDraft = { id: generateId(), title: '', items: [] };
-        initialRecipe.steps.forEach((s) => {
-          if (s.title && s.title.trim()) combined.items.push({ id: generateId(), text: s.title.trim(), isHeader: true });
-          (s.ingredients || []).forEach((ing) => combined.items.push({ id: generateId(), text: ing.name }));
-        });
-        return [combined];
-      }
-      // Legacy v1 fallback: top-level ingredients
-      const combined: GroupDraft = { id: generateId(), title: '', items: [] };
-      (initialRecipe.ingredients || []).forEach((ing) => combined.items.push({ id: generateId(), text: ing.name }));
-      return [combined];
+      // If no groups present, start with an empty list
+      return [{ id: generateId(), title: '', items: [] }];
     }
     return [{ id: generateId(), title: '', items: [] }];
   });
@@ -65,19 +54,8 @@ export default function RecipeForm({ mode, initialRecipe, onSave }: RecipeFormPr
         });
         if (combined.items.length > 0) return [combined];
       }
-      // Fallback legacy: steps
-      if (Array.isArray(initialRecipe.steps) && initialRecipe.steps.length > 0) {
-        const combined: GroupDraft = { id: generateId(), title: '', items: [] };
-        initialRecipe.steps.forEach((s) => {
-          if (s.title && s.title.trim()) combined.items.push({ id: generateId(), text: s.title.trim(), isHeader: true });
-          (s.instructions || []).forEach((txt) => combined.items.push({ id: generateId(), text: txt }));
-        });
-        return [combined];
-      }
-      // Legacy v1 fallback: top-level instructions
-      const combined: GroupDraft = { id: generateId(), title: '', items: [] };
-      (initialRecipe.instructions || []).forEach((txt) => combined.items.push({ id: generateId(), text: txt }));
-      return [combined];
+      // If no groups present, start with an empty list
+      return [{ id: generateId(), title: '', items: [] }];
     }
     return [{ id: generateId(), title: '', items: [] }];
   });
@@ -147,23 +125,85 @@ export default function RecipeForm({ mode, initialRecipe, onSave }: RecipeFormPr
   };
 
   const toIngredientGroups = (drafts: GroupDraft[]): IngredientGroup[] => {
-    return drafts.map(
-      (g) =>
-        new IngredientGroup({
-          title: (g.title || '').trim() || undefined,
-          items: g.items.filter((it) => !it.isHeader).map((it) => new Ingredient((it.text || '').trim())).filter((ing) => ing.name),
-        })
-    );
+    const output: IngredientGroup[] = [];
+
+    const flushGroup = (title: string | undefined, items: Ingredient[]) => {
+      const cleanTitle = (title || '').trim() || undefined;
+      const cleanItems = items.filter((i) => (i?.name || '').trim());
+      if (cleanTitle || cleanItems.length > 0) {
+        output.push(
+          new IngredientGroup({
+            title: cleanTitle,
+            items: cleanItems,
+          })
+        );
+      }
+    };
+
+    drafts.forEach((g) => {
+      let currentTitle: string | undefined = (g.title || '').trim() || undefined;
+      let currentItems: Ingredient[] = [];
+
+      (g.items || []).forEach((it) => {
+        const text = (it.text || '').trim();
+        if (!text) return;
+        if (it.isHeader) {
+          // Close previous group
+          flushGroup(currentTitle, currentItems);
+          // Start new group titled by this header
+          currentTitle = text;
+          currentItems = [];
+        } else {
+          currentItems.push(new Ingredient(text));
+        }
+      });
+
+      // Flush trailing group
+      flushGroup(currentTitle, currentItems);
+    });
+
+    return output;
   };
 
   const toInstructionGroups = (drafts: GroupDraft[]): InstructionGroup[] => {
-    return drafts.map(
-      (g) =>
-        new InstructionGroup({
-          title: (g.title || '').trim() || undefined,
-          items: g.items.filter((it) => !it.isHeader).map((it) => (it.text || '').trim()).filter(Boolean),
-        })
-    );
+    const output: InstructionGroup[] = [];
+
+    const flushGroup = (title: string | undefined, items: string[]) => {
+      const cleanTitle = (title || '').trim() || undefined;
+      const cleanItems = items.map((t) => (t || '').trim()).filter(Boolean);
+      if (cleanTitle || cleanItems.length > 0) {
+        output.push(
+          new InstructionGroup({
+            title: cleanTitle,
+            items: cleanItems,
+          })
+        );
+      }
+    };
+
+    drafts.forEach((g) => {
+      let currentTitle: string | undefined = (g.title || '').trim() || undefined;
+      let currentItems: string[] = [];
+
+      (g.items || []).forEach((it) => {
+        const text = (it.text || '').trim();
+        if (!text) return;
+        if (it.isHeader) {
+          // Close previous group
+          flushGroup(currentTitle, currentItems);
+          // Start new group titled by this header
+          currentTitle = text;
+          currentItems = [];
+        } else {
+          currentItems.push(text);
+        }
+      });
+
+      // Flush trailing group
+      flushGroup(currentTitle, currentItems);
+    });
+
+    return output;
   };
 
   const handleSave = () => {
