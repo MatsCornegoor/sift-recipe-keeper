@@ -42,37 +42,73 @@ export default function EditRecipe() {
   const [name, setName] = useState(originalRecipe.name);
   const [imageUri, setImageUri] = useState<string | null>(originalRecipe.imageUri);
   const [ingredientGroups, setIngredientGroups] = useState<GroupDraft[]>(() => {
-    const steps = Array.isArray(originalRecipe.steps) && originalRecipe.steps.length > 0
-      ? originalRecipe.steps
-      : [new RecipeStep({ title: '', ingredients: originalRecipe.ingredients, instructions: originalRecipe.instructions })];
-
-    const combined: GroupDraft = { id: generateId(), title: '', items: [] };
-    steps.forEach((s) => {
-      if (s.title && s.title.trim()) {
-        combined.items.push({ id: generateId(), text: s.title.trim(), isHeader: true });
-      }
-      (s.ingredients || []).forEach((ing) => {
-        combined.items.push({ id: generateId(), text: ing.name });
+    // Prefer v3 grouped structure: flatten into one list with in-list headers
+    if (Array.isArray(originalRecipe.ingredientsGroups) && originalRecipe.ingredientsGroups.length > 0) {
+      const combined: GroupDraft = { id: generateId(), title: '', items: [] };
+      originalRecipe.ingredientsGroups.forEach((g) => {
+        const title = (g.title || '').trim();
+        if (title) combined.items.push({ id: generateId(), text: title, isHeader: true });
+        (g.items || []).forEach((ing) => {
+          combined.items.push({ id: generateId(), text: ing.name });
+        });
       });
-    });
+      if (combined.items.length > 0) return [combined];
+    }
 
+    // Fallback to steps (v2)
+    if (Array.isArray(originalRecipe.steps) && originalRecipe.steps.length > 0) {
+      const combined: GroupDraft = { id: generateId(), title: '', items: [] };
+      originalRecipe.steps.forEach((s) => {
+        if (s.title && s.title.trim()) {
+          combined.items.push({ id: generateId(), text: s.title.trim(), isHeader: true });
+        }
+        (s.ingredients || []).forEach((ing) => {
+          combined.items.push({ id: generateId(), text: ing.name });
+        });
+      });
+      return [combined];
+    }
+
+    // Legacy v1 fallback: top-level ingredients
+    const combined: GroupDraft = { id: generateId(), title: '', items: [] };
+    (originalRecipe.ingredients || []).forEach((ing) => {
+      combined.items.push({ id: generateId(), text: ing.name });
+    });
     return [combined];
   });
   const [instructionGroups, setInstructionGroups] = useState<GroupDraft[]>(() => {
-    const steps = Array.isArray(originalRecipe.steps) && originalRecipe.steps.length > 0
-      ? originalRecipe.steps
-      : [new RecipeStep({ title: '', ingredients: originalRecipe.ingredients, instructions: originalRecipe.instructions })];
-
-    const combined: GroupDraft = { id: generateId(), title: '', items: [] };
-    steps.forEach((s) => {
-      if (s.title && s.title.trim()) {
-        combined.items.push({ id: generateId(), text: s.title.trim(), isHeader: true });
-      }
-      (s.instructions || []).forEach((txt) => {
-        combined.items.push({ id: generateId(), text: txt });
+    // Prefer v3 grouped structure: flatten into one list with in-list headers
+    if (Array.isArray(originalRecipe.instructionGroups) && originalRecipe.instructionGroups.length > 0) {
+      const combined: GroupDraft = { id: generateId(), title: '', items: [] };
+      originalRecipe.instructionGroups.forEach((g) => {
+        const title = (g.title || '').trim();
+        if (title) combined.items.push({ id: generateId(), text: title, isHeader: true });
+        (g.items || []).forEach((txt) => {
+          combined.items.push({ id: generateId(), text: txt });
+        });
       });
-    });
+      if (combined.items.length > 0) return [combined];
+    }
 
+    // Fallback to steps (v2)
+    if (Array.isArray(originalRecipe.steps) && originalRecipe.steps.length > 0) {
+      const combined: GroupDraft = { id: generateId(), title: '', items: [] };
+      originalRecipe.steps.forEach((s) => {
+        if (s.title && s.title.trim()) {
+          combined.items.push({ id: generateId(), text: s.title.trim(), isHeader: true });
+        }
+        (s.instructions || []).forEach((txt) => {
+          combined.items.push({ id: generateId(), text: txt });
+        });
+      });
+      return [combined];
+    }
+
+    // Legacy v1 fallback: top-level instructions
+    const combined: GroupDraft = { id: generateId(), title: '', items: [] };
+    (originalRecipe.instructions || []).forEach((txt) => {
+      combined.items.push({ id: generateId(), text: txt });
+    });
     return [combined];
   });
   const [cookingTime, setCookingTime] = useState(originalRecipe.cookingTime || '');
