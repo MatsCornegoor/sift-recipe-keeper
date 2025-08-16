@@ -145,7 +145,7 @@ export default function AddRecipeUrl() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <Header title="Add recipe from website" />
+      <Header title="Add recipe" />
       <ScrollView 
         style={{ flex: 1 }}
         contentContainerStyle={{ flexGrow: 1 }}
