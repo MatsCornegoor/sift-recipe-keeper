@@ -9,6 +9,7 @@ import Header from '../../components/Header';
 import ContentWrapper from '../../components/ContentWrapper';
 import CustomPopup from '../../components/CustomPopup';
 import { Recipe } from '../../models/Recipe';
+import { migrateRecipeToLatest } from '../../models/RecipeMigrations';
 import { zip, unzip } from 'react-native-zip-archive';
 import { AppNavigationProp } from '../../navigation/types';
 
@@ -155,12 +156,13 @@ export default function ImportExport() {
         const importedRecipes = JSON.parse(recipesJson);
 
         for (const recipeData of importedRecipes) {
-          recipeData.id = Date.now() + '-' + Math.random().toString(36).substring(2);
+          const migratedRecipeData = migrateRecipeToLatest(recipeData);
+          migratedRecipeData.id = Date.now() + '-' + Math.random().toString(36).substring(2);
           
-          if (recipeData.imageUri) {
+          if (migratedRecipeData.imageUri) {
             try {
               const timestamp = Date.now();
-              const originalFileName = recipeData.imageUri.split('/').pop();
+              const originalFileName = migratedRecipeData.imageUri.split('/').pop();
               const fileName = `${timestamp}-${originalFileName}`;
               const imageDir = RNFS.DocumentDirectoryPath + '/recipe-images/';
               if (!(await RNFS.exists(imageDir))) {
@@ -168,15 +170,15 @@ export default function ImportExport() {
               }
               const newImagePath = imageDir + fileName;
 
-              await RNFS.copyFile(tempDir + recipeData.imageUri, newImagePath);
-              recipeData.imageUri = newImagePath;
+              await RNFS.copyFile(tempDir + migratedRecipeData.imageUri, newImagePath);
+              migratedRecipeData.imageUri = newImagePath;
             } catch (error) {
-              console.error('Error importing image for recipe:', recipeData.title, error);
-              recipeData.imageUri = '';
+              console.error('Error importing image for recipe:', migratedRecipeData.title, error);
+              migratedRecipeData.imageUri = '';
             }
           }
 
-          const recipe = new Recipe(recipeData);
+          const recipe = new Recipe(migratedRecipeData);
           await RecipeStore.addRecipe(recipe);
         }
 
