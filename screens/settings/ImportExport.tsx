@@ -41,8 +41,8 @@ export default function ImportExport() {
 
     try {
       // Create a temporary directory for our export
-      const tempDir = RNFS.TemporaryDirectoryPath + '/export/';
-      const tempImagesDir = tempDir + 'images/';
+      const tempDir = RNFS.TemporaryDirectoryPath + '/sift-export';
+      const tempImagesDir = tempDir + '/images';
       const zipPath = RNFS.TemporaryDirectoryPath + '/recipes-export.zip';
       
       // Ensure directories exist and are clean
@@ -61,7 +61,7 @@ export default function ImportExport() {
         
         if (recipe.imageUri && await RNFS.exists(recipe.imageUri)) {
           const fileName = recipe.imageUri.split('/').pop() || '';
-          const newImagePath = tempImagesDir + fileName;
+          const newImagePath = tempImagesDir + '/' + fileName;
           
           try {
             await RNFS.copyFile(recipe.imageUri, newImagePath);
@@ -70,13 +70,16 @@ export default function ImportExport() {
             console.error('Error copying image:', error);
             recipeData.imageUri = '';
           }
+        } else if (recipe.imageUri) {
+          // Image URI exists but file doesn't, so clear it
+          recipeData.imageUri = '';
         }
         
         return recipeData;
       }));
 
       // Save recipes JSON
-      const jsonPath = tempDir + 'recipes.json';
+      const jsonPath = tempDir + '/recipes.json';
       await RNFS.writeFile(
         jsonPath,
         JSON.stringify(exportRecipes, null, 2)
@@ -152,7 +155,7 @@ export default function ImportExport() {
 
         await unzip(zipPath, tempDir);
 
-        const recipesJson = await RNFS.readFile(tempDir + 'recipes.json');
+        const recipesJson = await RNFS.readFile(tempDir + '/recipes.json');
         const importedRecipes = JSON.parse(recipesJson);
 
         for (const recipeData of importedRecipes) {
@@ -168,9 +171,10 @@ export default function ImportExport() {
               if (!(await RNFS.exists(imageDir))) {
                 await RNFS.mkdir(imageDir);
               }
-              const newImagePath = imageDir + fileName;
+              const newImagePath = `file://${imageDir}${fileName}`;
 
-              await RNFS.copyFile(tempDir + migratedRecipeData.imageUri, newImagePath);
+              const sourceImagePath = `${tempDir}/${migratedRecipeData.imageUri}`;
+              await RNFS.copyFile(sourceImagePath, newImagePath);
               migratedRecipeData.imageUri = newImagePath;
             } catch (error) {
               console.error('Error importing image for recipe:', migratedRecipeData.title, error);
