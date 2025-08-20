@@ -60,7 +60,16 @@ export default function TextInputPopup({
                     onPress={() => setSelectedType('item')}
                     style={[
                       styles.tab,
-                      { borderColor: colors.inputBorder, backgroundColor: selectedType === 'item' ? colors.inputBackground : 'transparent', opacity: selectedType === 'item' ? 1 : 0.5 },
+                      {
+                        borderColor: colors.inputBorder,
+                        backgroundColor:
+                          selectedType === 'item'
+                            ? colors.background === '#FFFFFF'
+                              ? colors.inputBackground
+                              : `${colors.tint}33`
+                            : colors.cardBackground,
+                        opacity: selectedType === 'item' ? 1 : 0.5,
+                      },
                     ]}
                   >
                     <Text style={[styles.tabText, { color: colors.text }]}>Item</Text>
@@ -69,7 +78,16 @@ export default function TextInputPopup({
                     onPress={() => setSelectedType('header')}
                     style={[
                       styles.tab,
-                      { borderColor: colors.inputBorder, backgroundColor: selectedType === 'header' ? colors.inputBackground : 'transparent', opacity: selectedType === 'header' ? 1 : 0.5 },
+                      {
+                        borderColor: colors.inputBorder,
+                        backgroundColor:
+                          selectedType === 'header'
+                            ? colors.background === '#FFFFFF'
+                              ? colors.inputBackground
+                              : `${colors.tint}33`
+                            : colors.cardBackground,
+                        opacity: selectedType === 'header' ? 1 : 0.5,
+                      },
                     ]}
                   >
                     <Text style={[styles.tabText, { color: colors.text }]}>Header</Text>
@@ -148,12 +166,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   input: {
-    borderBottomWidth: 1,
-    borderWidth: 0,
-    borderRadius: 0,
+    borderWidth: 1,
+    borderRadius: 8,
     paddingHorizontal: 12,
-    paddingVertical: 12,
     fontSize: 16,
+    height: 48,
   },
   buttonsRow: {
     flexDirection: 'row',

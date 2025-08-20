@@ -267,14 +267,13 @@ export default function RecipeForm({ mode, initialRecipe, onSave }: RecipeFormPr
         form: { padding: 16 },
         sectionTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 12, marginTop: 40, opacity: 0.7 },
         input: {
-          borderBottomWidth: 1,
-          borderWidth: 0,
+          borderWidth: 1,
           borderColor: '#ddd',
-          borderRadius: 0,
+          borderRadius: 8,
           marginBottom: 16,
           fontSize: 16,
-          minHeight: 48,
-          padding: 12,
+          height: 48,
+          paddingHorizontal: 12,
           textAlignVertical: 'center',
           lineHeight: 20,
         },
@@ -372,7 +371,7 @@ export default function RecipeForm({ mode, initialRecipe, onSave }: RecipeFormPr
         <Text style={[styles.detailLabel, { color: colors.text }]}>Tags</Text>
         <View style={styles.ingredientInput}>
           <TextInput
-            style={[styles.input, { flex: 1, marginBottom: 0, borderColor: colors.inputBorder, color: colors.text, height: 48 }]}
+            style={[styles.input, { flex: 1, marginBottom: 0, borderColor: colors.inputBorder, color: colors.text }]}
             placeholder="e.g. vegetarian"
             placeholderTextColor={colors.placeholderText}
             value={newTag}
