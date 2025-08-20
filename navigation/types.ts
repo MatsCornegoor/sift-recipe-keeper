@@ -13,4 +13,12 @@ export type RootStackParamList = {
   Recipes: undefined;
 };
 
+export type SettingsStackParamList = {
+  Settings: undefined;
+  Appearance: undefined;
+  ImportExport: undefined;
+  ExportRecipes: undefined;
+  About: undefined;
+};
+
 export type AppNavigationProp = NativeStackNavigationProp<RootStackParamList>; 
