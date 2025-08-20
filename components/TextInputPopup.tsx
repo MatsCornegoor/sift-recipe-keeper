@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Modal, View, Text, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, NativeSyntheticEvent, TextInputSelectionChangeEventData } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Modal, View, Text, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
 
 interface TextInputPopupProps {
@@ -30,33 +30,19 @@ export default function TextInputPopup({
 }: TextInputPopupProps) {
   const { colors } = useTheme();
   const [value, setValue] = useState(initialValue);
-  const inputRef = useRef<TextInput>(null);
-  const [initialSelection, setInitialSelection] = useState<{ start: number; end: number } | undefined>(undefined);
   const [selectedType, setSelectedType] = useState<'item' | 'header'>(initialType);
+  const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
     if (visible) {
       setValue(initialValue);
-      setInitialSelection({ start: initialValue.length, end: initialValue.length });
       setSelectedType(initialType || 'item');
-      const id = setTimeout(() => inputRef.current?.focus(), 50);
-      return () => clearTimeout(id);
-    } else {
-      setInitialSelection(undefined);
+      setIsFocused(false);
     }
   }, [visible, initialValue, initialType]);
 
   const handleConfirm = () => {
     onConfirm(value, selectedType);
-  };
-
-  const handleSelectionChange = (
-    _e: NativeSyntheticEvent<TextInputSelectionChangeEventData>
-  ) => {
-    if (initialSelection) {
-      // Stop controlling selection after the first real selection event
-      setInitialSelection(undefined);
-    }
   };
 
   const effectivePlaceholder = selectedType === 'header' ? 'Enter header title' : placeholder;
@@ -90,7 +76,8 @@ export default function TextInputPopup({
                   </TouchableOpacity>
                 </View>
                 <TextInput
-                  ref={inputRef}
+                  autoFocus
+                  onFocus={() => setIsFocused(true)}
                   style={[styles.input, { borderColor: colors.inputBorder, color: colors.text }]}
                   placeholder={effectivePlaceholder}
                   placeholderTextColor={colors.placeholderText}
@@ -98,8 +85,7 @@ export default function TextInputPopup({
                   onChangeText={setValue}
                   returnKeyType="done"
                   onSubmitEditing={handleConfirm}
-                  selection={initialSelection}
-                  onSelectionChange={handleSelectionChange}
+                  selection={isFocused ? undefined : { start: initialValue.length, end: initialValue.length }}
                 />
                 <View style={styles.buttonsRow}>
                   {onDelete ? (
