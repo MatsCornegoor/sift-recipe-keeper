@@ -6,11 +6,13 @@ import AddRecipe from '../screens/AddRecipe';
 import AddRecipeUrl from '../screens/AddRecipeUrl';
 import EditRecipe from '../screens/EditRecipe';
 import RecipeDetail from '../screens/RecipeDetail';
+import ImportExport from '../screens/settings/ImportExport';
+import ExportRecipes from '../screens/settings/ExportRecipes';
 import About from '../screens/settings/About';
 import Appearance from '../screens/settings/Appearance';
-import ImportExport from '../screens/settings/ImportExport';
 import Settings from '../screens/settings/Settings';
 import RecipeList from '../screens/RecipeList';
+import { useTheme } from '../hooks/useTheme';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +29,7 @@ export default function AppNavigator() {
         <Stack.Screen name="About" component={About} />
         <Stack.Screen name="Appearance" component={Appearance} />
         <Stack.Screen name="ImportExport" component={ImportExport} />
+        <Stack.Screen name="ExportRecipes" component={ExportRecipes} />
       </Stack.Navigator>
     </NavigationContainer>
   );

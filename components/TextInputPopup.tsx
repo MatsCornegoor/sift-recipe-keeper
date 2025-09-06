@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Modal, View, Text, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, NativeSyntheticEvent, TextInputSelectionChangeEventData } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Modal, View, Text, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
 
 interface TextInputPopupProps {
@@ -12,6 +12,8 @@ interface TextInputPopupProps {
   onConfirm: (value: string, type: 'item' | 'header') => void;
   onCancel?: () => void;
   initialType?: 'item' | 'header';
+  onDelete?: () => void;
+  deleteText?: string;
 }
 
 export default function TextInputPopup({
@@ -20,40 +22,27 @@ export default function TextInputPopup({
   initialValue = '',
   placeholder = 'Enter text',
   confirmText = 'Save',
-  cancelText = 'Cancel',
   onConfirm,
   onCancel,
   initialType = 'item',
+  onDelete,
+  deleteText = 'Delete',
 }: TextInputPopupProps) {
   const { colors } = useTheme();
   const [value, setValue] = useState(initialValue);
-  const inputRef = useRef<TextInput>(null);
-  const [initialSelection, setInitialSelection] = useState<{ start: number; end: number } | undefined>(undefined);
   const [selectedType, setSelectedType] = useState<'item' | 'header'>(initialType);
+  const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
     if (visible) {
       setValue(initialValue);
-      setInitialSelection({ start: initialValue.length, end: initialValue.length });
       setSelectedType(initialType || 'item');
-      const id = setTimeout(() => inputRef.current?.focus(), 50);
-      return () => clearTimeout(id);
-    } else {
-      setInitialSelection(undefined);
+      setIsFocused(false);
     }
   }, [visible, initialValue, initialType]);
 
   const handleConfirm = () => {
     onConfirm(value, selectedType);
-  };
-
-  const handleSelectionChange = (
-    _e: NativeSyntheticEvent<TextInputSelectionChangeEventData>
-  ) => {
-    if (initialSelection) {
-      // Stop controlling selection after the first real selection event
-      setInitialSelection(undefined);
-    }
   };
 
   const effectivePlaceholder = selectedType === 'header' ? 'Enter header title' : placeholder;
@@ -65,38 +54,64 @@ export default function TextInputPopup({
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.kav}>
             <TouchableWithoutFeedback>
               <View style={[styles.sheet, { backgroundColor: colors.background }]}>
-                {!!title && <Text style={[styles.title, { color: colors.text }]}>{title}</Text>}
+
                 <View style={styles.tabsRow}>
                   <TouchableOpacity
                     onPress={() => setSelectedType('item')}
-                    style={[styles.tab, { borderColor: colors.inputBorder, backgroundColor: selectedType === 'item' ? colors.tint : 'transparent' }]}
+                    style={[
+                      styles.tab,
+                      {
+                        borderColor: colors.inputBorder,
+                        backgroundColor:
+                          selectedType === 'item'
+                            ? colors.background === '#FFFFFF'
+                              ? colors.inputBackground
+                              : `${colors.tint}33`
+                            : colors.cardBackground,
+                        opacity: selectedType === 'item' ? 1 : 0.5,
+                      },
+                    ]}
                   >
-                    <Text style={[styles.tabText, { color: selectedType === 'item' ? colors.background : colors.text }]}>Item</Text>
+                    <Text style={[styles.tabText, { color: colors.text }]}>Item</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => setSelectedType('header')}
-                    style={[styles.tab, { borderColor: colors.inputBorder, backgroundColor: selectedType === 'header' ? colors.tint : 'transparent' }]}
+                    style={[
+                      styles.tab,
+                      {
+                        borderColor: colors.inputBorder,
+                        backgroundColor:
+                          selectedType === 'header'
+                            ? colors.background === '#FFFFFF'
+                              ? colors.inputBackground
+                              : `${colors.tint}33`
+                            : colors.cardBackground,
+                        opacity: selectedType === 'header' ? 1 : 0.5,
+                      },
+                    ]}
                   >
-                    <Text style={[styles.tabText, { color: selectedType === 'header' ? colors.background : colors.text }]}>Header</Text>
+                    <Text style={[styles.tabText, { color: colors.text }]}>Header</Text>
                   </TouchableOpacity>
                 </View>
                 <TextInput
-                  ref={inputRef}
-                  style={[styles.input, { backgroundColor: colors.inputBackground, borderColor: colors.inputBorder, color: colors.text }]}
+                  autoFocus
+                  onFocus={() => setIsFocused(true)}
+                  style={[styles.input, { borderColor: colors.inputBorder, color: colors.text }]}
                   placeholder={effectivePlaceholder}
                   placeholderTextColor={colors.placeholderText}
                   value={value}
                   onChangeText={setValue}
                   returnKeyType="done"
                   onSubmitEditing={handleConfirm}
-                  selection={initialSelection}
-                  onSelectionChange={handleSelectionChange}
+                  selection={isFocused ? undefined : { start: initialValue.length, end: initialValue.length }}
                 />
                 <View style={styles.buttonsRow}>
-                  <TouchableOpacity style={[styles.button, styles.cancel]} onPress={onCancel}>
-                    <Text style={[styles.buttonText, { color: colors.text }]}>{cancelText}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={[styles.button, { backgroundColor: colors.tint }]} onPress={handleConfirm}>
+                  {onDelete ? (
+                    <TouchableOpacity style={[styles.button]} onPress={onDelete}>
+                      <Text style={[styles.buttonText, { color: colors.text }]}>{deleteText}</Text>
+                    </TouchableOpacity>
+                  ) : null}
+                  <TouchableOpacity style={[styles.button, styles.confirm, { backgroundColor: colors.tint }]} onPress={handleConfirm}>
                     <Text style={[styles.buttonText, { color: colors.background }]}>{confirmText}</Text>
                   </TouchableOpacity>
                 </View>
@@ -120,6 +135,7 @@ const styles = StyleSheet.create({
   },
   sheet: {
     padding: 16,
+    paddingTop: 32,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
     shadowColor: '#000',
@@ -136,7 +152,7 @@ const styles = StyleSheet.create({
   tabsRow: {
     flexDirection: 'row',
     gap: 8,
-    marginBottom: 12,
+    marginBottom: 24,
   },
   tab: {
     flex: 1,
@@ -153,13 +169,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 12,
-    paddingVertical: 12,
     fontSize: 16,
+    height: 48,
   },
   buttonsRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginTop: 12,
+    justifyContent: 'flex-start',
+    marginTop: 24,
     gap: 8,
   },
   button: {
@@ -167,8 +183,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 8,
   },
-  cancel: {
-    backgroundColor: 'transparent',
+  confirm: {
+    marginLeft: 'auto',
   },
   buttonText: {
     fontSize: 16,

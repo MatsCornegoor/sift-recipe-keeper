@@ -136,26 +136,25 @@ export default function AddRecipeUrl() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <Header title="Add recipe from website" />
+      <Header title="Add recipe" />
       <ScrollView 
         style={{ flex: 1 }}
         contentContainerStyle={{ flexGrow: 1 }}
       >
         <ContentWrapper>
           <View style={styles.container}>
-            <TextInput
-              style={[styles.input, {
-                backgroundColor: colors.inputBackground,
-                borderColor: colors.inputBorder,
-                color: colors.text,
-              }]}
-              placeholder="www.cookingwebite.com/recipe"
-              placeholderTextColor={colors.deleteButton}
-              value={url}
-              onChangeText={setUrl}
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
+                        <TextInput
+               style={[styles.input, {
+                 borderColor: colors.inputBorder,
+                 color: colors.text,
+               }]}
+               placeholder="www.cookingwebite.com/recipe"
+               placeholderTextColor={colors.deleteButton}
+               value={url}
+               onChangeText={setUrl}
+               autoCapitalize="none"
+               autoCorrect={false}
+             />
 
             <TouchableOpacity
               style={[styles.button, { backgroundColor: colors.tint }]}
@@ -198,8 +197,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   input: {
-    borderWidth: 1,
-    borderRadius: 8,
+    borderBottomWidth: 1,
+    borderWidth: 0,
+    borderRadius: 0,
     padding: 12,
     marginBottom: 16,
     fontSize: 16,
@@ -227,8 +227,9 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   instructionsInput: {
-    borderWidth: 1,
-    borderRadius: 8,
+    borderBottomWidth: 1,
+    borderWidth: 0,
+    borderRadius: 0,
     padding: 12,
     fontSize: 16,
     minHeight: 100,

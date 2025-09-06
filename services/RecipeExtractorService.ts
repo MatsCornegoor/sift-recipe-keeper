@@ -108,7 +108,7 @@ class RecipeExtractorService {
         - Instructions: return lists of short, granular sub-steps per group.
         - Tags: 3-5 relevant tags.
         - Calories: estimate if missing.
-        - If the source has sectioned content (headings like "Sauce", "Pasta", "Filling", "Dough"), create matching groups. Use the same set of titles for both ingredientsGroups and instructionGroups when applicable. Otherwise return a single group with an empty title.${hintsText}
+        - If the source has sectioned content (headings like "Sauce", "Pasta", "Filling", "Dough"), create matching groups. Use the same set of titles for both ingredientsGroups and instructionGroups when applicable. Use the provided section hints for group titles only if they represent a distinct part of the recipe (e.g., "For the Frosting"). Do NOT use generic titles like "Ingredients" or "Instructions." If no meaningful sections are found, return a single group with an empty title.${hintsText}
 
         Content:
         ${cleanContent}
@@ -154,7 +154,7 @@ class RecipeExtractorService {
           const lower = normalized.toLowerCase();
           // Skip generic headings
           if ([
-            'ingredients', 'ingredient', 'instructions', 'method', 'directions', 'notes', 'nutrition', 'equipment'
+            'ingredients', 'ingredient', 'instructions', 'method', 'directions', 'notes', 'nutrition', 'equipment', 'let\'s start', 'lets start', 'get started', 'getting started', 'summary', 'recipe summary'
           ].includes(lower)) continue;
           // Title case
           const title = normalized.replace(/\w\S*/g, (w) => w.charAt(0).toUpperCase() + w.slice(1));
@@ -372,7 +372,7 @@ class RecipeExtractorService {
         throw new Error('Missing name in recipe data');
       }
 
-      // Read groups (required), fallback to steps/legacy if absent
+      // Read groups (required), fallback to legacy if absent
       let ingredientsGroups: IngredientGroup[] = [];
       let instructionGroups: InstructionGroup[] = [];
 
@@ -385,11 +385,6 @@ class RecipeExtractorService {
           title: g.title || undefined,
           items: this.normalizeInstructions(g.items),
         }));
-      } else if (Array.isArray(data.steps)) {
-        // Fallback: convert steps
-        const steps = data.steps as any[];
-        ingredientsGroups = steps.map((s) => new IngredientGroup({ title: s.title, items: (s.ingredients || []).map((txt: string) => new Ingredient(txt)) }));
-        instructionGroups = steps.map((s) => new InstructionGroup({ title: s.title, items: this.normalizeInstructions(s.instructions) }));
       } else {
         // Legacy
         const ingredients = Array.isArray(data.ingredients) ? data.ingredients : [];

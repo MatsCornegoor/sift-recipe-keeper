@@ -59,12 +59,12 @@ export function migrateRecipeToLatest(input: AnyStoredRecipe): AnyStoredRecipe {
     out.schemaVersion = version;
   }
 
-  // Final normalization for latest schema (groups)
-  if (!Array.isArray(out.ingredientsGroups) && Array.isArray(out.ingredients)) {
-    out.ingredientsGroups = [new IngredientGroup({ items: out.ingredients.map(ensureIngredientObject) })];
+  // Ensure arrays exist for latest schema
+  if (!Array.isArray(out.ingredientsGroups)) {
+    out.ingredientsGroups = [];
   }
-  if (!Array.isArray(out.instructionGroups) && (Array.isArray(out.instructions) || typeof out.instructions === 'string')) {
-    out.instructionGroups = [new InstructionGroup({ items: normalizeListOfStrings(out.instructions) })];
+  if (!Array.isArray(out.instructionGroups)) {
+    out.instructionGroups = [];
   }
 
   out.schemaVersion = CURRENT_SCHEMA_VERSION;

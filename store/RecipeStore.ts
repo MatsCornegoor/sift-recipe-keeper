@@ -49,6 +49,16 @@ class RecipeStore {
 
   async addRecipe(recipe: Recipe) {
     console.log('Adding recipe with tags:', recipe.tags);
+
+    if (recipe.imageUri && !recipe.imageUri.startsWith('file://')) {
+      try {
+        const newPath = await this.copyImageToAppDirectory(recipe.imageUri);
+        recipe.imageUri = newPath;
+      } catch (error) {
+        console.error('Error copying image:', error);
+        recipe.imageUri = null;
+      }
+    }
     this.recipes.push(recipe);
     await this.saveRecipes();
     this.notifyListeners();
@@ -75,11 +85,22 @@ class RecipeStore {
     this.notifyListeners();
   }
 
-  updateRecipe(updatedRecipe: Recipe) {
+  async updateRecipe(updatedRecipe: Recipe) {
     const index = this.recipes.findIndex(recipe => recipe.id === updatedRecipe.id);
     if (index !== -1) {
+      const oldRecipe = this.recipes[index];
+      if (updatedRecipe.imageUri && updatedRecipe.imageUri !== oldRecipe.imageUri && !updatedRecipe.imageUri.startsWith('file://')) {
+        try {
+          const newPath = await this.copyImageToAppDirectory(updatedRecipe.imageUri);
+          updatedRecipe.imageUri = newPath;
+        } catch (error) {
+          console.error('Error copying image:', error);
+          updatedRecipe.imageUri = oldRecipe.imageUri;
+        }
+      }
+
       this.recipes[index] = updatedRecipe;
-      this.saveRecipes();
+      await this.saveRecipes();
       this.notifyListeners();
     }
   }
@@ -107,6 +128,17 @@ class RecipeStore {
 
   getAllRecipes(): Recipe[] {
     return this.recipes.map(r => new Recipe(r));
+  }
+  
+  private async copyImageToAppDirectory(uri: string): Promise<string> {
+    const fileName = uri.split('/').pop();
+    const imageDir = `${RNFS.DocumentDirectoryPath}/recipe-images`;
+    if (!(await RNFS.exists(imageDir))) {
+      await RNFS.mkdir(imageDir);
+    }
+    const newPath = `file://${imageDir}/${Date.now()}-${fileName}`;
+    await RNFS.copyFile(uri, newPath);
+    return newPath;
   }
 }
 

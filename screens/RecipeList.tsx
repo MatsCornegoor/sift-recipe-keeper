@@ -96,17 +96,16 @@ export default function RecipeList({ navigation }: { navigation: any }) {
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={[styles.searchContainer, { borderBottomColor: colors.inputBorder }]}>
           <Ionicons name="search" size={20} color={colors.deleteButton} style={styles.searchIcon} />
-          <TextInput
-            style={[styles.searchInput, { 
-              color: colors.text,
-              backgroundColor: colors.inputBackground,
-            }]}
-            placeholder="Search recipes..."
-            placeholderTextColor={colors.deleteButton}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            clearButtonMode="while-editing"
-          />
+                    <TextInput
+             style={[styles.searchInput, { 
+               color: colors.text,
+             }]}
+             placeholder="Search recipes..."
+             placeholderTextColor={colors.deleteButton}
+             value={searchQuery}
+             onChangeText={setSearchQuery}
+             clearButtonMode="while-editing"
+           />
         </View>
 
         <RecipeGrid 

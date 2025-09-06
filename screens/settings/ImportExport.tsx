@@ -9,13 +9,15 @@ import Header from '../../components/Header';
 import ContentWrapper from '../../components/ContentWrapper';
 import CustomPopup from '../../components/CustomPopup';
 import { Recipe } from '../../models/Recipe';
+import { migrateRecipeToLatest } from '../../models/RecipeMigrations';
 import { zip, unzip } from 'react-native-zip-archive';
-import { AppNavigationProp } from '../../navigation/types';
+import { AppNavigationProp, SettingsStackParamList } from '../../navigation/types';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 
 export default function ImportExport() {
   const { colors } = useTheme();
-  const navigation = useNavigation<AppNavigationProp>();
+  const navigation = useNavigation<NativeStackNavigationProp<SettingsStackParamList>>();
   const [showPopup, setShowPopup] = useState(false);
   const [popupConfig, setPopupConfig] = useState<{
     title: string;
@@ -27,93 +29,8 @@ export default function ImportExport() {
     buttons: [],
   });
 
-  const handleExport = async () => {
-    if (Platform.OS === 'web') {
-      setPopupConfig({
-        title: 'Not Supported',
-        message: 'Export is only available on mobile devices.',
-        buttons: [{ text: 'OK', onPress: () => setShowPopup(false) }],
-      });
-      setShowPopup(true);
-      return;
-    }
-
-    try {
-      // Create a temporary directory for our export
-      const tempDir = RNFS.TemporaryDirectoryPath + '/export/';
-      const tempImagesDir = tempDir + 'images/';
-      const zipPath = RNFS.TemporaryDirectoryPath + '/recipes-export.zip';
-      
-      // Ensure directories exist and are clean
-      if (await RNFS.exists(tempDir)) {
-        await RNFS.unlink(tempDir);
-      }
-      await RNFS.mkdir(tempDir);
-      await RNFS.mkdir(tempImagesDir);
-
-      // Get all recipes
-      const recipes = RecipeStore.getAllRecipes();
-      
-      // Copy images and update paths
-      const exportRecipes = await Promise.all(recipes.map(async (recipe: Recipe) => {
-        const recipeData = { ...recipe };
-        
-        if (recipe.imageUri && await RNFS.exists(recipe.imageUri)) {
-          const fileName = recipe.imageUri.split('/').pop() || '';
-          const newImagePath = tempImagesDir + fileName;
-          
-          try {
-            await RNFS.copyFile(recipe.imageUri, newImagePath);
-            recipeData.imageUri = 'images/' + fileName;
-          } catch (error) {
-            console.error('Error copying image:', error);
-            recipeData.imageUri = '';
-          }
-        }
-        
-        return recipeData;
-      }));
-
-      // Save recipes JSON
-      const jsonPath = tempDir + 'recipes.json';
-      await RNFS.writeFile(
-        jsonPath,
-        JSON.stringify(exportRecipes, null, 2)
-      );
-
-      // Create zip file
-      await zip(tempDir, zipPath);
-
-      if (Platform.OS === 'android') {
-        try {
-          const downloadPath = `${RNFS.DownloadDirectoryPath}/sift-recipes-${Date.now()}.zip`;
-          await RNFS.moveFile(zipPath, downloadPath);
-          setPopupConfig({
-            title: 'Export Successful',
-            message: 'Your recipes have been saved to the Downloads folder.',
-            buttons: [{ text: 'OK', onPress: () => setShowPopup(false) }],
-          });
-        } catch (err) {
-          console.warn(err);
-          throw err;
-        }
-      } else {
-        // Share on iOS
-        await Share.share({ url: `file://${zipPath}` });
-      }
-
-      // Clean up temp files
-      await RNFS.unlink(tempDir);
-
-    } catch (error) {
-      console.error('Export error:', error);
-      setPopupConfig({
-        title: 'Export Failed',
-        message: 'There was an error exporting your recipes. Please try again.',
-        buttons: [{ text: 'OK', onPress: () => setShowPopup(false) }],
-      });
-    }
-    setShowPopup(true);
+  const handleExportPress = () => {
+    navigation.navigate('ExportRecipes');
   };
 
   const handleImport = async () => {
@@ -151,32 +68,34 @@ export default function ImportExport() {
 
         await unzip(zipPath, tempDir);
 
-        const recipesJson = await RNFS.readFile(tempDir + 'recipes.json');
+        const recipesJson = await RNFS.readFile(tempDir + '/recipes.json');
         const importedRecipes = JSON.parse(recipesJson);
 
         for (const recipeData of importedRecipes) {
-          recipeData.id = Date.now() + '-' + Math.random().toString(36).substring(2);
+          const migratedRecipeData = migrateRecipeToLatest(recipeData);
+          migratedRecipeData.id = Date.now() + '-' + Math.random().toString(36).substring(2);
           
-          if (recipeData.imageUri) {
+          if (migratedRecipeData.imageUri) {
             try {
               const timestamp = Date.now();
-              const originalFileName = recipeData.imageUri.split('/').pop();
+              const originalFileName = migratedRecipeData.imageUri.split('/').pop();
               const fileName = `${timestamp}-${originalFileName}`;
               const imageDir = RNFS.DocumentDirectoryPath + '/recipe-images/';
               if (!(await RNFS.exists(imageDir))) {
                 await RNFS.mkdir(imageDir);
               }
-              const newImagePath = imageDir + fileName;
+              const newImagePath = `file://${imageDir}${fileName}`;
 
-              await RNFS.copyFile(tempDir + recipeData.imageUri, newImagePath);
-              recipeData.imageUri = newImagePath;
+              const sourceImagePath = `${tempDir}/${migratedRecipeData.imageUri}`;
+              await RNFS.copyFile(sourceImagePath, newImagePath);
+              migratedRecipeData.imageUri = newImagePath;
             } catch (error) {
-              console.error('Error importing image for recipe:', recipeData.title, error);
-              recipeData.imageUri = '';
+              console.error('Error importing image for recipe:', migratedRecipeData.title, error);
+              migratedRecipeData.imageUri = '';
             }
           }
 
-          const recipe = new Recipe(recipeData);
+          const recipe = new Recipe(migratedRecipeData);
           await RecipeStore.addRecipe(recipe);
         }
 
@@ -192,7 +111,7 @@ export default function ImportExport() {
             text: 'OK', 
             onPress: () => {
               setShowPopup(false);
-              navigation.navigate('Recipes');
+              navigation.getParent()?.navigate('Recipes');
             }
           }],
         });
@@ -234,7 +153,7 @@ export default function ImportExport() {
             </Text>
             
             <View style={styles.actionsContainer}>
-              {renderActionButton('Export Recipes', handleExport)}
+              {renderActionButton('Export Recipes', handleExportPress)}
               {renderActionButton('Import Recipes', handleImport)}
             </View>
           </View>
