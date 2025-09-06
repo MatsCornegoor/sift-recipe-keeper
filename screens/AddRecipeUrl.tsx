@@ -16,6 +16,45 @@ import Header from '../components/Header';
 import CustomPopup from '../components/CustomPopup';
 import ContentWrapper from '../components/ContentWrapper';
 
+// This helper function checks for a live internet connection in a privacy-friendly way.
+const checkInternetConnection = async () => {
+  if (Platform.OS === 'web') {
+    // For web, use a standard CORS-friendly endpoint.
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      await fetch('https://httpbin.org/status/200', { method: 'HEAD', signal: controller.signal });
+      clearTimeout(timeoutId);
+      return true;
+    } catch (error) {
+      console.log('Web connectivity check failed:', error);
+      return false;
+    }
+  }
+
+  // For native, try multiple privacy-focused DNS providers for resilience.
+  const endpoints = [
+    'https://1.1.1.1', // Cloudflare (privacy-focused)
+    'https://9.9.9.9', // Quad9 (privacy-focused)
+  ];
+
+  for (const endpoint of endpoints) {
+    try {
+      const controller = new AbortController();
+      // Use a shorter timeout per endpoint
+      const timeoutId = setTimeout(() => controller.abort(), 3000);
+      await fetch(endpoint, { method: 'HEAD', signal: controller.signal });
+      clearTimeout(timeoutId);
+      return true; // Success, we have a connection.
+    } catch (error) {
+      console.log(`Connectivity check failed for ${endpoint}:`, error);
+      // This endpoint failed, but the loop will allow us to try the next one.
+    }
+  }
+
+  return false; // All endpoints failed.
+};
+
 export default function AddRecipeUrl() {
   const navigation = useNavigation();
   const [url, setUrl] = useState('');
@@ -23,7 +62,6 @@ export default function AddRecipeUrl() {
   const { colors } = useTheme();
   const [showPopup, setShowPopup] = useState(false);
   const [dots, setDots] = useState('');
-  const [buttonTextVisible, setButtonTextVisible] = useState(true);
   const [popupConfig, setPopupConfig] = useState<{
     title: string;
     message: string;
@@ -33,18 +71,7 @@ export default function AddRecipeUrl() {
     message: '',
     buttons: [],
   });
-  const [instructionsPlaceholder, setInstructionsPlaceholder] = useState('');
-  const [extraInstructions, setExtraInstructions] = useState('');
   
-  const placeholderExamples = [
-    'Make it vegan',
-    'Upscale for 8 people',
-    'Make it gluten-free',
-    'Add more vegetables',
-    'Convert to metric units',
-    'Lower the calories',
-  ];
-
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (loading) {
@@ -65,34 +92,6 @@ export default function AddRecipeUrl() {
     };
   }, [loading]);
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (loading) {
-      interval = setInterval(() => {
-        setButtonTextVisible((prev) => !prev);
-      }, 500); // Blink every 500ms
-    }
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-      setButtonTextVisible(true); // Reset visibility when loading stops
-    };
-  }, [loading]);
-
-  useEffect(() => {
-    let currentIndex = 0;
-    const interval = setInterval(() => {
-      setInstructionsPlaceholder(placeholderExamples[currentIndex]);
-      currentIndex = (currentIndex + 1) % placeholderExamples.length;
-    }, 3000); // Change every 3 seconds
-
-    // Set initial placeholder
-    setInstructionsPlaceholder(placeholderExamples[0]);
-
-    return () => clearInterval(interval);
-  }, []);
-
   const handleExtractRecipe = async () => {
     if (!url.trim()) {
       setPopupConfig({
@@ -104,17 +103,9 @@ export default function AddRecipeUrl() {
       return;
     }
 
-    // Check internet connectivity - use a CORS-friendly endpoint
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
-      // Use a CORS-friendly endpoint for connectivity check
-      const connectivityUrl = Platform.OS === 'web' 
-        ? 'https://httpbin.org/status/200'
-        : 'https://8.8.8.8';
-      await fetch(connectivityUrl, { method: 'HEAD', signal: controller.signal });
-      clearTimeout(timeoutId);
-    } catch (error) {
+    // Check internet connectivity
+    const isConnected = await checkInternetConnection();
+    if (!isConnected) {
       setPopupConfig({
         title: 'No Internet Connection',
         message: 'You are not connected to the internet',
@@ -126,7 +117,7 @@ export default function AddRecipeUrl() {
 
     setLoading(true);
     try {
-      const recipe = await RecipeExtractorService.extractRecipe(url, extraInstructions.trim());
+      const recipe = await RecipeExtractorService.extractRecipe(url);
       recipe.sourceUrl = url.trim();
       await RecipeStore.addRecipe(recipe);
       navigation.goBack();
@@ -164,23 +155,6 @@ export default function AddRecipeUrl() {
                autoCapitalize="none"
                autoCorrect={false}
              />
-
-            {/* <Text style={[styles.instructionsTitle, { color: colors.text }]}>
-              Extra instructions (optional)
-            </Text>
-            <TextInput
-              style={[styles.instructionsInput, {
-                backgroundColor: colors.inputBackground,
-                borderColor: colors.inputBorder,
-                color: colors.text,
-              }]}
-              placeholder={instructionsPlaceholder}
-              placeholderTextColor={colors.deleteButton}
-              multiline={true}
-              numberOfLines={4}
-              value={extraInstructions}
-              onChangeText={setExtraInstructions}
-            /> */}
 
             <TouchableOpacity
               style={[styles.button, { backgroundColor: colors.tint }]}
