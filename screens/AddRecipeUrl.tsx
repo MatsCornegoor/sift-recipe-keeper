@@ -197,13 +197,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   input: {
-    borderBottomWidth: 1,
-    borderWidth: 0,
-    borderRadius: 0,
+    borderWidth: 1,
+    borderRadius: 8,
     padding: 12,
     marginBottom: 16,
     fontSize: 16,
     height: 48,
+    textAlignVertical: 'center',
   },
   button: {
     padding: 16,
