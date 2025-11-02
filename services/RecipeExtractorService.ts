@@ -19,7 +19,6 @@ class RecipeExtractorService {
   private customApiKey: string | null = null;
 
   constructor() {
-    this.loadCustomModelConfig();
   }
 
   private async loadCustomModelConfig(): Promise<void> {
@@ -41,6 +40,7 @@ class RecipeExtractorService {
 
 
   async extractRecipe(url: string, extraInstructions?: string): Promise<Recipe> {
+    await this.loadCustomModelConfig();
     try {
       // Add cors proxy to the URL if on web platform
       const fetchUrl = Platform.OS === 'web' ? this.corsProxy + url : url;
