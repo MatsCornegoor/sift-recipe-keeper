@@ -9,6 +9,7 @@ import {
   Platform
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import NetInfo from '@react-native-community/netinfo';
 import RecipeExtractorService from '../services/RecipeExtractorService';
 import RecipeStore from '../store/RecipeStore';
 import { useTheme } from '../hooks/useTheme';
@@ -18,41 +19,8 @@ import ContentWrapper from '../components/ContentWrapper';
 
 // This helper function checks for a live internet connection in a privacy-friendly way.
 const checkInternetConnection = async () => {
-  if (Platform.OS === 'web') {
-    // For web, use a standard CORS-friendly endpoint.
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
-      await fetch('https://httpbin.org/status/200', { method: 'HEAD', signal: controller.signal });
-      clearTimeout(timeoutId);
-      return true;
-    } catch (error) {
-      console.log('Web connectivity check failed:', error);
-      return false;
-    }
-  }
-
-  // For native, try multiple privacy-focused DNS providers for resilience.
-  const endpoints = [
-    'https://1.1.1.1', // Cloudflare (privacy-focused)
-    'https://9.9.9.9', // Quad9 (privacy-focused)
-  ];
-
-  for (const endpoint of endpoints) {
-    try {
-      const controller = new AbortController();
-      // Use a shorter timeout per endpoint
-      const timeoutId = setTimeout(() => controller.abort(), 3000);
-      await fetch(endpoint, { method: 'HEAD', signal: controller.signal });
-      clearTimeout(timeoutId);
-      return true; // Success, we have a connection.
-    } catch (error) {
-      console.log(`Connectivity check failed for ${endpoint}:`, error);
-      // This endpoint failed, but the loop will allow us to try the next one.
-    }
-  }
-
-  return false; // All endpoints failed.
+  const state = await NetInfo.fetch();
+  return state.isConnected;
 };
 
 export default function AddRecipeUrl() {
