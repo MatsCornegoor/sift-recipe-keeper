@@ -357,6 +357,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 40,
     opacity: 0.7,
+    borderBottomWidth: 2,
+    borderBottomColor: 'gray',
+    paddingBottom: 10,
   },
   subSectionTitle: {
     fontSize: 16,

@@ -72,10 +72,6 @@ class RecipeExtractorService {
       
       // Clean and prepare content
       const cleanContent = this.cleanWebPageContent(html);
-
-      // Extract potential section headings as hints
-      const sectionHints = this.extractSectionHints(html, cleanContent);
-      const hintsText = sectionHints.length > 0 ? `\n\nSection hints (if applicable, try to use these titles): ${JSON.stringify(sectionHints)}` : '';
       
       // Prepare GPT prompt for groups schema (v2)
       const prompt = `
@@ -103,12 +99,11 @@ class RecipeExtractorService {
 
         CRITICAL:
         - Respond with ONLY the JSON object; no extra text.
-        - Group titles may be empty; use empty string if not present, but include the group object.
-        - Ingredients: include quantities/units; convert to metric and put converted amount in parentheses.
+        - Ingredients: include quantities and units.
         - Instructions: return lists of short, granular sub-steps per group.
         - Tags: 3-5 relevant tags.
         - Calories: estimate if missing.
-        - If the source has sectioned content (headings like "Sauce", "Pasta", "Filling", "Dough"), create matching groups. Use the same set of titles for both ingredientsGroups and instructionGroups when applicable. Use the provided section hints for group titles only if they represent a distinct part of the recipe (e.g., "For the Frosting"). Do NOT use generic titles like "Ingredients" or "Instructions." If no meaningful sections are found, return a single group with an empty title.${hintsText}
+        - Grouping: If the recipe has distinct sections with titles (like "Sauce" or "Dough"), create corresponding groups. If there are no such sections, create just one group for ingredients and one for instructions, leaving the 'title' as an empty string. Do not use generic titles like "Ingredients" or "Instructions."
 
         Content:
         ${cleanContent}
