@@ -10,27 +10,62 @@ export default function About() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header title="About" />
+      <Header title="How Sift Works" />
       <ScrollView style={{ flex: 1, backgroundColor: colors.background }}>
         <View style={styles.container}>
-          <Text style={[styles.title, { color: colors.text }]}>
-            Why Sift?
-          </Text>
+          {/* <Text style={[styles.title, { color: colors.text }]}>
+            Why Sift
+          </Text> */}
           <Text style={[styles.description, { color: colors.text }]}>
-            Sift is the ultimate minimalist recipe app designed for busy individuals who want fast, no-frills access to recipes. Tired of wading through ads, pop-ups, and endless commentary? Sift cuts through the clutter, delivering just the essential recipe information you need—nothing more, nothing less.
+            This app is a minimalist recipe keeper that can be used to extract only the essential information from a recipe website, cutting out the ads, stories, and other clutter. This gives you a clean, easy-to-read recipe card.
           </Text>
 
           <Text style={[styles.title, { color: colors.text }]}>
-            Features
+            Setting up a model
           </Text>
           <Text style={[styles.description, { color: colors.text }]}>
-            • No subscriptions, no hidden costs{'\n'}
-            • Unlimited Recipes: Store as many recipes as you want{'\n'}
-            • Import from Any Website: Extract recipes from any cooking website{'\n'}
-            • Clean Interface: Distraction-free cooking experience{'\n'}
-            • Local Storage: Your recipes stay on your device{'\n'}
-            • Import/Export: Backup and restore your recipes
+          Sift uses a Bring Your Own Model (BYOM) approach. This allows you to test new models and stay in control over your own data. Before you can import recipes, you need to connect Sift to an AI service.
+{`
+
+`}1.  Go to Settings &gt; AI Setup.
+{`
+`}2.  Fill in the required details from your chosen AI provider (We support any service that uses the OpenAI API format).
+{`
+`}
           </Text>
+
+
+          <Text style={[styles.description, { color: colors.text, marginTop: 16,  }]}>
+            API Endpoint:
+          </Text>
+          <Text style={[styles.description, { color: colors.text }]}>
+            This is a URL provided by your AI service (e.g., OpenAI). It usually ends with `/v1/chat/completions`.
+          </Text>
+          <Text style={[styles.description, { color: colors.text, marginTop: 16,  }]}>
+            Model Name:
+          </Text>
+          <Text style={[styles.description, { color: colors.text }]}>
+            The name of the specific AI model you want to use (e.g., `gpt-4o`).
+          </Text>
+          <Text style={[styles.description, { color: colors.text, marginTop: 16, }]}>
+            API Key:
+          </Text>
+          <Text style={[styles.description, { color: colors.text }]}>
+            A secret key provided by your AI service to authenticate your requests.
+          </Text>
+
+          <Text style={[styles.description, { color: colors.text }]}>
+          3.  Tap "Save & Test" to make sure everything is working correctly.
+          </Text>
+
+<Text style={[styles.title, { color: colors.text }]}>
+            Adding a Recipe
+          </Text>
+          <Text style={[styles.description, { color: colors.text }]}>
+            When the AI model is set up, you can add a recipe from a website by tapping the add button on the home screen.
+          </Text>
+
+
 
         </View>
       </ScrollView>
@@ -67,6 +102,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     opacity: 0.7,
     marginBottom: 8,
+    marginTop: 32,
   },
   version: {
     fontSize: 16,

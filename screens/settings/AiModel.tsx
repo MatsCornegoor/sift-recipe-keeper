@@ -72,26 +72,9 @@ export default function AiModel() {
       <ScrollView style={styles.container}>
         <View style={styles.infoSection}>
           <Text style={[styles.infoText, { color: colors.text }]}>
-            To enable recipe import from websites, you need to connect to an AI service. Please enter the details of your AI provider below.
+            Sift uses a Bring Your Own Model (BYOM) approach. To enable recipe import from websites, you need to connect to an AI service. Please enter the details of your AI provider below.
           </Text>
-          <Text style={[styles.infoText, { color: colors.text, marginTop: 16, fontWeight: 'bold' }]}>
-            API Endpoint:
-          </Text>
-          <Text style={[styles.infoText, { color: colors.text }]}>
-            This is a URL provided by your AI service (e.g., OpenAI). It usually ends with `/v1/chat/completions`.
-          </Text>
-          <Text style={[styles.infoText, { color: colors.text, marginTop: 16, fontWeight: 'bold' }]}>
-            Model Name:
-          </Text>
-          <Text style={[styles.infoText, { color: colors.text }]}>
-            The name of the specific AI model you want to use (e.g., `gpt-4o`).
-          </Text>
-          <Text style={[styles.infoText, { color: colors.text, marginTop: 16, fontWeight: 'bold' }]}>
-            API Key:
-          </Text>
-          <Text style={[styles.infoText, { color: colors.text }]}>
-            A secret key provided by your AI service to authenticate your requests.
-          </Text>
+
         </View>
 
         <View style={styles.form}>
@@ -115,7 +98,7 @@ export default function AiModel() {
             autoCapitalize="none"
           />
 
-          <Text style={[styles.label, { color: colors.text }]}>API Key (Optional)</Text>
+          <Text style={[styles.label, { color: colors.text }]}>API Key</Text>
           <TextInput
             style={[styles.input, { backgroundColor: colors.inputBackground, color: colors.text, borderColor: colors.inputBorder }]}
             value={apiKey}
@@ -144,9 +127,9 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   infoText: {
-    fontSize: 14,
-    lineHeight: 20,
-    opacity: 0.8,
+    fontSize: 16,
+    lineHeight: 24,
+    marginBottom: 16,
   },
   codeBlock: {
     fontFamily: 'SpaceMono-Regular',

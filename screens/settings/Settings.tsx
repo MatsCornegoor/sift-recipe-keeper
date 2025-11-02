@@ -38,7 +38,7 @@ export default function Settings() {
       >
         <ContentWrapper>
           <View style={styles.container}>
-            {renderSettingsItem('information-circle-outline', 'About Sift', () =>
+            {renderSettingsItem('information-circle-outline', 'How Sift Works', () =>
               navigation.navigate('About')
             )}
              {renderSettingsItem('cog-outline', 'AI Setup', () =>
