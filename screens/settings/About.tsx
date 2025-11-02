@@ -28,7 +28,7 @@ export default function About() {
           </Text>
 
           <View style={[styles.card, { backgroundColor: colors.cardBackground, flexDirection: 'row', alignItems: 'flex-start' , marginTop: 16 }]}>
-            <Text style={[styles.stepNumber, { color: colors.text }]}>1</Text>
+            <Text style={[styles.stepNumber, { color: colors.tint }]}>1</Text>
             <Text style={[styles.stepText, { color: colors.text }]}>
               Go to Settings &gt; AI Setup.
             </Text>
@@ -36,12 +36,12 @@ export default function About() {
 
           <View style={[styles.card, { backgroundColor: colors.cardBackground }]}>
             <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 16 }}>
-              <Text style={[styles.stepNumber, { color: colors.text }]}>2</Text>
+              <Text style={[styles.stepNumber, { color: colors.tint }]}>2</Text>
               <Text style={[styles.stepText, { color: colors.text }]}>
                 Fill in the required details from your chosen AI provider. We support any service that uses the OpenAI API format.
               </Text>
             </View>
-            <View style={{ marginLeft: 30  }}>
+            <View style={{ marginLeft: 36  }}>
               <Text style={[styles.cardTitle, { color: colors.text }]}>API Endpoint:</Text>
               <Text style={[styles.description, { color: colors.text, marginBottom: 16 }]}>
                 This is a URL provided by your AI service. For example the OpenAI url is: https://api.openai.com/v1/chat/completions.
@@ -58,7 +58,7 @@ export default function About() {
           </View>
 
           <View style={[styles.card, { backgroundColor: colors.cardBackground, flexDirection: 'row', alignItems: 'flex-start' }]}>
-            <Text style={[styles.stepNumber, { color: colors.text }]}>3</Text>
+            <Text style={[styles.stepNumber, { color: colors.tint }]}>3</Text>
             <Text style={[styles.stepText, { color: colors.text }]}>
               Tap "Save & Test" to make sure everything is working correctly.
             </Text>
@@ -137,9 +137,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   card: {
-    padding: 24,
+    padding: 16,
     borderRadius: 12,
-    marginBottom: 16,
+    marginBottom: 12,
   },
   cardTitle: {
     fontSize: 16,
@@ -149,13 +149,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   stepNumber: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
-    marginRight: 16,
-    opacity: 0.3,
-    lineHeight: 25,
-    width: 16,
-    textAlign: 'center',
+    marginRight: 12,
+    minWidth: 24,
   },
   stepText: {
     fontSize: 16,
