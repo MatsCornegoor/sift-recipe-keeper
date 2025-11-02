@@ -75,7 +75,11 @@ class RecipeExtractorService {
       
       // Prepare GPT prompt for groups schema (v2)
       const prompt = `
-        Extract recipe information from the following content and respond ONLY with valid JSON matching this schema exactly.
+        Extract recipe information from the following content.
+        Your primary rule is to ONLY extract information that is explicitly present in the text.
+        Do not invent, assume, translate, or generate any information.
+        If a value for a field is not found, it should be an empty string "" or an empty array [] for lists.
+        Respond ONLY with a valid JSON object matching this schema exactly.
 
         {
           "schemaVersion": 2,
@@ -98,12 +102,14 @@ class RecipeExtractorService {
         }
 
         CRITICAL:
-        - Respond with ONLY the JSON object; no extra text.
-        - Ingredients: include quantities and units.
-        - Instructions: return lists of short, granular sub-steps per group.
-        - Tags: 3-5 relevant tags.
-        - Calories: estimate if missing.
-        - Grouping: If the recipe has distinct sections with titles (like "Sauce" or "Dough"), create corresponding groups. If there are no such sections, create just one group for ingredients and one for instructions, leaving the 'title' as an empty string. Do not use generic titles like "Ingredients" or "Instructions."
+        - Respond with ONLY the JSON object; no extra text or markdown.
+        - Only extract information from the content. Do not add your own text.
+        - Ingredients: Extract quantities and units as written.
+        - Instructions: Extract instructions as short, granular sub-steps per group. Do not rephrase or create your own text.
+        - Tags: Extract 3-5 relevant tags only if they are explicitly mentioned in the content. If not, use an empty array [].
+        - Calories: Extract from content. If missing, use an empty string "". DO NOT estimate.
+        - Cooking Time: Extract from content. If missing, use an empty string "".
+        - Grouping: If the recipe has distinct sections with titles (like "Sauce" or "Dough"), create corresponding groups. If there are no such sections, create just one group for ingredients and one for instructions, leaving the 'title' as an empty string. DO NOT make up your own group titles. DO NOT use generic titles like "Ingredients" or "Instructions."
 
         Content:
         ${cleanContent}
