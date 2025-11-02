@@ -38,11 +38,11 @@ export default function Settings() {
       >
         <ContentWrapper>
           <View style={styles.container}>
+            {renderSettingsItem('information-circle-outline', 'About Sift', () =>
+              navigation.navigate('About')
+            )}
             {renderSettingsItem('color-palette-outline', 'Appearance', () =>
               navigation.navigate('Appearance')
-            )}
-            {renderSettingsItem('information-circle-outline', 'About', () =>
-              navigation.navigate('About')
             )}
             {renderSettingsItem('swap-horizontal-outline', 'Import/Export', () =>
               navigation.navigate('ImportExport')

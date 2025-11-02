@@ -32,13 +32,6 @@ export default function About() {
             • Import/Export: Backup and restore your recipes
           </Text>
 
-          <Text style={[styles.title, { color: colors.text }]}>
-            Privacy 
-          </Text>
-          <Text style={[styles.description, { color: colors.text }]}>
-            Sift is built with privacy in mind. We don't track your data, and we don't sell it to third parties. Your data is yours, stored locally on your device and you can delete it at any time. More about privacy can be found at siftrecipes.app/privacy
-          </Text>
-
         </View>
       </ScrollView>
     </View>

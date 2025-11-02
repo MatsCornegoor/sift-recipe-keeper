@@ -203,11 +203,14 @@ const styles = StyleSheet.create({
   recipeItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingVertical: 16,
   },
   recipeTitle: {
     fontSize: 16,
     marginLeft: 16,
+    marginRight: 16,
   },
   actionButton: {
     margin: 16,
