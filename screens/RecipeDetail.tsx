@@ -18,7 +18,7 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RecipeStore from '../store/RecipeStore';
-import { Recipe, IngredientGroup, InstructionGroup } from '../models/Recipe';
+import { Recipe } from '../models/Recipe';
 import { useTheme } from '../hooks/useTheme';
 import Header from '../components/Header';
 import CustomPopup from '../components/CustomPopup';
@@ -39,8 +39,7 @@ export default function RecipeDetail() {
   });
   const [isMenuVisible, setIsMenuVisible] = useState(false);
 
-  const { colors, colorScheme } = useTheme();
-
+  const { colors } = useTheme();
   const { width: windowWidth } = useWindowDimensions();
 
   const [showPopup, setShowPopup] = useState(false);
@@ -55,6 +54,8 @@ export default function RecipeDetail() {
   });
 
   const [checkedIngredients, setCheckedIngredients] = useState<Set<string>>(new Set());
+
+  const styles = useMemo(() => stylesFactory(colors), [colors]);
 
   if (!recipe) return null;
 
@@ -143,12 +144,12 @@ export default function RecipeDetail() {
     return (
       <View>
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Ingredients</Text>
+          <Text style={styles.sectionTitle}>Ingredients</Text>
           {(recipe.ingredientsGroups || []).map((group, gi) => (
             <View key={group.id || `${gi}`} style={{ marginBottom: 8 }}>
               {group.title ? (
                 <View style={styles.headerCard}>
-                  <Text style={[styles.headerCardText, { color: colors.text }]}>{group.title}</Text>
+                  <Text style={styles.headerCardText}>{group.title}</Text>
                 </View>
               ) : null}
               {group.items.map((ingredient) => {
@@ -165,7 +166,7 @@ export default function RecipeDetail() {
                         color={isChecked ? colors.tint : colors.text} 
                       />
                     </TouchableOpacity>
-                    <Text style={[styles.ingredient, { color: colors.text }, isChecked && { opacity: 0.3 }]}>
+                    <Text style={[styles.ingredient, isChecked && styles.checkedIngredient]}>
                       {ingredient.name}
                     </Text>
                   </View>
@@ -176,23 +177,23 @@ export default function RecipeDetail() {
         </View>
 
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Instructions</Text>
+          <Text style={styles.sectionTitle}>Instructions</Text>
           {(recipe.instructionGroups || []).map((group, gi) => (
             <View key={group.id || `${gi}`} style={{ marginBottom: 8 }}>
               {group.title ? (
                 <View style={styles.headerCard}>
-                  <Text style={[styles.headerCardText, { color: colors.text }]}>{group.title}</Text>
+                  <Text style={styles.headerCardText}>{group.title}</Text>
                 </View>
               ) : null}
               {group.items.map((instruction, idx) => (
                 <View 
                   key={`${group.id || gi}-${idx}`} 
-                  style={[styles.instructionCard, { backgroundColor: colors.cardBackground }]}
+                  style={styles.instructionCard}
                 >
-                  <Text style={[styles.instructionNumber, { color: colors.tint }]}>
+                  <Text style={styles.instructionNumber}>
                     {idx + 1}
                   </Text>
-                  <Text style={[styles.instruction, { color: colors.text }]}>
+                  <Text style={styles.instruction}>
                     {instruction}
                   </Text>
                 </View>
@@ -205,7 +206,7 @@ export default function RecipeDetail() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <View style={styles.container}>
       <Header 
         title={recipe.name}
         rightElement={<MenuButton />}
@@ -218,12 +219,12 @@ export default function RecipeDetail() {
         ]}
       >
         <ContentWrapper>
-          <View style={[styles.container, { backgroundColor: colors.background }]}> 
+          <View style={styles.container}> 
             {recipe.imageUri ? (
               <Image source={{ uri: recipe.imageUri }} style={imageStyle} />
             ) : (
-              <View style={[styles.image, styles.placeholderImage, { backgroundColor: colors.placeholderBackground }]}>
-                <Text style={[styles.placeholderText, { color: colors.deleteButton }]}>No Image</Text>
+              <View style={[imageStyle, styles.placeholderImage]}>
+                <Text style={styles.placeholderText}>No Image</Text>
               </View>
             )}
 
@@ -232,13 +233,13 @@ export default function RecipeDetail() {
                 {recipe.cookingTime && (
                   <View style={styles.detailItem}>
                     <Ionicons name="time-outline" size={16} color={colors.text} style={styles.detailIcon} />
-                    <Text style={[styles.detailText, { color: colors.text }]}>{recipe.cookingTime}</Text>
+                    <Text style={styles.detailText}>{recipe.cookingTime}</Text>
                   </View>
                 )}
                 {recipe.calories && (
                   <View style={styles.detailItem}>
                     <Ionicons name="flame-outline" size={16} color={colors.text} style={styles.detailIcon} />
-                    <Text style={[styles.detailText, { color: colors.text }]}>{recipe.calories}</Text>
+                    <Text style={styles.detailText}>{recipe.calories}</Text>
                   </View>
                 )}
                 {recipe.sourceUrl && (
@@ -256,7 +257,7 @@ export default function RecipeDetail() {
                       }}
                       activeOpacity={0.6}
                     >
-                      <Text style={[styles.detailText, { color: colors.tint }]}>source</Text>
+                      <Text style={[styles.detailText, styles.linkText]}>source</Text>
                     </TouchableOpacity>
                   </View>
                 )}
@@ -270,8 +271,8 @@ export default function RecipeDetail() {
                   contentContainerStyle={styles.tagsContainer}
                 >
                   {recipe.tags.map((tag) => (
-                    <View key={tag} style={[styles.tagContainer, { backgroundColor: colors.tint }]}> 
-                      <Text style={[styles.tagText, { color: colors.background }]}>{tag}</Text>
+                    <View key={tag} style={styles.tagContainer}> 
+                      <Text style={styles.tagText}>{tag}</Text>
                     </View>
                   ))}
                 </ScrollView>
@@ -294,7 +295,6 @@ export default function RecipeDetail() {
           onPress={() => setIsMenuVisible(false)}
         >
           <View style={[styles.menuContainer, { 
-            backgroundColor: colors.cardBackground,
             bottom: Platform.select({
               ios: 'auto',
               android: 'auto',
@@ -304,10 +304,10 @@ export default function RecipeDetail() {
             top: 80,
           }]}> 
             <TouchableOpacity style={styles.menuItem} onPress={handleEdit}>
-              <Text style={[styles.menuText, { color: colors.text }]}>Edit Recipe</Text>
+              <Text style={styles.menuText}>Edit Recipe</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.menuItem} onPress={handleDelete}>
-              <Text style={[styles.menuText, { color: '#ff3b30' }]}>Delete Recipe</Text>
+              <Text style={[styles.menuText, styles.deleteMenuText]}>Delete Recipe</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
@@ -324,23 +324,23 @@ export default function RecipeDetail() {
   );
 }
 
-const styles = StyleSheet.create({
+const stylesFactory = (colors: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.background,
   },
   image: {
     width: '100%',
     height: 270,
   },
   placeholderImage: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: colors.placeholderBackground,
     justifyContent: 'center',
     alignItems: 'center',
   },
   placeholderText: {
     fontSize: 16,
-    color: '#666',
+    color: colors.deleteButton,
   },
   content: {
     padding: 16,
@@ -358,8 +358,9 @@ const styles = StyleSheet.create({
     marginTop: 40,
     opacity: 0.7,
     borderBottomWidth: 2,
-    borderBottomColor: 'gray',
+    borderBottomColor: colors.inputBorder,
     paddingBottom: 10,
+    color: colors.text,
   },
   subSectionTitle: {
     fontSize: 16,
@@ -383,6 +384,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     opacity: 0.9,
+    color: colors.text,
   },
   ingredientRow: {
     flexDirection: 'row',
@@ -395,6 +397,10 @@ const styles = StyleSheet.create({
   ingredient: {
     fontSize: 16,
     flex: 1,
+    color: colors.text,
+  },
+  checkedIngredient: {
+    opacity: 0.3,
   },
   instructionCard: {
     padding: 16,
@@ -402,17 +408,20 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     flexDirection: 'row',
     alignItems: 'flex-start',
+    backgroundColor: colors.cardBackground,
   },
   instructionNumber: {
     fontSize: 16,
     fontWeight: 'bold',
     marginRight: 12,
     minWidth: 24,
+    color: colors.tint,
   },
   instruction: {
     fontSize: 16,
     lineHeight: 24,
     flex: 1,
+    color: colors.text,
   },
   modalOverlay: {
     flex: 1,
@@ -420,7 +429,7 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     position: 'absolute',
-    backgroundColor: 'white',
+    backgroundColor: colors.cardBackground,
     borderRadius: 8,
     padding: 8,
     minWidth: 150,
@@ -436,6 +445,10 @@ const styles = StyleSheet.create({
   },
   menuText: {
     fontSize: 17,
+    color: colors.text,
+  },
+  deleteMenuText: {
+    color: '#ff3b30',
   },
   detailsContainer: {
     flexDirection: 'row',
@@ -459,6 +472,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     opacity: 0.6,
     paddingVertical: 4,
+    color: colors.text,
+  },
+  linkText: {
+    color: colors.tint,
   },
   tagsScrollContainer: {
     overflow: 'visible',
@@ -478,9 +495,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 16,
     height: 32,
+    backgroundColor: colors.tint,
   },
   tagText: {
     fontSize: 14,
     fontWeight: '500',
+    color: colors.background,
   },
-}); 
+});
+ 
