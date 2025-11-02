@@ -23,45 +23,51 @@ export default function About() {
           <Text style={[styles.title, { color: colors.text }]}>
             Setting up a model
           </Text>
-          <Text style={[styles.description, { color: colors.text }]}>
-          Sift uses a Bring Your Own Model (BYOM) approach. This allows you to test new models and stay in control over your own data. Before you can import recipes, you need to connect Sift to an AI service.
-{`
-
-`}1.  Go to Settings &gt; AI Setup.
-{`
-`}2.  Fill in the required details from your chosen AI provider (We support any service that uses the OpenAI API format).
-{`
-`}
+          <Text style={[styles.description, { color: colors.text, marginBottom: 16 }]}>
+            Sift uses a Bring Your Own Model (BYOM) approach. This allows you to test new models and stay in control over your own data. Before you can import recipes, you need to connect Sift to an AI service.
           </Text>
 
+          <View style={[styles.card, { backgroundColor: colors.cardBackground, flexDirection: 'row', alignItems: 'flex-start' , marginTop: 16 }]}>
+            <Text style={[styles.stepNumber, { color: colors.text }]}>1</Text>
+            <Text style={[styles.stepText, { color: colors.text }]}>
+              Go to Settings &gt; AI Setup.
+            </Text>
+          </View>
 
-          <Text style={[styles.description, { color: colors.text, marginTop: 16,  }]}>
-            API Endpoint:
-          </Text>
-          <Text style={[styles.description, { color: colors.text }]}>
-            This is a URL provided by your AI service (e.g., OpenAI). It usually ends with `/v1/chat/completions`.
-          </Text>
-          <Text style={[styles.description, { color: colors.text, marginTop: 16,  }]}>
-            Model Name:
-          </Text>
-          <Text style={[styles.description, { color: colors.text }]}>
-            The name of the specific AI model you want to use (e.g., `gpt-4o`).
-          </Text>
-          <Text style={[styles.description, { color: colors.text, marginTop: 16, }]}>
-            API Key:
-          </Text>
-          <Text style={[styles.description, { color: colors.text }]}>
-            A secret key provided by your AI service to authenticate your requests.
-          </Text>
+          <View style={[styles.card, { backgroundColor: colors.cardBackground }]}>
+            <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 16 }}>
+              <Text style={[styles.stepNumber, { color: colors.text }]}>2</Text>
+              <Text style={[styles.stepText, { color: colors.text }]}>
+                Fill in the required details from your chosen AI provider. We support any service that uses the OpenAI API format.
+              </Text>
+            </View>
+            <View style={{ marginLeft: 30  }}>
+              <Text style={[styles.cardTitle, { color: colors.text }]}>API Endpoint:</Text>
+              <Text style={[styles.description, { color: colors.text, marginBottom: 16 }]}>
+                This is a URL provided by your AI service. For example the OpenAI url is: https://api.openai.com/v1/chat/completions.
+              </Text>
+              <Text style={[styles.cardTitle, { color: colors.text }]}>Model Name:</Text>
+              <Text style={[styles.description, { color: colors.text, marginBottom: 16 }]}>
+                The name of the specific AI model you want to use. We recommend using: gpt-4o-mini.
+              </Text>
+              <Text style={[styles.cardTitle, { color: colors.text }]}>API Key:</Text>
+              <Text style={[styles.description, { color: colors.text, marginBottom: 0 }]}>
+                A secret key provided by your AI service to authenticate your requests.
+              </Text>
+            </View>
+          </View>
 
-          <Text style={[styles.description, { color: colors.text }]}>
-          3.  Tap "Save & Test" to make sure everything is working correctly.
-          </Text>
+          <View style={[styles.card, { backgroundColor: colors.cardBackground, flexDirection: 'row', alignItems: 'flex-start' }]}>
+            <Text style={[styles.stepNumber, { color: colors.text }]}>3</Text>
+            <Text style={[styles.stepText, { color: colors.text }]}>
+              Tap "Save & Test" to make sure everything is working correctly.
+            </Text>
+          </View>
 
-<Text style={[styles.title, { color: colors.text }]}>
+          <Text style={[styles.title, { color: colors.text }]}>
             Adding a Recipe
           </Text>
-          <Text style={[styles.description, { color: colors.text }]}>
+          <Text style={[styles.description, { color: colors.text, marginBottom: 0 }]}>
             When the AI model is set up, you can add a recipe from a website by tapping the add button on the home screen.
           </Text>
 
@@ -113,7 +119,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     textAlign: 'left',
-    marginBottom: 32,
+    marginBottom: 16,
   },
   websiteButton: {
     flexDirection: 'row',
@@ -129,5 +135,31 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: '600',
+  },
+  card: {
+    padding: 24,
+    borderRadius: 12,
+    marginBottom: 16,
+  },
+  cardTitle: {
+    fontSize: 16,
+    marginTop: 20,
+    fontWeight: 'bold',
+    opacity: 0.9,
+    marginBottom: 8,
+  },
+  stepNumber: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginRight: 16,
+    opacity: 0.3,
+    lineHeight: 25,
+    width: 16,
+    textAlign: 'center',
+  },
+  stepText: {
+    fontSize: 16,
+    lineHeight: 24,
+    flex: 1,
   },
 });
