@@ -27,6 +27,8 @@ export default function ExportRecipes() {
     buttons: [],
   });
 
+  const styles = useMemo(() => stylesFactory(colors), [colors]);
+
   useEffect(() => {
     setRecipes(RecipeStore.getAllRecipes());
   }, []);
@@ -134,7 +136,6 @@ export default function ExportRecipes() {
   const renderItem = ({ item }: { item: Recipe | {id: string, name: string} }) => {
     const isAllSelected = selectedRecipes.length === recipes.length && recipes.length > 0;
     const isSelected = item.id === SELECT_ALL_ID ? isAllSelected : selectedRecipes.includes(item.id);
-    const isSelectAllItem = item.id === SELECT_ALL_ID;
 
     return (
       <TouchableOpacity
@@ -146,7 +147,7 @@ export default function ExportRecipes() {
           size={25} 
           color={isSelected ? colors.tint : colors.text} 
         />
-        <Text style={[styles.recipeTitle, { color: colors.text }]}>{item.name}</Text>
+        <Text style={styles.recipeTitle}>{item.name}</Text>
       </TouchableOpacity>
     );
   };
@@ -159,7 +160,7 @@ export default function ExportRecipes() {
   }, [recipes]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <View style={styles.flexView}>
       <Header title="Export Recipes" />
       <ContentWrapper>
         <FlatList
@@ -168,11 +169,11 @@ export default function ExportRecipes() {
           keyExtractor={item => item.id}
           ListFooterComponent={
             <TouchableOpacity
-              style={[styles.actionButton, { backgroundColor: colors.tint, opacity: selectedRecipes.length > 0 ? 1 : 0.5 }]}
+              style={[styles.actionButton, { opacity: selectedRecipes.length > 0 ? 1 : 0.5 }]}
               onPress={handleExport}
               disabled={selectedRecipes.length === 0}
             >
-              <Text style={[styles.actionLabel, { color: colors.background }]}>
+              <Text style={styles.actionLabel}>
                 Export Selected Recipes
               </Text>
             </TouchableOpacity>
@@ -190,15 +191,10 @@ export default function ExportRecipes() {
   );
 }
 
-const styles = StyleSheet.create({
-  headerContainer: {
-    paddingHorizontal: 16,
-  },
-  description: {
-    fontSize: 16,
-    lineHeight: 24,
-    marginBottom: 16,
-    paddingHorizontal: 16,
+const stylesFactory = (colors: any) => StyleSheet.create({
+  flexView: {
+    flex: 1,
+    backgroundColor: colors.background,
   },
   recipeItem: {
     flexDirection: 'row',
@@ -211,15 +207,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 16,
     marginRight: 16,
+    color: colors.text,
   },
   actionButton: {
     margin: 16,
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
+    backgroundColor: colors.tint,
   },
   actionLabel: {
     fontSize: 16,
     fontWeight: '600',
+    color: colors.background,
   },
-}); 
+});
+ 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  Platform
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import NetInfo from '@react-native-community/netinfo';
@@ -39,6 +38,8 @@ export default function AddRecipeUrl() {
     message: '',
     buttons: [],
   });
+
+  const styles = useMemo(() => stylesFactory(colors), [colors]);
   
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -103,43 +104,40 @@ export default function AddRecipeUrl() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <View style={styles.flexView}>
       <Header title="Add recipe" />
       <ScrollView 
-        style={{ flex: 1 }}
-        contentContainerStyle={{ flexGrow: 1 }}
+        style={styles.flexView}
+        contentContainerStyle={styles.flexGrow}
       >
         <ContentWrapper>
           <View style={styles.container}>
-                        <TextInput
-               style={[styles.input, {
-                 borderColor: colors.inputBorder,
-                 color: colors.text,
-               }]}
-               placeholder="www.cookingwebite.com/recipe"
-               placeholderTextColor={colors.deleteButton}
-               value={url}
-               onChangeText={setUrl}
-               autoCapitalize="none"
-               autoCorrect={false}
-             />
+            <TextInput
+              style={styles.input}
+              placeholder="www.cookingwebite.com/recipe"
+              placeholderTextColor={colors.deleteButton}
+              value={url}
+              onChangeText={setUrl}
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
 
             <TouchableOpacity
-              style={[styles.button, { backgroundColor: colors.tint }]}
+              style={styles.button}
               onPress={handleExtractRecipe}
               disabled={loading}
             >
               {loading ? (
                 <View style={styles.loadingContainer}>
-                  <Text style={[styles.buttonText, { color: colors.background }]}>
+                  <Text style={styles.buttonText}>
                     Adding
                   </Text>
-                  <Text style={[styles.buttonText, styles.dotsContainer, { color: colors.background }]}>
+                  <Text style={[styles.buttonText, styles.dotsContainer]}>
                     {dots}
                   </Text>
                 </View>
               ) : (
-                <Text style={[styles.buttonText, { color: colors.background }]}>
+                <Text style={styles.buttonText}>
                   Add Recipe
                 </Text>
               )}
@@ -158,7 +156,14 @@ export default function AddRecipeUrl() {
   );
 }
 
-const styles = StyleSheet.create({
+const stylesFactory = (colors: any) => StyleSheet.create({
+  flexView: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  flexGrow: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
     padding: 16,
@@ -172,15 +177,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     height: 48,
     textAlignVertical: 'center',
+    borderColor: colors.inputBorder,
+    color: colors.text,
   },
   button: {
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
+    backgroundColor: colors.tint,
   },
   buttonText: {
     fontSize: 16,
     fontWeight: '600',
+    color: colors.background,
   },
   loadingContainer: {
     flexDirection: 'row',
@@ -188,20 +197,5 @@ const styles = StyleSheet.create({
   dotsContainer: {
     width: 24, // Fixed width for 3 dots
   },
-  instructionsTitle: {
-    fontSize: 14,
-    marginTop: 10,
-    marginBottom: 8,
-    opacity: 0.7,
-  },
-  instructionsInput: {
-    borderBottomWidth: 1,
-    borderWidth: 0,
-    borderRadius: 0,
-    padding: 12,
-    fontSize: 16,
-    minHeight: 100,
-    marginBottom: 16,
-    textAlignVertical: 'top',
-  },
-}); 
+});
+ 

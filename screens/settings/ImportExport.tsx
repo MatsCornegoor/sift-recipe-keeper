@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Share, Platform, PermissionsAndroid } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import RNFS from 'react-native-fs';
 import DocumentPicker from 'react-native-document-picker';
 import { useNavigation } from '@react-navigation/native';
@@ -10,10 +10,9 @@ import ContentWrapper from '../../components/ContentWrapper';
 import CustomPopup from '../../components/CustomPopup';
 import { Recipe } from '../../models/Recipe';
 import { migrateRecipeToLatest } from '../../models/RecipeMigrations';
-import { zip, unzip } from 'react-native-zip-archive';
-import { AppNavigationProp, SettingsStackParamList } from '../../navigation/types';
+import { unzip } from 'react-native-zip-archive';
+import { SettingsStackParamList } from '../../navigation/types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
 
 export default function ImportExport() {
   const { colors } = useTheme();
@@ -28,6 +27,8 @@ export default function ImportExport() {
     message: '',
     buttons: [],
   });
+
+  const styles = useMemo(() => stylesFactory(colors), [colors]);
 
   const handleExportPress = () => {
     navigation.navigate('ExportRecipes');
@@ -132,23 +133,23 @@ export default function ImportExport() {
 
   const renderActionButton = (label: string, onPress: () => void) => (
     <TouchableOpacity
-      style={[styles.actionButton, { backgroundColor: colors.tint }]}
+      style={styles.actionButton}
       onPress={onPress}
     >
-      <Text style={[styles.actionLabel, { color: colors.background }]}>{label}</Text>
+      <Text style={styles.actionLabel}>{label}</Text>
     </TouchableOpacity>
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <View style={styles.flexView}>
       <Header title="Import/Export" />
       <ScrollView 
-        style={{ flex: 1 }}
-        contentContainerStyle={{ flexGrow: 1 }}
+        style={styles.flexView}
+        contentContainerStyle={styles.flexGrow}
       >
         <ContentWrapper>
           <View style={styles.container}>
-            <Text style={[styles.description, { color: colors.text }]}>
+            <Text style={styles.description}>
               Import or export your Sift recipes to create a backup or to transfer them to other devices.
             </Text>
             
@@ -171,7 +172,14 @@ export default function ImportExport() {
   );
 }
 
-const styles = StyleSheet.create({
+const stylesFactory = (colors: any) => StyleSheet.create({
+  flexView: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  flexGrow: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
     padding: 16,
@@ -181,6 +189,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     marginBottom: 24,
+    color: colors.text,
   },
   actionsContainer: {
     gap: 16,
@@ -189,9 +198,12 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
+    backgroundColor: colors.tint,
   },
   actionLabel: {
     fontSize: 16,
     fontWeight: '600',
+    color: colors.background,
   },
-}); 
+});
+ 

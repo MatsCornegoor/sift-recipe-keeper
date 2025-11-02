@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, FlatList, Pressable, Image, StyleSheet, Dimensions, Platform, TouchableOpacity } from 'react-native';
+import React, { useMemo } from 'react';
+import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Recipe } from '../models/Recipe';
 import { useTheme } from '../hooks/useTheme';
@@ -16,55 +16,19 @@ export default function RecipeGrid({ recipes, numColumns, cardWidth, gap, paddin
     const navigation = useNavigation<any>();
     const { colors } = useTheme();
 
-    const styles = StyleSheet.create({
-        gridContainer: {
-            padding,
-        },
-        columnWrapper: {
-            justifyContent: 'space-between',
-            marginBottom: gap,
-        },
-        container: {
-            width: cardWidth,
-        },
-        image: {
-            width: '100%',
-            aspectRatio: 1,
-            borderRadius: 8,
-        },
-        placeholderImage: {
-            backgroundColor: colors.placeholderBackground,
-            justifyContent: 'center',
-            alignItems: 'center',
-        },
-        placeholderText: {
-            color: colors.text,
-            opacity: 0.5,
-        },
-        title: {
-            fontSize: 16,
-            marginTop: 4,
-            textAlign: 'left',
-            fontWeight: 'bold',
-            color: colors.text,
-            opacity: 0.8,
-        },
-    });
+    const styles = useMemo(() => stylesFactory(colors, cardWidth, gap, padding), [colors, cardWidth, gap, padding]);
 
     return (
         <FlatList
             key={`grid-${numColumns}`}
             data={recipes}
             numColumns={numColumns}
-            columnWrapperStyle={[styles.columnWrapper, { gap }]}
-            contentContainerStyle={{
-                paddingBottom: padding + 80,
-                paddingHorizontal: padding,
-            }}
+            columnWrapperStyle={styles.columnWrapper}
+            contentContainerStyle={styles.gridContainer}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
                 <TouchableOpacity
-                    style={{ width: cardWidth }}
+                    style={styles.container}
                     onPress={() => navigation.navigate('RecipeDetail', { id: item.id })}
                 >
                     {item.imageUri ? (
@@ -81,4 +45,42 @@ export default function RecipeGrid({ recipes, numColumns, cardWidth, gap, paddin
             showsVerticalScrollIndicator={false}
         />
     );
-} 
+}
+
+const stylesFactory = (colors: any, cardWidth: number, gap: number, padding: number) => StyleSheet.create({
+    gridContainer: {
+        paddingBottom: padding + 80,
+        paddingHorizontal: padding,
+    },
+    columnWrapper: {
+        justifyContent: 'space-between',
+        marginBottom: gap,
+        gap: gap,
+    },
+    container: {
+        width: cardWidth,
+    },
+    image: {
+        width: '100%',
+        aspectRatio: 1,
+        borderRadius: 8,
+    },
+    placeholderImage: {
+        backgroundColor: colors.placeholderBackground,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    placeholderText: {
+        color: colors.text,
+        opacity: 0.5,
+    },
+    title: {
+        fontSize: 16,
+        marginTop: 4,
+        textAlign: 'left',
+        fontWeight: 'bold',
+        color: colors.text,
+        opacity: 0.8,
+    },
+});
+ 

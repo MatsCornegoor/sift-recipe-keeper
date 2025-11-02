@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Modal, View, Text, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
 
@@ -30,8 +30,10 @@ export default function TextInputPopup({
 }: TextInputPopupProps) {
   const { colors } = useTheme();
   const [value, setValue] = useState(initialValue);
-  const [selectedType, setSelectedType] = useState<'item' | 'header'>(initialType);
+  const [selectedType, setSelectedType] = useState<'item' | 'header'>('item');
   const [isFocused, setIsFocused] = useState(false);
+
+  const styles = useMemo(() => stylesFactory(colors), [colors]);
 
   useEffect(() => {
     if (visible) {
@@ -53,7 +55,7 @@ export default function TextInputPopup({
         <View style={styles.overlay}>
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.kav}>
             <TouchableWithoutFeedback>
-              <View style={[styles.sheet, { backgroundColor: colors.background }]}>
+              <View style={styles.sheet}>
 
                 <View style={styles.tabsRow}>
                   <TouchableOpacity
@@ -61,7 +63,6 @@ export default function TextInputPopup({
                     style={[
                       styles.tab,
                       {
-                        borderColor: colors.inputBorder,
                         backgroundColor:
                           selectedType === 'item'
                             ? colors.background === '#FFFFFF'
@@ -72,14 +73,13 @@ export default function TextInputPopup({
                       },
                     ]}
                   >
-                    <Text style={[styles.tabText, { color: colors.text }]}>Item</Text>
+                    <Text style={styles.tabText}>Item</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => setSelectedType('header')}
                     style={[
                       styles.tab,
                       {
-                        borderColor: colors.inputBorder,
                         backgroundColor:
                           selectedType === 'header'
                             ? colors.background === '#FFFFFF'
@@ -90,13 +90,13 @@ export default function TextInputPopup({
                       },
                     ]}
                   >
-                    <Text style={[styles.tabText, { color: colors.text }]}>Header</Text>
+                    <Text style={styles.tabText}>Header</Text>
                   </TouchableOpacity>
                 </View>
                 <TextInput
                   autoFocus
                   onFocus={() => setIsFocused(true)}
-                  style={[styles.input, { borderColor: colors.inputBorder, color: colors.text }]}
+                  style={styles.input}
                   placeholder={effectivePlaceholder}
                   placeholderTextColor={colors.placeholderText}
                   value={value}
@@ -107,11 +107,11 @@ export default function TextInputPopup({
                 />
                 <View style={styles.buttonsRow}>
                   {onDelete ? (
-                    <TouchableOpacity style={[styles.button]} onPress={onDelete}>
-                      <Text style={[styles.buttonText, { color: colors.text }]}>{deleteText}</Text>
+                    <TouchableOpacity style={styles.button} onPress={onDelete}>
+                      <Text style={styles.buttonText}>{deleteText}</Text>
                     </TouchableOpacity>
                   ) : null}
-                  <TouchableOpacity style={[styles.button, styles.confirm, { backgroundColor: colors.tint }]} onPress={handleConfirm}>
+                  <TouchableOpacity style={[styles.button, styles.confirm]} onPress={handleConfirm}>
                     <Text style={[styles.buttonText, { color: colors.background }]}>{confirmText}</Text>
                   </TouchableOpacity>
                 </View>
@@ -124,7 +124,7 @@ export default function TextInputPopup({
   );
 }
 
-const styles = StyleSheet.create({
+const stylesFactory = (colors: any) => StyleSheet.create({
   overlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -143,11 +143,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 6,
     elevation: 10,
+    backgroundColor: colors.background,
   },
   title: {
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 12,
+    color: colors.text,
   },
   tabsRow: {
     flexDirection: 'row',
@@ -160,10 +162,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     alignItems: 'center',
+    borderColor: colors.inputBorder,
   },
   tabText: {
     fontSize: 14,
     fontWeight: '600',
+    color: colors.text,
   },
   input: {
     borderWidth: 1,
@@ -171,6 +175,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     fontSize: 16,
     height: 48,
+    borderColor: colors.inputBorder,
+    color: colors.text,
   },
   buttonsRow: {
     flexDirection: 'row',
@@ -185,9 +191,12 @@ const styles = StyleSheet.create({
   },
   confirm: {
     marginLeft: 'auto',
+    backgroundColor: colors.tint,
   },
   buttonText: {
     fontSize: 16,
     fontWeight: '600',
+    color: colors.text,
   },
-}); 
+});
+ 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@/hooks/useTheme';
@@ -11,6 +11,8 @@ export default function Settings() {
   const navigation = useNavigation<AppNavigationProp>();
   const { colors } = useTheme();
 
+  const styles = useMemo(() => stylesFactory(colors), [colors]);
+
   const renderSettingsItem = (
     icon: string,
     label: string,
@@ -18,23 +20,23 @@ export default function Settings() {
     showArrow = true
   ) => (
     <TouchableOpacity
-      style={[styles.settingsItem, { borderBottomColor: colors.inputBorder }]}
+      style={styles.settingsItem}
       onPress={onPress}
     >
       <View style={styles.settingsItemContent}>
         <Ionicons name={icon as any} size={22} color={colors.text} style={styles.settingsIcon} />
-        <Text style={[styles.settingsLabel, { color: colors.text }]}>{label}</Text>
+        <Text style={styles.settingsLabel}>{label}</Text>
       </View>
       {showArrow && <Ionicons name="chevron-forward" size={22} color={colors.text} />}
     </TouchableOpacity>
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <View style={styles.flexView}>
       <Header title="Settings" />
       <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{ flexGrow: 1 }}
+        style={styles.flexView}
+        contentContainerStyle={styles.flexGrow}
       >
         <ContentWrapper>
           <View style={styles.container}>
@@ -57,7 +59,14 @@ export default function Settings() {
   );
 }
 
-const styles = StyleSheet.create({
+const stylesFactory = (colors: any) => StyleSheet.create({
+  flexView: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  flexGrow: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: 'transparent',
@@ -70,6 +79,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 16,
     borderBottomWidth: 1,
+    borderBottomColor: colors.inputBorder,
   },
   settingsItemContent: {
     flexDirection: 'row',
@@ -80,5 +90,7 @@ const styles = StyleSheet.create({
   },
   settingsLabel: {
     fontSize: 17,
+    color: colors.text,
   },
-}); 
+});
+ 

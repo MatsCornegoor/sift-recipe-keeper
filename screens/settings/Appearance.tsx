@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, Switch } from 'react-native';
 import Header from '../../components/Header';
 import KeepAwake from 'react-native-keep-awake';
@@ -8,6 +8,8 @@ import { useTheme } from '../../hooks/useTheme';
 export default function Appearance() {
   const { isDarkMode, toggleTheme, colors } = useTheme();
   const [isScreenAwake, setIsScreenAwake] = useState(false);
+
+  const styles = useMemo(() => stylesFactory(colors), [colors]);
 
   useEffect(() => {
     loadPreferences();
@@ -47,16 +49,16 @@ export default function Appearance() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.flexView}>
       <Header title="Appearance" />
-      <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
-        <View style={[styles.section, { borderBottomColor: colors.inputBorder }]}>
+      <ScrollView style={styles.container}>
+        <View style={styles.section}>
           <View style={styles.settingRow}>
             <View style={styles.settingInfo}>
-              <Text style={[styles.settingTitle, { color: colors.text }]}>
+              <Text style={styles.settingTitle}>
                 Dark Mode
               </Text>
-              <Text style={[styles.settingDescription, { color: colors.text }]}>
+              <Text style={styles.settingDescription}>
                 Switch between light and dark theme
               </Text>
             </View>
@@ -69,13 +71,13 @@ export default function Appearance() {
           </View>
         </View>
 
-        <View style={[styles.section, { borderBottomColor: colors.inputBorder }]}>
+        <View style={styles.section}>
           <View style={styles.settingRow}>
             <View style={styles.settingInfo}>
-              <Text style={[styles.settingTitle, { color: colors.text }]}>
+              <Text style={styles.settingTitle}>
                 Keep screen awake
               </Text>
-              <Text style={[styles.settingDescription, { color: colors.text }]}>
+              <Text style={styles.settingDescription}>
                 Prevent screen from sleeping while viewing recipes
               </Text>
             </View>
@@ -92,12 +94,17 @@ export default function Appearance() {
   );
 }
 
-const styles = StyleSheet.create({
+const stylesFactory = (colors: any) => StyleSheet.create({
+  flexView: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
   container: {
     flex: 1,
   },
   section: {
     borderBottomWidth: 1,
+    borderBottomColor: colors.inputBorder,
   },
   settingRow: {
     flexDirection: 'row',
@@ -112,9 +119,12 @@ const styles = StyleSheet.create({
   settingTitle: {
     fontSize: 16,
     marginBottom: 4,
+    color: colors.text,
   },
   settingDescription: {
     fontSize: 14,
     opacity: 0.7,
+    color: colors.text,
   },
 });
+

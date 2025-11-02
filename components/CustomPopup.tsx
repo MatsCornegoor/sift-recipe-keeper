@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   View,
   Text,
@@ -32,6 +32,8 @@ export default function CustomPopup({
 
   const { colors } = useTheme();
 
+  const styles = useMemo(() => stylesFactory(colors), [colors]);
+
   return (
     <Modal
       transparent
@@ -40,15 +42,14 @@ export default function CustomPopup({
       onRequestClose={onClose}
     >
       <View style={styles.overlay}>
-        <View style={[styles.popup, { backgroundColor: colors.background }]}>
-          <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
+        <View style={styles.popup}>
+          <Text style={styles.title}>{title}</Text>
           <View style={styles.messageContainer}>
-            {message.split("\n").map((paragraph, index) => (
+            {message.split('\n').map((paragraph, index) => (
               <Text 
                 key={index} 
                 style={[
                   styles.message, 
-                  { color: colors.text },
                   paragraph.trim() === '' && styles.emptyLine,
                   index > 0 && styles.lineSpacing
                 ]}
@@ -63,12 +64,11 @@ export default function CustomPopup({
                 key={index}
                 style={[
                   styles.button,
-                  { backgroundColor: colors.tint },
                   index < buttons.length - 1 && styles.buttonMargin,
                 ]}
                 onPress={button.onPress}
               >
-                <Text style={[styles.buttonText, { color: colors.background }]}>
+                <Text style={styles.buttonText}>
                   {button.text}
                 </Text>
               </TouchableOpacity>
@@ -80,7 +80,7 @@ export default function CustomPopup({
   );
 }
 
-const styles = StyleSheet.create({
+const stylesFactory = (colors: any) => StyleSheet.create({
   overlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
@@ -99,11 +99,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    backgroundColor: colors.background,
   },
   title: {
     fontSize: 20,
     fontWeight: '600',
     marginBottom: 12,
+    color: colors.text,
   },
   messageContainer: {
     marginBottom: 20,
@@ -111,6 +113,7 @@ const styles = StyleSheet.create({
   message: {
     fontSize: 16,
     lineHeight: 22,
+    color: colors.text,
   },
   lineSpacing: {
     marginTop: 4,
@@ -127,6 +130,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 8,
+    backgroundColor: colors.tint,
   },
   buttonMargin: {
     marginRight: 8,
@@ -134,5 +138,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     fontWeight: '600',
+    color: colors.background,
   },
-}); 
+});
+ 

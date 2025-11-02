@@ -1,5 +1,5 @@
 import { View, TouchableOpacity, StyleSheet, Text, Modal, TextInput, useWindowDimensions, Pressable } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import RecipeGrid from '../components/RecipeGrid';
 import RecipeStore from '../store/RecipeStore';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -24,6 +24,8 @@ export default function RecipeList({ navigation }: { navigation: any }) {
   const cardWidth = availableWidth / numColumns;
 
   const { colors, colorScheme } = useTheme();
+
+  const styles = useMemo(() => stylesFactory(colors), [colors]);
 
   useEffect(() => {
     RecipeStore.loadRecipes();
@@ -92,7 +94,7 @@ export default function RecipeList({ navigation }: { navigation: any }) {
     });
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.flexView}>
       <Header 
         title="Sift" 
         showBack={false}
@@ -103,23 +105,21 @@ export default function RecipeList({ navigation }: { navigation: any }) {
             style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Ionicons name="menu" style={{ marginTop: 10, marginRight: -4 }} size={32} color={colors.tint} />
+            <Ionicons name="menu" style={styles.menuIcon} size={32} color={colors.tint} />
           </Pressable>
         }
       />
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <View style={[styles.searchContainer, { borderBottomColor: colors.inputBorder }]}>
+      <View style={styles.container}>
+        <View style={styles.searchContainer}>
           <Ionicons name="search" size={20} color={colors.deleteButton} style={styles.searchIcon} />
-                    <TextInput
-             style={[styles.searchInput, { 
-               color: colors.text,
-             }]}
-             placeholder="Search recipes..."
-             placeholderTextColor={colors.deleteButton}
-             value={searchQuery}
-             onChangeText={setSearchQuery}
-             clearButtonMode="while-editing"
-           />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search recipes..."
+            placeholderTextColor={colors.deleteButton}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            clearButtonMode="while-editing"
+          />
         </View>
 
         <RecipeGrid 
@@ -131,23 +131,23 @@ export default function RecipeList({ navigation }: { navigation: any }) {
         />
         
         <TouchableOpacity 
-          style={[styles.fab, { backgroundColor: colors.tint }]}
+          style={styles.fab}
           onPress={() => setIsMenuVisible(true)}
         >
           <Ionicons name="add" size={24} color={colors.background} />
         </TouchableOpacity>
 
         {recipes.length === 0 && (
-          <View style={[styles.tooltip, { backgroundColor: colors.cardBackground }]}>
+          <View style={styles.tooltip}>
             <View style={styles.tooltipContent}>
-              <Text style={[styles.tooltipText, { color: colors.text }]}>
+              <Text style={styles.tooltipText}>
                 Add your first recipe
               </Text>
               <Ionicons 
                 name="arrow-forward" 
                 size={14} 
                 color={colors.text} 
-                style={{ marginLeft: 8 }}
+                style={styles.arrowIcon}
               />
             </View>
           </View>
@@ -165,15 +165,14 @@ export default function RecipeList({ navigation }: { navigation: any }) {
             onPress={() => setIsMenuVisible(false)}
           >
             <View style={[styles.menuContainer, { 
-              backgroundColor: colors.cardBackground,
               bottom: 90,
               right: 20 
             }]}>
               <TouchableOpacity style={styles.menuItem} onPress={handleAddWithUrl}>
-                <Text style={[styles.menuText, { color: colors.text }]}>Add recipe from website</Text>
+                <Text style={styles.menuText}>Add recipe from website</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.menuItem} onPress={handleAddManually}>
-                <Text style={[styles.menuText, { color: colors.text }]}>Add recipe manually</Text>
+                <Text style={styles.menuText}>Add recipe manually</Text>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
@@ -196,9 +195,13 @@ export default function RecipeList({ navigation }: { navigation: any }) {
   );
 }
 
-const styles = StyleSheet.create({
+const stylesFactory = (colors: any) => StyleSheet.create({
+  flexView: {
+    flex: 1,
+  },
   container: {
     flex: 1,
+    backgroundColor: colors.background,
   },
   searchContainer: {
     flexDirection: 'row',
@@ -206,6 +209,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderBottomWidth: 1,
+    borderBottomColor: colors.inputBorder,
   },
   searchIcon: {
     marginRight: 8,
@@ -214,21 +218,21 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 40,
     fontSize: 16,
-    color: '#000',
     paddingLeft: 10,
     paddingRight: 10,
     borderRadius: 8,
+    color: colors.text,
   },
   fab: {
     position: 'absolute',
     right: 20,
     bottom: 20,
-    backgroundColor: '#007AFF',
     width: 56,
     height: 56,
     borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: colors.tint,
   },
   modalOverlay: {
     flex: 1,
@@ -236,7 +240,7 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     position: 'absolute',
-    backgroundColor: 'white',
+    backgroundColor: colors.cardBackground,
     borderRadius: 8,
     padding: 8,
     elevation: 4,
@@ -251,6 +255,7 @@ const styles = StyleSheet.create({
   },
   menuText: {
     fontSize: 17,
+    color: colors.text,
   },
   tooltip: {
     position: 'absolute',
@@ -258,12 +263,22 @@ const styles = StyleSheet.create({
     bottom: 28,
     padding: 12,
     borderRadius: 8,
+    backgroundColor: colors.cardBackground,
   },
   tooltipText: {
     fontSize: 14,
+    color: colors.text,
   },
   tooltipContent: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-}); 
+  menuIcon: {
+    marginTop: 10,
+    marginRight: -4,
+  },
+  arrowIcon: {
+    marginLeft: 8,
+  },
+});
+ 

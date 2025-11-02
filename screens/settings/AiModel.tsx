@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '@/hooks/useTheme';
@@ -20,6 +20,8 @@ export default function AiModel() {
     message: '',
     buttons: [],
   });
+
+  const styles = useMemo(() => stylesFactory(colors), [colors]);
 
   useEffect(() => {
     loadSettings();
@@ -95,20 +97,19 @@ export default function AiModel() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <View style={styles.flexView}>
       <Header title="AI Model" />
       <ScrollView style={styles.container}>
         <View style={styles.infoSection}>
-          <Text style={[styles.infoText, { color: colors.text }]}>
+          <Text style={styles.infoText}>
             Sift uses a Bring Your Own Model (BYOM) approach. To enable recipe import from websites, you need to connect to an AI service. Please enter the details of your AI provider below.
           </Text>
-
         </View>
 
         <View style={styles.form}>
-          <Text style={[styles.label, { color: colors.text }]}>Model Endpoint</Text>
+          <Text style={styles.label}>Model Endpoint</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: colors.inputBackground, color: colors.text, borderColor: colors.inputBorder }]}
+            style={styles.input}
             value={endpoint}
             onChangeText={setEndpoint}
             placeholder="https://api.openai.com/v1/chat/completions"
@@ -116,9 +117,9 @@ export default function AiModel() {
             autoCapitalize="none"
           />
 
-          <Text style={[styles.label, { color: colors.text }]}>Model Name</Text>
+          <Text style={styles.label}>Model Name</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: colors.inputBackground, color: colors.text, borderColor: colors.inputBorder }]}
+            style={styles.input}
             value={model}
             onChangeText={setModel}
             placeholder="gpt-4o-mini"
@@ -126,9 +127,9 @@ export default function AiModel() {
             autoCapitalize="none"
           />
 
-          <Text style={[styles.label, { color: colors.text }]}>API Key</Text>
+          <Text style={styles.label}>API Key</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: colors.inputBackground, color: colors.text, borderColor: colors.inputBorder }]}
+            style={styles.input}
             value={apiKey}
             onChangeText={setApiKey}
             placeholder="sk-..."
@@ -138,8 +139,8 @@ export default function AiModel() {
           />
         </View>
 
-        <TouchableOpacity style={[styles.button, { backgroundColor: colors.tint, marginBottom: 32 }]} onPress={saveAndTest}>
-          <Text style={[styles.buttonText, { color: colors.background }]}>Save & Test</Text>
+        <TouchableOpacity style={[styles.button, { marginBottom: 32 }]} onPress={saveAndTest}>
+          <Text style={styles.buttonText}>Save & Test</Text>
         </TouchableOpacity>
       </ScrollView>
       <CustomPopup
@@ -153,7 +154,11 @@ export default function AiModel() {
   );
 }
 
-const styles = StyleSheet.create({
+const stylesFactory = (colors: any) => StyleSheet.create({
+  flexView: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
   container: {
     flex: 1,
     padding: 16,
@@ -165,13 +170,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     marginBottom: 16,
-  },
-  codeBlock: {
-    fontFamily: 'SpaceMono-Regular',
-    fontSize: 12,
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 8,
+    color: colors.text,
   },
   form: {
     marginBottom: 16,
@@ -181,6 +180,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     opacity: 0.7,
     marginTop: 16,
+    color: colors.text,
   },
   input: {
     fontSize: 16,
@@ -188,14 +188,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 16,
+    backgroundColor: colors.inputBackground,
+    color: colors.text,
+    borderColor: colors.inputBorder,
   },
   button: {
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
+    backgroundColor: colors.tint,
   },
   buttonText: {
     fontSize: 16,
     fontWeight: '600',
+    color: colors.background,
   },
 });
+

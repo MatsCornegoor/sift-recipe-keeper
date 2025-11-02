@@ -264,11 +264,11 @@ export default function RecipeForm({ mode, initialRecipe, onSave }: RecipeFormPr
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        form: { padding: 16 },
-        sectionTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 12, marginTop: 40, opacity: 0.7 },
+        form: { padding: 16, backgroundColor: colors.background },
+        sectionTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 12, marginTop: 40, opacity: 0.7, color: colors.text },
         input: {
           borderWidth: 1,
-          borderColor: '#ddd',
+          borderColor: colors.inputBorder,
           borderRadius: 8,
           marginBottom: 16,
           fontSize: 16,
@@ -276,51 +276,51 @@ export default function RecipeForm({ mode, initialRecipe, onSave }: RecipeFormPr
           paddingHorizontal: 12,
           textAlignVertical: 'center',
           lineHeight: 20,
+          color: colors.text,
         },
-        imageButton: { backgroundColor: '#007AFF', padding: 16, borderRadius: 8, alignItems: 'center', marginBottom: 24 },
-        imageButtonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
-        imagePreview: { width: '100%', height: 200, marginBottom: 16, borderRadius: 8, overflow: 'hidden', backgroundColor: '#f0f0f0' },
+        imageButton: { backgroundColor: colors.tint, padding: 16, borderRadius: 8, alignItems: 'center', marginBottom: 24 },
+        imageButtonText: { color: colors.background, fontSize: 16, fontWeight: '600' },
+        imagePreview: { width: '100%', height: 200, marginBottom: 16, borderRadius: 8, overflow: 'hidden', backgroundColor: colors.placeholderBackground },
         previewImage: { width: '100%', height: '100%', resizeMode: 'cover' },
         detailsRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16, gap: 8 },
         detailInput: { flex: 1 },
-        detailLabel: { fontSize: 15, marginBottom: 8, marginTop: 12, opacity: 0.7 },
+        detailLabel: { fontSize: 15, marginBottom: 8, marginTop: 12, opacity: 0.7, color: colors.text },
         ingredientInput: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
-        addButton: { backgroundColor: '#007AFF', width: 48, height: 48, borderRadius: 8, marginLeft: 8, justifyContent: 'center', alignItems: 'center' },
-        saveButton: { backgroundColor: '#34C759', padding: 16, borderRadius: 8, alignItems: 'center', marginTop: 24 },
-        saveButtonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
+        addButton: { backgroundColor: colors.tint, width: 48, height: 48, borderRadius: 8, marginLeft: 8, justifyContent: 'center', alignItems: 'center' },
+        saveButton: { backgroundColor: colors.success, padding: 16, borderRadius: 8, alignItems: 'center', marginTop: 24 },
+        saveButtonText: { color: colors.background, fontSize: 16, fontWeight: '600' },
         tagsScrollContainer: { overflow: 'visible', marginHorizontal: -16 },
         tagsContainer: { flexDirection: 'row', gap: 8, overflow: 'visible', paddingHorizontal: 16 },
-        tagContainer: { flexDirection: 'row', alignItems: 'center', paddingVertical: 4, paddingLeft: 12, paddingRight: 4, borderRadius: 16, height: 32, marginBottom: 16 },
-        tagText: { fontSize: 14, marginRight: 4, fontWeight: '500' },
+        tagContainer: { flexDirection: 'row', alignItems: 'center', paddingVertical: 4, paddingLeft: 12, paddingRight: 4, borderRadius: 16, height: 32, marginBottom: 16, backgroundColor: colors.cardBackground, borderWidth: 1, borderColor: colors.inputBorder },
+        tagText: { fontSize: 14, marginRight: 4, fontWeight: '500', color: colors.text },
         tagDeleteButton: { height: 32, width: 32, justifyContent: 'center', alignItems: 'center' },
         tagDeleteIcon: { opacity: 0.8 },
       }),
-    []
+    [colors]
   );
 
   return (
-    <View style={{ backgroundColor: colors.background }}>
-      <View style={styles.form}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>Name</Text>
+    <View style={styles.form}>
+        <Text style={styles.sectionTitle}>Name</Text>
         <TextInput
-          style={[styles.input, { borderColor: colors.inputBorder, color: colors.text }]}
+          style={styles.input}
           placeholder="e.g. Spaghetti Carbonara"
           placeholderTextColor={colors.placeholderText}
           value={name}
           onChangeText={setName}
         />
 
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>Image</Text>
+        <Text style={styles.sectionTitle}>Image</Text>
         {imageUri ? (
-          <View style={[styles.imagePreview, { backgroundColor: colors.placeholderBackground }]}> 
+          <View style={styles.imagePreview}> 
             <Image source={{ uri: imageUri }} style={styles.previewImage} />
           </View>
         ) : null}
-        <TouchableOpacity style={[styles.imageButton, { backgroundColor: colors.tint }]} onPress={handleAddImage}>
-          <Text style={[styles.imageButtonText, { color: colors.background }]}>{imageUri ? 'Change Image' : 'Select Image'}</Text>
+        <TouchableOpacity style={styles.imageButton} onPress={handleAddImage}>
+          <Text style={styles.imageButtonText}>{imageUri ? 'Change Image' : 'Select Image'}</Text>
         </TouchableOpacity>
 
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>Ingredients</Text>
+        <Text style={styles.sectionTitle}>Ingredients</Text>
         <GroupsEditor
           title="Ingredients"
           groups={ingredientGroups}
@@ -332,7 +332,7 @@ export default function RecipeForm({ mode, initialRecipe, onSave }: RecipeFormPr
           singleGroup
         />
 
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>Instructions</Text>
+        <Text style={styles.sectionTitle}>Instructions</Text>
         <GroupsEditor
           title="Instructions"
           groups={instructionGroups}
@@ -344,12 +344,12 @@ export default function RecipeForm({ mode, initialRecipe, onSave }: RecipeFormPr
           singleGroup
         />
 
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>Details</Text>
+        <Text style={styles.sectionTitle}>Details</Text>
         <View style={styles.detailsRow}>
           <View style={styles.detailInput}>
-            <Text style={[styles.detailLabel, { color: colors.text }]}>Cooking Time</Text>
+            <Text style={styles.detailLabel}>Cooking Time</Text>
             <TextInput
-              style={[styles.input, { borderColor: colors.inputBorder, color: colors.text, marginBottom: 0 }]}
+              style={[styles.input, { marginBottom: 0 }]}
               placeholder="e.g. 30 min"
               placeholderTextColor={colors.placeholderText}
               value={cookingTime}
@@ -357,9 +357,9 @@ export default function RecipeForm({ mode, initialRecipe, onSave }: RecipeFormPr
             />
           </View>
           <View style={styles.detailInput}>
-            <Text style={[styles.detailLabel, { color: colors.text }]}>Calories</Text>
+            <Text style={styles.detailLabel}>Calories</Text>
             <TextInput
-              style={[styles.input, { borderColor: colors.inputBorder, color: colors.text, marginBottom: 0 }]}
+              style={[styles.input, { marginBottom: 0 }]}
               placeholder="e.g. 250 kcal"
               placeholderTextColor={colors.placeholderText}
               value={calories}
@@ -368,24 +368,24 @@ export default function RecipeForm({ mode, initialRecipe, onSave }: RecipeFormPr
           </View>
         </View>
 
-        <Text style={[styles.detailLabel, { color: colors.text }]}>Tags</Text>
+        <Text style={styles.detailLabel}>Tags</Text>
         <View style={styles.ingredientInput}>
           <TextInput
-            style={[styles.input, { flex: 1, marginBottom: 0, borderColor: colors.inputBorder, color: colors.text }]}
+            style={[styles.input, { flex: 1, marginBottom: 0 }]}
             placeholder="e.g. vegetarian"
             placeholderTextColor={colors.placeholderText}
             value={newTag}
             onChangeText={setNewTag}
             onSubmitEditing={handleAddTag}
           />
-          <TouchableOpacity style={[styles.addButton, { backgroundColor: colors.tint }]} onPress={handleAddTag}>
+          <TouchableOpacity style={styles.addButton} onPress={handleAddTag}>
             <Ionicons name="add" size={24} color={colors.background} />
           </TouchableOpacity>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tagsScrollContainer} contentContainerStyle={styles.tagsContainer}>
           {tags.map((tag) => (
-            <View key={tag} style={[styles.tagContainer, { backgroundColor: colors.cardBackground, borderWidth: 1, borderColor: colors.inputBorder }]}> 
-              <Text style={[styles.tagText, { color: colors.text }]}>{tag}</Text>
+            <View key={tag} style={styles.tagContainer}> 
+              <Text style={styles.tagText}>{tag}</Text>
               <TouchableOpacity style={styles.tagDeleteButton} onPress={() => handleDeleteTag(tag)}>
                 <Ionicons name="close-circle" size={24} color={colors.deleteButton} style={styles.tagDeleteIcon} />
               </TouchableOpacity>
@@ -393,9 +393,9 @@ export default function RecipeForm({ mode, initialRecipe, onSave }: RecipeFormPr
           ))}
         </ScrollView>
 
-        <Text style={[styles.detailLabel, { color: colors.text }]}>Source URL</Text>
+        <Text style={styles.detailLabel}>Source URL</Text>
         <TextInput
-          style={[styles.input, { borderColor: colors.inputBorder, color: colors.text }]}
+          style={styles.input}
           placeholder="www.cookingwebite.com"
           placeholderTextColor={colors.placeholderText}
           value={sourceUrl}
@@ -404,10 +404,9 @@ export default function RecipeForm({ mode, initialRecipe, onSave }: RecipeFormPr
           autoCorrect={false}
         />
 
-        <TouchableOpacity style={[styles.saveButton, { backgroundColor: colors.tint }]} onPress={handleSave}>
-          <Text style={[styles.saveButtonText, { color: colors.background }]}>{mode === 'add' ? 'Save Recipe' : 'Save Changes'}</Text>
+        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+          <Text style={styles.saveButtonText}>{mode === 'add' ? 'Save Recipe' : 'Save Changes'}</Text>
         </TouchableOpacity>
-      </View>
 
       <CustomPopup visible={showPopup} title={popupConfig.title} message={popupConfig.message} buttons={popupConfig.buttons} onClose={() => setShowPopup(false)} />
       <TextInputPopup
@@ -442,4 +441,5 @@ export default function RecipeForm({ mode, initialRecipe, onSave }: RecipeFormPr
       />
     </View>
   );
-} 
+}
+ 
