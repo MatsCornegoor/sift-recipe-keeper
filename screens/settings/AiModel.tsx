@@ -6,8 +6,8 @@ import Header from '@/components/Header';
 
 export default function AiModel() {
   const { colors } = useTheme();
-  const [endpoint, setEndpoint] = useState('');
-  const [model, setModel] = useState('');
+  const [endpoint, setEndpoint] = useState('https://api.openai.com/v1/chat/completions');
+  const [model, setModel] = useState('gpt-4o-mini');
   const [apiKey, setApiKey] = useState('');
 
   useEffect(() => {
@@ -83,7 +83,7 @@ export default function AiModel() {
             style={[styles.input, { backgroundColor: colors.inputBackground, color: colors.text, borderColor: colors.inputBorder }]}
             value={endpoint}
             onChangeText={setEndpoint}
-            placeholder="https://api.example.com/v1/chat/completions"
+            placeholder="https://api.openai.com/v1/chat/completions"
             placeholderTextColor={colors.text}
             autoCapitalize="none"
           />
@@ -93,7 +93,7 @@ export default function AiModel() {
             style={[styles.input, { backgroundColor: colors.inputBackground, color: colors.text, borderColor: colors.inputBorder }]}
             value={model}
             onChangeText={setModel}
-            placeholder="your-model-name"
+            placeholder="gpt-4o-mini"
             placeholderTextColor={colors.text}
             autoCapitalize="none"
           />
