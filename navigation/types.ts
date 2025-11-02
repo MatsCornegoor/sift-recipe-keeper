@@ -11,6 +11,7 @@ export type RootStackParamList = {
   ImportExport: undefined;
   Settings: undefined;
   Recipes: undefined;
+  AiModel: undefined;
 };
 
 export type SettingsStackParamList = {
@@ -19,6 +20,7 @@ export type SettingsStackParamList = {
   ImportExport: undefined;
   ExportRecipes: undefined;
   About: undefined;
+  AiModel: undefined;
 };
 
 export type AppNavigationProp = NativeStackNavigationProp<RootStackParamList>; 

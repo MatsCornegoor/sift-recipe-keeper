@@ -2,6 +2,7 @@ import { Recipe, Ingredient, RecipeStep, IngredientGroup, InstructionGroup } fro
 import { Platform } from 'react-native';
 import RNFS from 'react-native-fs';
 import { CURRENT_SCHEMA_VERSION } from '../models/RecipeMigrations';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface ModelConfig {
   model: string;
@@ -11,44 +12,33 @@ interface ModelConfig {
 }
 
 class RecipeExtractorService {
-  private endpoint = 'https://siftrecipes.app/api/router';
   private corsProxy = 'https://corsproxy.io/?';  
   
-  private models: ModelConfig[] = [
-    { model: 'qwen/qwen3-8b:free', temperature: 0.1, seed: 1997, supportsResponseFormat: true },
-    { model: 'mistralai/mistral-small-3.2-24b-instruct:free', temperature: 0.1, seed: 1997, supportsResponseFormat: true },
-    { model: 'moonshotai/kimi-k2:free', temperature: 0.1, seed: 1997, supportsResponseFormat: true },
-  ];
+  private customEndpoint: string | null = null;
+  private customModel: string | null = null;
+  private customApiKey: string | null = null;
 
   constructor() {
-    this.initializeModels();
+    this.loadCustomModelConfig();
   }
 
-  private async initializeModels(): Promise<void> {
-
+  private async loadCustomModelConfig(): Promise<void> {
     try {
-      // First fetch the most up-to-date model config with free models
-      const response = await fetch('https://siftrecipes.app/model-config.json', {
-        headers: {
-          'Accept': 'application/json',
-          'Cache-Control': 'no-cache'
-        }
-      });
+      const endpoint = await AsyncStorage.getItem('ai_model_endpoint');
+      const model = await AsyncStorage.getItem('ai_model_name');
+      const apiKey = await AsyncStorage.getItem('ai_model_api_key');
       
-      if (!response.ok) {
-        throw new Error(`Failed to fetch model config: ${response.status}`);
+      if (endpoint && model) {
+        this.customEndpoint = endpoint;
+        this.customModel = model;
+        this.customApiKey = apiKey || null;
+        console.log('Loaded custom AI model configuration.');
       }
-      
-      const fetchedModels = await response.json();
-      // Replace the entire models array with the fetched array
-      this.models = fetchedModels;
-      console.log('Model config loaded successfully:', this.models);
     } catch (error) {
-      console.log('Error loading model config:', error);
-      // Keep the hardcoded models as fallback
-      console.log('Using hardcoded model config:', this.models);
+      console.error('Failed to load custom AI model config', error);
     }
   }
+
 
   async extractRecipe(url: string, extraInstructions?: string): Promise<Recipe> {
     try {
@@ -186,19 +176,27 @@ class RecipeExtractorService {
   }
 
   private async callGPTAPI(prompt: string): Promise<string> {
-    for (const model of this.models) {
-      try {
-        console.log(`Trying model: ${model.model}`);
-        return await this.callGPTAPIWithModel(model, prompt);
-      } catch (error) {
-        console.log(`Model ${model.model} failed: ${error}`);
-        continue;
-      }
+    if (!this.customEndpoint || !this.customModel) {
+      throw new Error('AI model is not configured. Please configure it in the settings.');
     }
-    throw new Error('All models failed to respond');
+
+    try {
+      console.log(`Trying custom model: ${this.customModel}`);
+      const customModelConfig: ModelConfig & { apiKey?: string | null } = {
+        model: this.customModel,
+        temperature: 0.1,
+        seed: 1997,
+        supportsResponseFormat: true, // Assume custom endpoints support this for simplicity
+        apiKey: this.customApiKey,
+      };
+      return await this.callGPTAPIWithModel(customModelConfig, prompt, this.customEndpoint);
+    } catch (error) {
+      console.log(`Custom model failed: ${error}`);
+      throw new Error('Custom model failed to respond');
+    }
   }
 
-  private async callGPTAPIWithModel(modelConfig: ModelConfig, prompt: string): Promise<string> {
+  private async callGPTAPIWithModel(modelConfig: ModelConfig & { apiKey?: string | null }, prompt: string, endpoint: string): Promise<string> {
     const requestBody: any = {
       model: modelConfig.model,
       messages: [
@@ -216,9 +214,14 @@ class RecipeExtractorService {
 
     console.log(`API request body for ${modelConfig.model}:`, JSON.stringify(requestBody, null, 2));
 
-    const response = await fetch(this.endpoint, {
+    const headers: HeadersInit = { 'Content-Type': 'application/json' };
+    if (modelConfig.apiKey) {
+        headers['Authorization'] = `Bearer ${modelConfig.apiKey}`;
+    }
+
+    const response = await fetch(endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: headers,
       body: JSON.stringify(requestBody),
     });
 

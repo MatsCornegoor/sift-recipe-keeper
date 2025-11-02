@@ -8,11 +8,13 @@ import { useTheme } from '../hooks/useTheme';
 import Header from '../components/Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as KeepAwake from 'react-native-keep-awake';
+import CustomPopup from '../components/CustomPopup';
 
 export default function RecipeList({ navigation }: { navigation: any }) {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showAiPopup, setShowAiPopup] = useState(false);
 
   const { width } = useWindowDimensions();
   const numColumns = width > 600 ? 3 : width > 300 ? 2 : 1;
@@ -27,8 +29,20 @@ export default function RecipeList({ navigation }: { navigation: any }) {
     RecipeStore.loadRecipes();
     RecipeStore.addListener(setRecipes);
     checkScreenAwake();
+    checkAiSettings();
     return () => RecipeStore.removeListener(setRecipes);
   }, []);
+
+  const checkAiSettings = async () => {
+    try {
+      const endpoint = await AsyncStorage.getItem('ai_model_endpoint');
+      if (!endpoint) {
+        setShowAiPopup(true);
+      }
+    } catch (e) {
+      console.error("Failed to check AI settings", e);
+    }
+  };
 
   const checkScreenAwake = async () => {
     try {
@@ -164,6 +178,19 @@ export default function RecipeList({ navigation }: { navigation: any }) {
             </View>
           </TouchableOpacity>
         </Modal>
+        <CustomPopup
+          visible={showAiPopup}
+          title="AI Model Required"
+          message="To import recipes from websites, you must configure an AI model in the settings. Please add your API endpoint to enable this feature."
+          buttons={[
+            { text: 'Go to Settings', onPress: () => {
+                setShowAiPopup(false);
+                navigation.navigate('Settings', { screen: 'AiModel' });
+            }},
+            { text: 'Later', onPress: () => setShowAiPopup(false) }
+          ]}
+          onClose={() => setShowAiPopup(false)}
+        />
       </View>
     </View>
   );

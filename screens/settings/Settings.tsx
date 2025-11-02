@@ -41,6 +41,9 @@ export default function Settings() {
             {renderSettingsItem('information-circle-outline', 'About Sift', () =>
               navigation.navigate('About')
             )}
+             {renderSettingsItem('cog-outline', 'AI Setup', () =>
+              navigation.navigate('AiModel')
+            )}
             {renderSettingsItem('color-palette-outline', 'Appearance', () =>
               navigation.navigate('Appearance')
             )}

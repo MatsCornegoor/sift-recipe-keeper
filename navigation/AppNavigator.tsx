@@ -10,6 +10,7 @@ import ImportExport from '../screens/settings/ImportExport';
 import ExportRecipes from '../screens/settings/ExportRecipes';
 import About from '../screens/settings/About';
 import Appearance from '../screens/settings/Appearance';
+import AiModel from '../screens/settings/AiModel';
 import Settings from '../screens/settings/Settings';
 import RecipeList from '../screens/RecipeList';
 import { useTheme } from '../hooks/useTheme';
@@ -28,6 +29,7 @@ export default function AppNavigator() {
         <Stack.Screen name="RecipeDetail" component={RecipeDetail} />
         <Stack.Screen name="About" component={About} />
         <Stack.Screen name="Appearance" component={Appearance} />
+        <Stack.Screen name="AiModel" component={AiModel} />
         <Stack.Screen name="ImportExport" component={ImportExport} />
         <Stack.Screen name="ExportRecipes" component={ExportRecipes} />
       </Stack.Navigator>
