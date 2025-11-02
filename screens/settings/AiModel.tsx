@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '@/hooks/useTheme';
 import Header from '@/components/Header';
+import CustomPopup from '@/components/CustomPopup';
 
 export default function AiModel() {
   const { colors } = useTheme();
   const [endpoint, setEndpoint] = useState('https://api.openai.com/v1/chat/completions');
   const [model, setModel] = useState('gpt-4o-mini');
   const [apiKey, setApiKey] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupConfig, setPopupConfig] = useState<{
+    title: string;
+    message: string;
+    buttons: Array<{ text: string; onPress: () => void; style?: 'default' | 'cancel' }>;
+  }>({
+    title: '',
+    message: '',
+    buttons: [],
+  });
 
   useEffect(() => {
     loadSettings();
@@ -29,7 +40,12 @@ export default function AiModel() {
 
   const saveAndTest = async () => {
     if (!endpoint || !model) {
-      Alert.alert('Error', 'Please fill in at least the endpoint and model name.');
+      setPopupConfig({
+        title: 'Error',
+        message: 'Please fill in at least the endpoint and model name.',
+        buttons: [{ text: 'OK', onPress: () => setShowPopup(false) }],
+      });
+      setShowPopup(true);
       return;
     }
     try {
@@ -53,16 +69,28 @@ export default function AiModel() {
         await AsyncStorage.setItem('ai_model_endpoint', endpoint);
         await AsyncStorage.setItem('ai_model_name', model);
         await AsyncStorage.setItem('ai_model_api_key', apiKey);
-        Alert.alert('Success', 'Settings saved and connection is working.');
+        setPopupConfig({
+          title: 'Success',
+          message: 'Settings saved and connection is working.',
+          buttons: [{ text: 'OK', onPress: () => setShowPopup(false) }],
+        });
+        setShowPopup(true);
       } else {
         const errorBody = await response.text();
-        Alert.alert(
-          'Connection Failed',
-          `The endpoint returned an error (Status: ${response.status}). Settings were not saved.\n\n${errorBody}`
-        );
+        setPopupConfig({
+          title: 'Connection Failed',
+          message: `The endpoint returned an error (Status: ${response.status}). Settings were not saved.\n\n${errorBody}`,
+          buttons: [{ text: 'OK', onPress: () => setShowPopup(false) }],
+        });
+        setShowPopup(true);
       }
     } catch (error: any) {
-      Alert.alert('Connection Error', `Failed to connect to the endpoint. Settings were not saved: ${error.message}`);
+      setPopupConfig({
+        title: 'Connection Error',
+        message: `Failed to connect to the endpoint. Settings were not saved: ${error.message}`,
+        buttons: [{ text: 'OK', onPress: () => setShowPopup(false) }],
+      });
+      setShowPopup(true);
     }
   };
 
@@ -114,6 +142,13 @@ export default function AiModel() {
           <Text style={[styles.buttonText, { color: colors.background }]}>Save & Test</Text>
         </TouchableOpacity>
       </ScrollView>
+      <CustomPopup
+        visible={showPopup}
+        title={popupConfig.title}
+        message={popupConfig.message}
+        buttons={popupConfig.buttons}
+        onClose={() => setShowPopup(false)}
+      />
     </View>
   );
 }
@@ -142,9 +177,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   label: {
-    fontSize: 16,
-    marginBottom: 8,
-    opacity: 0.9,
+    fontSize: 15,
+    marginBottom: 10,
+    opacity: 0.7,
+    marginTop: 16,
   },
   input: {
     fontSize: 16,
