@@ -20,6 +20,7 @@ interface CustomPopupProps {
     style?: 'default' | 'cancel';
   }>;
   onClose: () => void;
+  type?: 'default' | 'info';
 }
 
 export default function CustomPopup({
@@ -28,11 +29,14 @@ export default function CustomPopup({
   message,
   buttons,
   onClose,
+  type = 'default',
 }: CustomPopupProps) {
 
   const { colors } = useTheme();
 
   const styles = useMemo(() => stylesFactory(colors), [colors]);
+
+  const isInfo = type === 'info';
 
   return (
     <Modal
@@ -58,17 +62,20 @@ export default function CustomPopup({
               </Text>
             ))}
           </View>
-          <View style={styles.buttonContainer}>
+          <View style={[styles.buttonContainer, isInfo && styles.buttonContainerInfo]}>
             {buttons.map((button, index) => (
               <TouchableOpacity
                 key={index}
                 style={[
                   styles.button,
-                  index < buttons.length - 1 && styles.buttonMargin,
+                  isInfo && styles.buttonInfo,
+                  isInfo && button.style === 'cancel' && styles.buttonOutlined,
+                  !isInfo && index < buttons.length - 1 && styles.buttonMargin,
+                  isInfo && index > 0 && styles.buttonMarginInfo,
                 ]}
                 onPress={button.onPress}
               >
-                <Text style={styles.buttonText}>
+                <Text style={[styles.buttonText, isInfo && button.style === 'cancel' && styles.buttonTextOutlined]}>
                   {button.text}
                 </Text>
               </TouchableOpacity>
@@ -122,6 +129,7 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     marginTop: 8,
     height: 0,
   },
+  // Default button styles
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -140,5 +148,24 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     fontWeight: '600',
     color: colors.background,
   },
+  // Info popup styles
+  buttonContainerInfo: {
+    flexDirection: 'column',
+    marginTop: 10,
+  },
+  buttonInfo: {
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  buttonOutlined: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: colors.inputBorder,
+  },
+  buttonMarginInfo: {
+    marginTop: 10,
+  },
+  buttonTextOutlined: {
+    color: colors.deleteButton,
+  },
 });
- 

@@ -189,16 +189,17 @@ export default function RecipeList({ navigation }: { navigation: any }) {
           title="Welcome to Sift!"
           message="To import recipes from websites, you need to configure an AI model. Please set up the model to unlock this feature."
           buttons={[
-            { text: 'Setup Model', onPress: () => {
-                setShowAiPopup(false);
-                navigation.navigate('AiModel');
-            }},
             { text: 'How Sift Works', onPress: () => {
                 setShowAiPopup(false);
                 navigation.navigate('About');
+            }, style: 'cancel'},
+            { text: 'Setup Model', onPress: () => {
+              setShowAiPopup(false);
+              navigation.navigate('AiModel');
             }}
           ]}
           onClose={() => setShowAiPopup(false)}
+          type="info"
         />
       </View>
     </View>
