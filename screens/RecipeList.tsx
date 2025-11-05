@@ -31,20 +31,27 @@ export default function RecipeList({ navigation }: { navigation: any }) {
     RecipeStore.loadRecipes();
     RecipeStore.addListener(setRecipes);
     checkScreenAwake();
-    checkAiSettings();
     return () => RecipeStore.removeListener(setRecipes);
   }, []);
 
-  const checkAiSettings = async () => {
-    try {
-      const endpoint = await AsyncStorage.getItem('ai_model_endpoint');
-      if (!endpoint) {
-        setShowAiPopup(true);
+  useEffect(() => {
+    const checkAiSettings = async () => {
+      if (recipes.length === 0) {
+        try {
+          const endpoint = await AsyncStorage.getItem('ai_model_endpoint');
+          if (!endpoint) {
+            setShowAiPopup(true);
+          }
+        } catch (e) {
+          console.error("Failed to check AI settings", e);
+        }
+      } else {
+        setShowAiPopup(false);
       }
-    } catch (e) {
-      console.error("Failed to check AI settings", e);
-    }
-  };
+    };
+
+    checkAiSettings();
+  }, [recipes]);
 
   const checkScreenAwake = async () => {
     try {
@@ -179,14 +186,17 @@ export default function RecipeList({ navigation }: { navigation: any }) {
         </Modal>
         <CustomPopup
           visible={showAiPopup}
-          title="AI Model Required"
-          message="To import recipes from websites, you must configure an AI model in the settings. Please add your API endpoint to enable this feature."
+          title="Welcome to Sift!"
+          message="To import recipes from websites, you need to configure an AI model. Please set up the model to unlock this feature."
           buttons={[
-            { text: 'Go to Settings', onPress: () => {
+            { text: 'Setup Model', onPress: () => {
                 setShowAiPopup(false);
-                navigation.navigate('Settings', { screen: 'AiModel' });
+                navigation.navigate('AiModel');
             }},
-            { text: 'Later', onPress: () => setShowAiPopup(false) }
+            { text: 'How Sift Works', onPress: () => {
+                setShowAiPopup(false);
+                navigation.navigate('About');
+            }}
           ]}
           onClose={() => setShowAiPopup(false)}
         />

@@ -98,7 +98,7 @@ export default function AiModel() {
 
   return (
     <View style={styles.flexView}>
-      <Header title="AI Model" />
+      <Header title="AI Setup" />
       <ScrollView style={styles.container}>
         <View style={styles.infoSection}>
           <Text style={styles.infoText}>

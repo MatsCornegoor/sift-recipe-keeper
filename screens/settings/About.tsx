@@ -82,6 +82,7 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    paddingBottom: 80,
   },
   title: {
     fontSize: 20,
@@ -107,7 +108,7 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   cardTitle: {
     fontSize: 16,
     marginTop: 20,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     opacity: 0.9,
     marginBottom: 8,
     color: colors.text,
