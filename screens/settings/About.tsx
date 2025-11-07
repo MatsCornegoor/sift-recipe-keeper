@@ -28,7 +28,7 @@ export default function About() {
             Sift works with any provider that supports the OpenAI API format. Here are a few popular options:
           </Text>
 
-          <View style={styles.card}>
+          <View style={[styles.card, { marginTop: 16 }]}>
             <Text style={styles.cardTitle}>OpenRouter</Text>
             <Text style={[styles.description, { marginBottom: 0, opacity: 0.8 }]}>
               A great place to start. OpenRouter lets you access models from different providers, including some excellent free ones. It's a flexible way to find a model that fits your needs.
@@ -63,10 +63,10 @@ export default function About() {
             Once you've chosen a provider and have your API details, follow these steps:
           </Text>
 
-          <View style={[styles.card, { flexDirection: 'row', alignItems: 'flex-start' }]}>
+          <View style={[styles.card, { flexDirection: 'row', alignItems: 'flex-start', marginTop: 16 }]}>
             <Text style={styles.stepNumber}>1</Text>
             <Text style={styles.stepText}>
-              Go to <Text style={{ fontWeight: 'bold' }}>Settings &gt; AI Model</Text>.
+              Go to Settings &gt; AI Model.
             </Text>
           </View>
 
@@ -74,18 +74,18 @@ export default function About() {
             <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 16 }}>
               <Text style={styles.stepNumber}>2</Text>
               <Text style={styles.stepText}>
-                Enter the <Text style={{ fontWeight: 'bold' }}>API Endpoint</Text>, <Text style={{ fontWeight: 'bold' }}>Model Name</Text>, and <Text style={{ fontWeight: 'bold' }}>API Key</Text> from your provider.
+                Enter the API Endpoint, Model Name, and API Key from your provider.
               </Text>
             </View>
             <View style={styles.indentedContent}>
               <Text style={[styles.description, { opacity: 0.8 }]}>
-                The <Text style={{ fontWeight: 'bold' }}>API Endpoint</Text> is the URL for the AI service (e.g., <Text style={{ fontFamily: 'SpaceMono-Regular' }}>https://openrouter.ai/api/v1/chat/completions</Text>).
+                The API Endpoint is the URL for the AI service (e.g., <Text style={{ fontFamily: 'SpaceMono-Regular' }}>https://openrouter.ai/api/v1/chat/completions</Text>).
               </Text>
               <Text style={[styles.description, { opacity: 0.8 }]}>
-                The <Text style={{ fontWeight: 'bold' }}>Model Name</Text> is the specific model you want to use (e.g., <Text style={{ fontFamily: 'SpaceMono-Regular' }}>google/gemini-flash-1.5</Text>).
+                The Model Name is the specific model you want to use (e.g., <Text style={{ fontFamily: 'SpaceMono-Regular' }}>google/gemini-flash-1.5</Text>).
               </Text>
               <Text style={[styles.description, { marginBottom: 0, opacity: 0.8 }]}>
-                The <Text style={{ fontWeight: 'bold' }}>API Key</Text> is your secret key from the provider.
+                The API Key is your secret key from the provider.
               </Text>
             </View>
           </View>
@@ -93,7 +93,7 @@ export default function About() {
           <View style={[styles.card, { flexDirection: 'row', alignItems: 'flex-start' }]}>
             <Text style={styles.stepNumber}>3</Text>
             <Text style={styles.stepText}>
-              Tap <Text style={{ fontWeight: 'bold' }}>Save & Test</Text> to check the connection.
+              Tap Save & Test to check the connection.
             </Text>
           </View>
 
@@ -142,7 +142,7 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   },
   cardTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     opacity: 0.9,
     marginBottom: 8,
     color: colors.text,

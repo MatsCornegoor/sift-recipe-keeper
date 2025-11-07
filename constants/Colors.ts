@@ -19,7 +19,7 @@ export default {
     placeholderBackground: '#e9e9e9',
     placeholderText: '#A3A3A3F7',
     deleteButton: '#525252',
-    success: '#16A34A',
+    success: '#171717',
   },
   dark: {
     text: '#FAFAFA',
@@ -33,6 +33,6 @@ export default {
     placeholderBackground: '#262626',
     placeholderText: '#A3A3A3A6',
     deleteButton: '#A3A3A3',
-    success: '#16A34A',
+    success: '#FAFAFA',
   },
 };
