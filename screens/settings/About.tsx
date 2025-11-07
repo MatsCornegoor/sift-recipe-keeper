@@ -15,20 +15,58 @@ export default function About() {
       <ScrollView style={styles.flexView}>
         <View style={styles.container}>
           <Text style={styles.description}>
-            This app is a minimalist recipe keeper that can be used to extract only the essential information from a recipe website, cutting out the ads, stories, and other clutter. This gives you a clean, easy-to-read recipe card.
+            Sift is a simple recipe keeper. It uses AI to grab just the recipe from a website, leaving out ads and long stories. You get a clean, easy-to-read recipe.
           </Text>
 
           <Text style={styles.title}>
-            Setting up a model
+            Choosing an AI Provider
           </Text>
           <Text style={[styles.description, { marginBottom: 16 }]}>
-            Sift uses a Bring Your Own Model (BYOM) approach. This allows you to test new models and stay in control over your own data. Before you can import recipes, you need to connect Sift to an AI service.
+            To start, you need to connect Sift to an AI service. This "Bring Your Own Model" approach gives you control over your data and lets you experiment with different AI models.
+          </Text>
+          <Text style={[styles.description, { marginBottom: 16 }]}>
+            Sift works with any provider that supports the OpenAI API format. Here are a few popular options:
           </Text>
 
-          <View style={[styles.card, { flexDirection: 'row', alignItems: 'flex-start' , marginTop: 16 }]}>
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>OpenRouter</Text>
+            <Text style={[styles.description, { marginBottom: 0, opacity: 0.8 }]}>
+              A great place to start. OpenRouter lets you access models from different providers, including some excellent free ones. It's a flexible way to find a model that fits your needs.
+            </Text>
+          </View>
+
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>OpenAI</Text>
+            <Text style={[styles.description, { marginBottom: 0, opacity: 0.8 }]}>
+              Home of the GPT models. Models like <Text style={{ fontFamily: 'SpaceMono-Regular' }}>gpt-4o-mini</Text> are powerful and do a great job of extracting recipes accurately. These are typically paid models.
+            </Text>
+          </View>
+
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Google AI</Text>
+            <Text style={[styles.description, { marginBottom: 0, opacity: 0.8 }]}>
+              Provides the Gemini family of models. You can often access these through services like OpenRouter.
+            </Text>
+          </View>
+
+          <Text style={styles.title}>
+            Free vs. Paid Models
+          </Text>
+          <Text style={[styles.description, { marginBottom: 16 }]}>
+            Many providers offer free models that are perfect for casual use. However, for the best performance and highest accuracy, you may want to consider a paid model. Paid models are generally more powerful and make fewer mistakes when reading recipes.
+          </Text>
+
+          <Text style={styles.title}>
+            Setting up Your Model
+          </Text>
+          <Text style={[styles.description, { marginBottom: 16 }]}>
+            Once you've chosen a provider and have your API details, follow these steps:
+          </Text>
+
+          <View style={[styles.card, { flexDirection: 'row', alignItems: 'flex-start' }]}>
             <Text style={styles.stepNumber}>1</Text>
             <Text style={styles.stepText}>
-              Go to Settings &gt; AI Setup.
+              Go to <Text style={{ fontWeight: 'bold' }}>Settings &gt; AI Model</Text>.
             </Text>
           </View>
 
@@ -36,21 +74,18 @@ export default function About() {
             <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 16 }}>
               <Text style={styles.stepNumber}>2</Text>
               <Text style={styles.stepText}>
-                Fill in the required details from your chosen AI provider. We support any service that uses the OpenAI API format.
+                Enter the <Text style={{ fontWeight: 'bold' }}>API Endpoint</Text>, <Text style={{ fontWeight: 'bold' }}>Model Name</Text>, and <Text style={{ fontWeight: 'bold' }}>API Key</Text> from your provider.
               </Text>
             </View>
             <View style={styles.indentedContent}>
-              <Text style={styles.cardTitle}>API Endpoint:</Text>
-              <Text style={[styles.description, { marginBottom: 16 }]}>
-                This is a URL provided by your AI service. For example the OpenAI url is: https://api.openai.com/v1/chat/completions.
+              <Text style={[styles.description, { opacity: 0.8 }]}>
+                The <Text style={{ fontWeight: 'bold' }}>API Endpoint</Text> is the URL for the AI service (e.g., <Text style={{ fontFamily: 'SpaceMono-Regular' }}>https://openrouter.ai/api/v1/chat/completions</Text>).
               </Text>
-              <Text style={styles.cardTitle}>Model Name:</Text>
-              <Text style={[styles.description, { marginBottom: 16 }]}>
-                The name of the specific AI model you want to use. We recommend using: gpt-4o-mini.
+              <Text style={[styles.description, { opacity: 0.8 }]}>
+                The <Text style={{ fontWeight: 'bold' }}>Model Name</Text> is the specific model you want to use (e.g., <Text style={{ fontFamily: 'SpaceMono-Regular' }}>google/gemini-flash-1.5</Text>).
               </Text>
-              <Text style={styles.cardTitle}>API Key:</Text>
-              <Text style={[styles.description, { marginBottom: 0 }]}>
-                A secret key provided by your AI service to authenticate your requests.
+              <Text style={[styles.description, { marginBottom: 0, opacity: 0.8 }]}>
+                The <Text style={{ fontWeight: 'bold' }}>API Key</Text> is your secret key from the provider.
               </Text>
             </View>
           </View>
@@ -58,7 +93,7 @@ export default function About() {
           <View style={[styles.card, { flexDirection: 'row', alignItems: 'flex-start' }]}>
             <Text style={styles.stepNumber}>3</Text>
             <Text style={styles.stepText}>
-              Tap "Save & Test" to make sure everything is working correctly.
+              Tap <Text style={{ fontWeight: 'bold' }}>Save & Test</Text> to check the connection.
             </Text>
           </View>
 
@@ -66,7 +101,7 @@ export default function About() {
             Adding a Recipe
           </Text>
           <Text style={[styles.description, { marginBottom: 0 }]}>
-            When the AI model is set up, you can add a recipe from a website by tapping the add button on the home screen.
+            With your AI model set up, just tap the '+' button on the home screen and paste a recipe URL to get started!
           </Text>
         </View>
       </ScrollView>
@@ -107,8 +142,7 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   },
   cardTitle: {
     fontSize: 16,
-    marginTop: 20,
-    // fontWeight: 'bold',
+    fontWeight: 'bold',
     opacity: 0.9,
     marginBottom: 8,
     color: colors.text,
