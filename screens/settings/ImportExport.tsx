@@ -154,8 +154,8 @@ export default function ImportExport() {
             </Text>
             
             <View style={styles.actionsContainer}>
-              {renderActionButton('Export Recipes', handleExportPress)}
-              {renderActionButton('Import Recipes', handleImport)}
+              {renderActionButton('Export recipes', handleExportPress)}
+              {renderActionButton('Import recipes', handleImport)}
             </View>
           </View>
         </ContentWrapper>

@@ -347,7 +347,7 @@ export default function RecipeForm({ mode, initialRecipe, onSave }: RecipeFormPr
         <Text style={styles.sectionTitle}>Details</Text>
         <View style={styles.detailsRow}>
           <View style={styles.detailInput}>
-            <Text style={styles.detailLabel}>Cooking Time</Text>
+            <Text style={styles.detailLabel}>Cooking time</Text>
             <TextInput
               style={[styles.input, { marginBottom: 0 }]}
               placeholder="e.g. 30 min"

@@ -40,10 +40,10 @@ export default function Settings() {
       >
         <ContentWrapper>
           <View style={styles.container}>
-            {renderSettingsItem('information-circle-outline', 'How Sift Works', () =>
+            {renderSettingsItem('information-circle-outline', 'How Sift works', () =>
               navigation.navigate('About')
             )}
-             {renderSettingsItem('cog-outline', 'AI Setup', () =>
+             {renderSettingsItem('cog-outline', 'AI setup', () =>
               navigation.navigate('AiModel')
             )}
             {renderSettingsItem('color-palette-outline', 'Appearance', () =>

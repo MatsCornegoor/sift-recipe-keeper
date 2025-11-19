@@ -56,7 +56,7 @@ export default function Appearance() {
           <View style={styles.settingRow}>
             <View style={styles.settingInfo}>
               <Text style={styles.settingTitle}>
-                Dark Mode
+                Dark mode
               </Text>
               <Text style={styles.settingDescription}>
                 Switch between light and dark theme

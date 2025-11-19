@@ -304,10 +304,10 @@ export default function RecipeDetail() {
             top: 80,
           }]}> 
             <TouchableOpacity style={styles.menuItem} onPress={handleEdit}>
-              <Text style={styles.menuText}>Edit Recipe</Text>
+              <Text style={styles.menuText}>Edit recipe</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.menuItem} onPress={handleDelete}>
-              <Text style={[styles.menuText, styles.deleteMenuText]}>Delete Recipe</Text>
+              <Text style={[styles.menuText, styles.deleteMenuText]}>Delete recipe</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>

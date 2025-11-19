@@ -98,7 +98,7 @@ export default function AiModel() {
 
   return (
     <View style={styles.flexView}>
-      <Header title="AI Setup" />
+      <Header title="AI setup" />
       <ScrollView style={styles.container}>
         <View style={styles.infoSection}>
           <Text style={styles.infoText}>
@@ -107,7 +107,7 @@ export default function AiModel() {
         </View>
 
         <View style={styles.form}>
-          <Text style={styles.label}>Model Endpoint</Text>
+          <Text style={styles.label}>Model endpoint</Text>
           <TextInput
             style={styles.input}
             value={endpoint}
@@ -117,7 +117,7 @@ export default function AiModel() {
             autoCapitalize="none"
           />
 
-          <Text style={styles.label}>Model Name</Text>
+          <Text style={styles.label}>Model name</Text>
           <TextInput
             style={styles.input}
             value={model}
@@ -127,7 +127,7 @@ export default function AiModel() {
             autoCapitalize="none"
           />
 
-          <Text style={styles.label}>API Key</Text>
+          <Text style={styles.label}>API key</Text>
           <TextInput
             style={styles.input}
             value={apiKey}
