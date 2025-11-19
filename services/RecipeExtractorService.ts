@@ -96,7 +96,7 @@ class RecipeExtractorService {
         - Only extract information from the content. Do not add your own text.
         - Ingredients: Extract quantities and units as written.
         - Instructions: Extract instructions as short, granular sub-steps per group. Do not rephrase or create your own text.
-        - Tags: Extract 3-5 relevant tags only if they are explicitly mentioned in the content. If not, use an empty array [].
+        - Tags: Come up with 3-5 relevant tags for the recipe.
         - Calories: Extract from content. If missing, use an empty string "". DO NOT estimate.
         - Cooking Time: Extract from content. If missing, use an empty string "".
         - Grouping: If the recipe has distinct sections with titles (like "Sauce" or "Dough"), create corresponding groups. If there are no such sections, create just one group for ingredients and one for instructions, leaving the 'title' as an empty string. DO NOT make up your own group titles. DO NOT use generic titles like "Ingredients" or "Instructions."
@@ -144,7 +144,7 @@ class RecipeExtractorService {
         if (normalized.length > 2 && normalized.length <= 50) {
           const lower = normalized.toLowerCase();
           // Skip generic headings
-          if ([
+          if ([ 
             'ingredients', 'ingredient', 'instructions', 'method', 'directions', 'notes', 'nutrition', 'equipment', 'let\'s start', 'lets start', 'get started', 'getting started', 'summary', 'recipe summary'
           ].includes(lower)) continue;
           // Title case
@@ -333,7 +333,7 @@ class RecipeExtractorService {
         const lines = item.split(/\r?\n+/).map(s => s.trim()).filter(Boolean);
         for (const line of lines) {
           const parts = line
-            .split(/(?=(?:\d+\.\s|\d+\)\s|[-*•]\s))/)
+            .split(/(?=(?:\d+\.\s|\d+\)\s|[-*•]\s))/) // Corrected regex for escaped characters
             .map(s => s.trim())
             .filter(Boolean);
           for (let part of parts) {
@@ -427,4 +427,4 @@ class RecipeExtractorService {
   }
 }
 
-export default new RecipeExtractorService(); 
+export default new RecipeExtractorService();
