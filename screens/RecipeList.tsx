@@ -187,7 +187,7 @@ export default function RecipeList({ navigation }: { navigation: any }) {
         <CustomPopup
           visible={showAiPopup}
           title="Welcome to Sift!"
-          message="To import recipes from websites, you need to configure an AI model. Please set up the model to unlock this feature."
+          message="To import recipes from websites, you need to configure an AI model."
           buttons={[
             { text: 'How Sift Works', onPress: () => {
                 setShowAiPopup(false);

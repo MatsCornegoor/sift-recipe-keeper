@@ -66,7 +66,7 @@ export default function About() {
           <View style={[styles.card, { flexDirection: 'row', alignItems: 'flex-start', marginTop: 16 }]}>
             <Text style={styles.stepNumber}>1</Text>
             <Text style={styles.stepText}>
-              Go to Settings &gt; AI Model.
+              Go to Settings &gt; AI Setup.
             </Text>
           </View>
 
@@ -78,13 +78,13 @@ export default function About() {
               </Text>
             </View>
             <View style={styles.indentedContent}>
-              <Text style={[styles.description, { opacity: 0.8 }]}>
+              <Text style={[styles.description]}>
                 The API Endpoint is the URL for the AI service (e.g., <Text style={{ fontFamily: 'SpaceMono-Regular' }}>https://openrouter.ai/api/v1/chat/completions</Text>).
               </Text>
-              <Text style={[styles.description, { opacity: 0.8 }]}>
+              <Text style={[styles.description]}>
                 The Model Name is the specific model you want to use (e.g., <Text style={{ fontFamily: 'SpaceMono-Regular' }}>google/gemini-2.5-flash</Text>).
               </Text>
-              <Text style={[styles.description, { marginBottom: 0, opacity: 0.8 }]}>
+              <Text style={[styles.description, { marginBottom: 0}]}>
                 The API Key is your secret key from the provider.
               </Text>
             </View>
