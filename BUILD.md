@@ -50,3 +50,12 @@ To build the app for F-Droid, you will need to have the `fdroidserver` tools ins
     ```bash
     rm -rf logs/ srclibs/ build/ tmp/ unsigned/ signed/
     ```
+
+
+
+## Notes:
+To bump version:
+
+1. Update package.json.
+2. Update android/app/build.gradle.
+3. Update metadata/app.siftrecipes.yml (CurrentVersion + Add new Build entry).
