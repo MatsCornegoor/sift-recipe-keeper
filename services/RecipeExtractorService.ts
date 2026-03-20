@@ -32,6 +32,12 @@ class RecipeExtractorService {
         this.customModel = model;
         this.customApiKey = apiKey || null;
         console.log('Loaded custom AI model configuration.');
+	//console.log('Loaded custom AI model configuration:', {
+	//  endpoint: this.customEndpoint,
+	//  model: this.customModel,
+	//  hasApiKey: !!this.customApiKey,
+	//  apiKeyPreview: this.customApiKey ? this.customApiKey.substring(0, 12) + '...' : 'NULL'
+	//});
       }
     } catch (error) {
       console.error('Failed to load custom AI model config', error);
@@ -186,7 +192,7 @@ class RecipeExtractorService {
         model: this.customModel,
         temperature: 0.1,
         seed: 1997,
-        supportsResponseFormat: true, // Assume custom endpoints support this for simplicity
+        supportsResponseFormat: false, // Free models often do not support response_format; the prompt already enforces JSON
         apiKey: this.customApiKey,
       };
       return await this.callGPTAPIWithModel(customModelConfig, prompt, this.customEndpoint);
@@ -219,7 +225,10 @@ class RecipeExtractorService {
         headers['Authorization'] = `Bearer ${modelConfig.apiKey}`;
     }
 
-    const response = await fetch(endpoint, {
+    //const response = await fetch(endpoint, {
+    const url = endpoint.endsWith('/chat/completions') ? endpoint : `${endpoint}/chat/completions`;
+    console.log('Final request URL:', url);
+    const response = await fetch(url, {
       method: 'POST',
       headers: headers,
       body: JSON.stringify(requestBody),
@@ -228,6 +237,11 @@ class RecipeExtractorService {
     if (!response.ok) {
       throw new Error(`API call failed: ${response.status}`);
     }
+
+    //const rawText = await response.text();
+    //console.log(`RAW API response for ${modelConfig.model}:`, rawText);
+    //const data = JSON.parse(rawText);
+    //console.log(`GPT API response for ${modelConfig.model}:`, data);
 
     const data = await response.json();
     console.log(`GPT API response for ${modelConfig.model}:`, data);
@@ -354,11 +368,17 @@ class RecipeExtractorService {
     try {
       console.log('Raw response to parse:', response);
       
-      let jsonMatch = response.match(/\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/);
-      if (!jsonMatch) {
-        jsonMatch = response.match(/\{[^{}]*\}/);
-      }
+      //let jsonMatch = response.match(/\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/);
+      //if (!jsonMatch) {
+      //  jsonMatch = response.match(/\{[^{}]*\}/);
+      //}
       
+      const firstBrace = response.indexOf('{');
+      const lastBrace = response.lastIndexOf('}');
+      const jsonMatch = firstBrace !== -1 && lastBrace !== -1 
+        ? [response.substring(firstBrace, lastBrace + 1)] 
+        : null;
+
       if (!jsonMatch) {
         console.error('No JSON found in response. Full response:', response);
         throw new Error('No JSON found in response');
