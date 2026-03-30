@@ -264,14 +264,47 @@ class RecipeExtractorService {
 
   private extractFirstImage(html: string, baseUrl: string): string | null {
     try {
-      const ogImageMatch = html.match(/<meta[^>]*property=\"og:image\"[^>]*content=\"([^\"]*)\"[^>]*>/);
-      if (ogImageMatch && ogImageMatch[1]) {
+      // 1. JSON-LD structured data (most reliable for recipe pages)
+      const ldJsonMatch = html.match(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/i);
+      if (ldJsonMatch) {
+        try {
+          const ld = JSON.parse(ldJsonMatch[1]);
+          const entries = Array.isArray(ld) ? ld : [ld];
+          for (const entry of entries) {
+            const target = entry['@type'] === 'Recipe' ? entry : (entry['@graph'] || []).find((n: any) => n['@type'] === 'Recipe');
+            if (target?.image) {
+              const img = Array.isArray(target.image) ? target.image[0] : target.image;
+              const url = typeof img === 'string' ? img : img?.url;
+              if (url) return this.resolveUrl(url, baseUrl);
+            }
+          }
+        } catch {
+          // malformed LD+JSON, fall through
+        }
+      }
+
+      // 2. og:image meta tag (handles any quote style and attribute order)
+      const ogImageMatch = html.match(/<meta[^>]*\bproperty=["']og:image["'][^>]*\bcontent=["']([^"']+)["']/i)
+        || html.match(/<meta[^>]*\bcontent=["']([^"']+)["'][^>]*\bproperty=["']og:image["']/i);
+      if (ogImageMatch?.[1]) {
         return this.resolveUrl(ogImageMatch[1], baseUrl);
       }
 
-      const imgMatch = html.match(/<img[^>]*src=\"([^\"]*)\"[^>]*>/);
-      if (imgMatch && imgMatch[1]) {
-        return this.resolveUrl(imgMatch[1], baseUrl);
+      // 3. twitter:image meta tag
+      const twitterImageMatch = html.match(/<meta[^>]*\bname=["']twitter:image["'][^>]*\bcontent=["']([^"']+)["']/i)
+        || html.match(/<meta[^>]*\bcontent=["']([^"']+)["'][^>]*\bname=["']twitter:image["']/i);
+      if (twitterImageMatch?.[1]) {
+        return this.resolveUrl(twitterImageMatch[1], baseUrl);
+      }
+
+      // 4. First <img> with a meaningful src (skip data URIs and tiny tracking pixels)
+      const imgRegex = /<img[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi;
+      let imgMatch;
+      while ((imgMatch = imgRegex.exec(html)) !== null) {
+        const src = imgMatch[1];
+        if (!src.startsWith('data:') && !src.includes('pixel') && !src.includes('tracking')) {
+          return this.resolveUrl(src, baseUrl);
+        }
       }
 
       return null;
