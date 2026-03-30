@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
 import Header from '@/components/Header';
 
@@ -30,31 +30,30 @@ export default function About() {
 
           <View style={[styles.card, { marginTop: 16 }]}>
             <Text style={styles.cardTitle}>OpenRouter</Text>
-            <Text style={[styles.description, { marginBottom: 0, opacity: 0.8 }]}>
-              OpenRouter lets you access models from different providers, including some excellent free ones. It's a flexible way experiment and to find a model that fits your needs.
+            <Text style={[styles.description, { marginBottom: 8, opacity: 0.8 }]}>
+              A platform that gives you access to models from many different providers in one place, including free options.
             </Text>
+            <TouchableOpacity onPress={() => Linking.openURL('https://github.com/MatsCornegoor/sift-recipe-keeper')}>
+              <Text style={styles.link}>View supported models</Text>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.card}>
             <Text style={styles.cardTitle}>OpenAI</Text>
-            <Text style={[styles.description, { marginBottom: 0, opacity: 0.8 }]}>
-              Gpt-4o-mini works great for extracting recipes accurately.
+            <Text style={[styles.description, { marginBottom: 8, opacity: 0.8 }]}>
+              The platform behind ChatGPT, offering a range of models via API.
             </Text>
+            <TouchableOpacity onPress={() => Linking.openURL('https://github.com/MatsCornegoor/sift-recipe-keeper')}>
+              <Text style={styles.link}>View supported models</Text>
+            </TouchableOpacity>
           </View>
 
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Google AI</Text>
-            <Text style={[styles.description, { marginBottom: 0, opacity: 0.8 }]}>
-              Gemini 2.0 Flash is a good model to start with.
-            </Text>
-          </View>
-
-          <Text style={styles.title}>
+          {/* <Text style={styles.title}>
             Free vs. paid models
           </Text>
           <Text style={[styles.description, { marginBottom: 16 }]}>
             Many providers offer free models that are perfect for casual use. However, for the best performance and highest accuracy, you may want to consider a paid model. Paid models are generally more powerful and make fewer mistakes when reading recipes.
-          </Text>
+          </Text> */}
 
           <Text style={styles.title}>
             Setting up your model
@@ -71,22 +70,16 @@ export default function About() {
           </View>
 
           <View style={styles.card}>
-            <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 16 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 12 }}>
               <Text style={styles.stepNumber}>2</Text>
               <Text style={styles.stepText}>
                 Enter the API Endpoint, Model Name, and API Key from your provider.
               </Text>
             </View>
             <View style={styles.indentedContent}>
-              <Text style={[styles.description]}>
-                The API Endpoint is the URL for the AI service (e.g., <Text style={{ fontFamily: 'SpaceMono-Regular' }}>https://openrouter.ai/api/v1/chat/completions</Text>).
-              </Text>
-              <Text style={[styles.description]}>
-                The Model Name is the specific model you want to use (e.g., <Text style={{ fontFamily: 'SpaceMono-Regular' }}>google/gemini-2.5-flash</Text>).
-              </Text>
-              <Text style={[styles.description, { marginBottom: 0}]}>
-                The API Key is your secret key from the provider.
-              </Text>
+              <TouchableOpacity onPress={() => Linking.openURL('https://github.com/MatsCornegoor/sift-recipe-keeper')}>
+                <Text style={styles.link}>View supported models</Text>
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -162,6 +155,12 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   },
   indentedContent: {
     marginLeft: 36,
+    marginBottom: 4,
+  },
+  link: {
+    fontSize: 16,
+    color: colors.tint,
+    textDecorationLine: 'underline',
   },
 });
 

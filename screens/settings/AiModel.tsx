@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Switch } from 'react-native';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Switch, Animated } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '@/hooks/useTheme';
 import Header from '@/components/Header';
@@ -14,6 +15,7 @@ export default function AiModel() {
   const [temperature, setTemperature] = useState('0.1');
   const [supportsResponseFormat, setSupportsResponseFormat] = useState(true);
   const [advancedExpanded, setAdvancedExpanded] = useState(false);
+  const chevronRotation = useRef(new Animated.Value(0)).current;
   const [isTesting, setIsTesting] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupConfig, setPopupConfig] = useState<{
@@ -156,9 +158,26 @@ export default function AiModel() {
           />
         </View>
 
-        <TouchableOpacity style={styles.accordionHeader} onPress={() => setAdvancedExpanded(v => !v)}>
+        <TouchableOpacity
+          style={styles.accordionHeader}
+          onPress={() => {
+            const toValue = advancedExpanded ? 0 : 1;
+            Animated.timing(chevronRotation, {
+              toValue,
+              duration: 200,
+              useNativeDriver: true,
+            }).start();
+            setAdvancedExpanded(v => !v);
+          }}
+        >
           <Text style={styles.accordionTitle}>Advanced options</Text>
-          <Text style={styles.accordionChevron}>{advancedExpanded ? '⌃' : '⌄'}</Text>
+          <Animated.View style={{
+            transform: [{
+              rotate: chevronRotation.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] }),
+            }],
+          }}>
+            <Ionicons name="chevron-down" size={18} color={colors.text} style={{ opacity: 0.5 }} />
+          </Animated.View>
         </TouchableOpacity>
 
         {advancedExpanded && (
@@ -271,12 +290,6 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     fontSize: 15,
     color: colors.text,
     opacity: 0.7,
-  },
-  accordionChevron: {
-    fontSize: 22,
-    color: colors.text,
-    opacity: 0.5,
-    letterSpacing: 2,
   },
   switchRow: {
     flexDirection: 'row',
