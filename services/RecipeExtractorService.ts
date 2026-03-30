@@ -363,17 +363,33 @@ class RecipeExtractorService {
     try {
       console.log('Raw response to parse:', response);
       
-      let jsonMatch = response.match(/\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/);
-      if (!jsonMatch) {
-        jsonMatch = response.match(/\{[^{}]*\}/);
-      }
-      
-      if (!jsonMatch) {
+      const start = response.indexOf('{');
+      if (start === -1) {
         console.error('No JSON found in response. Full response:', response);
         throw new Error('No JSON found in response');
       }
 
-      const jsonString = jsonMatch[0];
+      let depth = 0;
+      let inString = false;
+      let escape = false;
+      let end = -1;
+
+      for (let i = start; i < response.length; i++) {
+        const ch = response[i];
+        if (escape) { escape = false; continue; }
+        if (ch === '\\' && inString) { escape = true; continue; }
+        if (ch === '"') { inString = !inString; continue; }
+        if (inString) continue;
+        if (ch === '{') depth++;
+        else if (ch === '}') { depth--; if (depth === 0) { end = i; break; } }
+      }
+
+      if (end === -1) {
+        console.error('Unterminated JSON in response. Full response:', response);
+        throw new Error('Unterminated JSON in response');
+      }
+
+      const jsonString = response.slice(start, end + 1);
       console.log('Extracted JSON string:', jsonString);
       
       const data = JSON.parse(jsonString);
