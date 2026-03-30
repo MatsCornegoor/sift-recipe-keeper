@@ -1,9 +1,6 @@
-Sift is a minimalist recipe app for saving, organizing, and accessing your favorite recipes without ads or distractions.
+Sift is a minimalist recipe keeper for saving, organizing, and accessing your favorite recipes — without ads or distractions.
 
-**Features:**
-
-*   Import recipes from any website
-*   Edit and organize recipes with custom tags
-*   Ad-free, open-source, and privacy-focused
-*   Clean, intuitive interface for a seamless cooking experience
-*   Local-first storage—your data stays on your device
+- Import recipes from any website using AI (connect to any provider)
+- Add recipes manually
+- Edit and organize recipes with custom tags
+- Local-first storage — your data stays on your device
