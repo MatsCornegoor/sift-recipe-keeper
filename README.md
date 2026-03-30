@@ -1,34 +1,51 @@
 # Sift - Recipe Keeper
 
-Sift is a minimalist recipe app for saving, organizing, and accessing your favorite recipes without ads or distractions.
+A minimalist recipe keeper that uses AI to extract clean recipes from any website — no ads, no stories, just the recipe.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 
 ## Features
 
-- **Completely Free & Open Source**: No ads, no subscriptions, and no hidden costs.
-- **Unlimited Recipes**: Store as many recipes as you want, all on your own device.
-- **Import from Any Website**: Save recipes from your favorite cooking websites with a single tap.
-- **Bring Your Own AI Model**: Connect to any OpenAI-compatible API to have full control over your data and costs.
-- **Clean & Intuitive Interface**: A distraction-free cooking experience designed to help you focus.
+- **Free & Open Source** — No ads, no subscriptions, no hidden costs.
+- **Unlimited Recipes** — Everything stored locally on your device.
+- **Import from Any Website** — Save recipes with a single tap.
+- **Bring Your Own Model** — Connect to any OpenAI-compatible API for full control over your data and costs.
 
 
 ## How It Works
 
-Sift uses AI to extract only the recipe from any webpage, leaving behind ads, stories, and other distractions. This gives you a clean, easy-to-follow recipe card.
+Sift fetches a webpage and uses AI to extract just the recipe, leaving behind ads, stories, and other clutter. You get a clean, easy-to-follow recipe card.
 
-The app uses a "Bring Your Own Model" approach, which means you connect it to an AI service of your choice. This gives you complete control over your data and allows you to choose from a wide range of AI models, including free and paid options.
-
-Sift is compatible with any provider that supports the OpenAI API format, such as:
-
-- **OpenRouter**: Access a variety of models from different providers, including some great free options.
-- **OpenAI**: Use powerful models like `gpt-4o-mini` for high accuracy.
-- **Google AI**: Access the Gemini family of models.
-
-To get started, simply go to `Settings > AI Model` and enter your provider's API Endpoint, Model Name, and API Key.
+To get started, go to `Settings > AI Setup` and enter your provider's API Endpoint, Model Name, and API Key.
 
 
-## Build the app
+## Supported Models
 
-To build the app from source, please see the detailed instructions in the [BUILD.md](BUILD.md) file.
+Sift works with any provider that supports the OpenAI API format. Below are tested models split by provider that work well with Sift.
+
+### OpenRouter
+
+Endpoint: `https://openrouter.ai/api/v1/chat/completions`
+
+| Model name | Response format | Notes |
+|---|---|---|
+| `meta-llama/llama-3.1-8b-instruct` | On | Fast, affordable, accurate |
+| `google/gemma-2-9b-it` | On | Fast and accurate |
+| `mistral-small-3.2-24b-instruct` | Off | Higher accuracy for complex recipes |
+
+### OpenAI
+
+Endpoint: `https://api.openai.com/v1/chat/completions`
+
+| Model name | Response format | Notes |
+|---|---|---|
+| `gpt-4o-mini` | On | Recommended — fast, affordable, accurate |
+| `gpt-4o` | On | Higher accuracy for complex recipes |
+
+> Models not listed here may still work. If you find a model that works well, feel free to open a PR.
+
+
+## Building from Source
+
+See [BUILD.md](BUILD.md) for full instructions.
