@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Switch } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '@/hooks/useTheme';
 import Header from '@/components/Header';
@@ -10,6 +10,11 @@ export default function AiModel() {
   const [endpoint, setEndpoint] = useState('https://api.openai.com/v1/chat/completions');
   const [model, setModel] = useState('gpt-4o-mini');
   const [apiKey, setApiKey] = useState('');
+  const [seed, setSeed] = useState('1997');
+  const [temperature, setTemperature] = useState('0.1');
+  const [supportsResponseFormat, setSupportsResponseFormat] = useState(true);
+  const [advancedExpanded, setAdvancedExpanded] = useState(false);
+  const [isTesting, setIsTesting] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupConfig, setPopupConfig] = useState<{
     title: string;
@@ -32,9 +37,15 @@ export default function AiModel() {
       const savedEndpoint = await AsyncStorage.getItem('ai_model_endpoint');
       const savedModel = await AsyncStorage.getItem('ai_model_name');
       const savedApiKey = await AsyncStorage.getItem('ai_model_api_key');
+      const savedSeed = await AsyncStorage.getItem('ai_model_seed');
+      const savedTemperature = await AsyncStorage.getItem('ai_model_temperature');
+      const savedSupportsResponseFormat = await AsyncStorage.getItem('ai_model_supports_response_format');
       if (savedEndpoint) setEndpoint(savedEndpoint);
       if (savedModel) setModel(savedModel);
       if (savedApiKey) setApiKey(savedApiKey);
+      if (savedSeed) setSeed(savedSeed);
+      if (savedTemperature) setTemperature(savedTemperature);
+      if (savedSupportsResponseFormat !== null) setSupportsResponseFormat(savedSupportsResponseFormat === 'true');
     } catch (error) {
       console.error('Failed to load AI model settings', error);
     }
@@ -50,6 +61,7 @@ export default function AiModel() {
       setShowPopup(true);
       return;
     }
+    setIsTesting(true);
     try {
       const headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -71,6 +83,9 @@ export default function AiModel() {
         await AsyncStorage.setItem('ai_model_endpoint', endpoint);
         await AsyncStorage.setItem('ai_model_name', model);
         await AsyncStorage.setItem('ai_model_api_key', apiKey);
+        await AsyncStorage.setItem('ai_model_seed', seed);
+        await AsyncStorage.setItem('ai_model_temperature', temperature);
+        await AsyncStorage.setItem('ai_model_supports_response_format', String(supportsResponseFormat));
         setPopupConfig({
           title: 'Success',
           message: 'Settings saved and connection is working.',
@@ -93,6 +108,8 @@ export default function AiModel() {
         buttons: [{ text: 'OK', onPress: () => setShowPopup(false) }],
       });
       setShowPopup(true);
+    } finally {
+      setIsTesting(false);
     }
   };
 
@@ -139,8 +156,53 @@ export default function AiModel() {
           />
         </View>
 
-        <TouchableOpacity style={[styles.button, { marginBottom: 32 }]} onPress={saveAndTest}>
-          <Text style={styles.buttonText}>Save & Test</Text>
+        <TouchableOpacity style={styles.accordionHeader} onPress={() => setAdvancedExpanded(v => !v)}>
+          <Text style={styles.accordionTitle}>Advanced options</Text>
+          <Text style={styles.accordionChevron}>{advancedExpanded ? '⌃' : '⌄'}</Text>
+        </TouchableOpacity>
+
+        {advancedExpanded && (
+          <View style={styles.advancedForm}>
+            <Text style={styles.label}>Temperature</Text>
+            <TextInput
+              style={styles.input}
+              value={temperature}
+              onChangeText={setTemperature}
+              placeholder="0.1"
+              placeholderTextColor={colors.text}
+              keyboardType="decimal-pad"
+              autoCapitalize="none"
+            />
+
+            <Text style={styles.label}>Seed</Text>
+            <TextInput
+              style={styles.input}
+              value={seed}
+              onChangeText={setSeed}
+              placeholder="1997"
+              placeholderTextColor={colors.text}
+              keyboardType="number-pad"
+              autoCapitalize="none"
+            />
+
+            <View style={styles.switchRow}>
+              <Text style={styles.label}>Supports response format</Text>
+              <Switch
+                value={supportsResponseFormat}
+                onValueChange={setSupportsResponseFormat}
+                trackColor={{ false: colors.deleteButton, true: colors.tint }}
+                thumbColor={colors.inputBackground}
+              />
+            </View>
+          </View>
+        )}
+
+        <TouchableOpacity
+          style={[styles.button, { marginBottom: 32, marginTop: 16, opacity: isTesting ? 0.7 : 1 }]}
+          onPress={saveAndTest}
+          disabled={isTesting}
+        >
+          <Text style={styles.buttonText}>{isTesting ? 'Testing model...' : 'Save & Test'}</Text>
         </TouchableOpacity>
       </ScrollView>
       <CustomPopup
@@ -173,7 +235,10 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     color: colors.text,
   },
   form: {
-    marginBottom: 16,
+    marginBottom: 8,
+  },
+  advancedForm: {
+    marginBottom: 8,
   },
   label: {
     fontSize: 15,
@@ -192,6 +257,39 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     color: colors.text,
     borderColor: colors.inputBorder,
   },
+  accordionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 14,
+    marginTop: 12,
+    marginBottom: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.inputBorder,
+  },
+  accordionTitle: {
+    fontSize: 15,
+    color: colors.text,
+    opacity: 0.7,
+  },
+  accordionChevron: {
+    fontSize: 22,
+    color: colors.text,
+    opacity: 0.5,
+    letterSpacing: 2,
+  },
+  switchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+  },
+  switchLabel: {
+    flex: 1,
+    fontSize: 16,
+    marginRight: 16,
+    color: colors.text,
+  },
   button: {
     padding: 16,
     borderRadius: 8,
@@ -204,4 +302,3 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     color: colors.background,
   },
 });
-

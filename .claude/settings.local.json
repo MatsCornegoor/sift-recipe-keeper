@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /Users/mats/Documents/Apps/sift-recipe-keeper -type f \\\\\\(-name *.tsx -o -name *.ts \\\\\\) -path */hooks/* -o -path */services/* -o -path */context/*)",
+      "Bash(find /Users/mats/Documents/Apps/sift-recipe-keeper -maxdepth 3 -type f \\\\\\(-name *navigation* -o -name *navigate* \\\\\\) \\\\\\(-name *.tsx -o -name *.ts \\\\\\))"
+    ]
+  }
+}

@@ -17,6 +17,9 @@ class RecipeExtractorService {
   private customEndpoint: string | null = null;
   private customModel: string | null = null;
   private customApiKey: string | null = null;
+  private customSeed: number = 1997;
+  private customTemperature: number = 0.1;
+  private customSupportsResponseFormat: boolean = true;
 
   constructor() {
   }
@@ -26,11 +29,17 @@ class RecipeExtractorService {
       const endpoint = await AsyncStorage.getItem('ai_model_endpoint');
       const model = await AsyncStorage.getItem('ai_model_name');
       const apiKey = await AsyncStorage.getItem('ai_model_api_key');
-      
+      const seed = await AsyncStorage.getItem('ai_model_seed');
+      const temperature = await AsyncStorage.getItem('ai_model_temperature');
+      const supportsResponseFormat = await AsyncStorage.getItem('ai_model_supports_response_format');
+
       if (endpoint && model) {
         this.customEndpoint = endpoint;
         this.customModel = model;
         this.customApiKey = apiKey || null;
+        if (seed !== null) this.customSeed = parseInt(seed, 10);
+        if (temperature !== null) this.customTemperature = parseFloat(temperature);
+        if (supportsResponseFormat !== null) this.customSupportsResponseFormat = supportsResponseFormat === 'true';
         console.log('Loaded custom AI model configuration.');
       }
     } catch (error) {
@@ -184,9 +193,9 @@ class RecipeExtractorService {
       console.log(`Trying custom model: ${this.customModel}`);
       const customModelConfig: ModelConfig & { apiKey?: string | null } = {
         model: this.customModel,
-        temperature: 0.1,
-        seed: 1997,
-        supportsResponseFormat: true, // Assume custom endpoints support this for simplicity
+        temperature: this.customTemperature,
+        seed: this.customSeed,
+        supportsResponseFormat: this.customSupportsResponseFormat,
         apiKey: this.customApiKey,
       };
       return await this.callGPTAPIWithModel(customModelConfig, prompt, this.customEndpoint);
