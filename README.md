@@ -31,8 +31,10 @@ Endpoint: `https://openrouter.ai/api/v1/chat/completions`
 | Model name | Response format | Notes |
 |---|---|---|
 | `meta-llama/llama-3.1-8b-instruct` | On | Fast, affordable, accurate |
-| `google/gemma-2-9b-it` | On | Fast and accurate |
-| `mistral-small-3.2-24b-instruct` | Off | Higher accuracy for complex recipes |
+| `google/gemma-2-9b-it` | On | Fast, affordable, accurate |
+| `mistralai/mistral-small-3.2-24b-instruct` | On | Higher accuracy for complex recipes |
+| `google/gemma-3-27b-it` | On | Higher accuracy for complex recipes |
+
 
 ### OpenAI
 
