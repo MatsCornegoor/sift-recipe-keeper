@@ -1,0 +1,2 @@
+- Extended OpenRouter model support (thanks @d5c0d3)
+- Improved documentation
