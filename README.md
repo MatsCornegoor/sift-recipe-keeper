@@ -28,22 +28,44 @@ Sift works with any provider that supports the OpenAI API format. Below are test
 
 Endpoint: `https://openrouter.ai/api/v1/chat/completions`
 
-| Model name | Response format | Notes |
-|---|---|---|
-| `meta-llama/llama-3.1-8b-instruct` | On | Fast, affordable, accurate |
-| `google/gemma-2-9b-it` | On | Fast, affordable, accurate |
-| `mistralai/mistral-small-3.2-24b-instruct` | On | Higher accuracy for complex recipes |
-| `google/gemma-3-27b-it` | On | Higher accuracy for complex recipes |
+**Good quality — best balance between accuracy and price**
+
+| Model name | Response format |
+|---|---|
+| `google/gemma-3-27b-it` | On |
+| `mistralai/mistral-small-3.2-24b-instruct` | On |
+| `qwen/qwen3-coder-30b-a3b-instruct` | On |
+
+**Great quality, but more expensive**
+
+| Model name | Response format |
+|---|---|
+| `google/gemini-2.5-flash` | On |
+
+**Medium quality, cheap, but prone to mistakes**
+
+| Model name | Response format |
+|---|---|
+| `google/gemma-3-12b-it` | On |
+| `meta-llama/llama-3.1-8b-instruct` | On |
 
 
 ### OpenAI
 
 Endpoint: `https://api.openai.com/v1/chat/completions`
 
-| Model name | Response format | Notes |
-|---|---|---|
-| `gpt-4o-mini` | On | Recommended — fast, affordable, accurate |
-| `gpt-4o` | On | Higher accuracy for complex recipes |
+**Good quality — best balance between accuracy and price**
+
+| Model name | Response format |
+|---|---|
+| `gpt-4o-mini` | On |
+| `gpt-5.4-nano` | On |
+
+**Great quality, but more expensive**
+
+| Model name | Response format |
+|---|---|
+| `gpt-5.4-mini` | On |
 
 > Models not listed here may still work. If you find a model that works well, feel free to open a PR.
 
