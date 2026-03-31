@@ -70,6 +70,25 @@ Endpoint: `https://api.openai.com/v1/chat/completions`
 > Models not listed here may still work. If you find a model that works well, feel free to open a PR.
 
 
+## Roadmap
+
+### Documentation Improvements
+- Short and clear documentation
+- List with supported models + estimated pricing
+- Collaboration guidelines
+
+### UX Improvements
+- Improved introduction flow — hide AI buttons if users want to use the app in manual mode
+- Multilayer menu to keep interface clean, but add extra functions
+- Clear error messages
+
+### Import via Share Action
+By clicking the share link option in e.g. a web browser, users can send a URL directly to the Sift app for easy imports.
+
+### Recipe Sharing
+ZIP archives will get a custom `.sift` extension to auto-open the Sift app when clicked. Recipes will get a share button to easily share a recipe archive with people on messaging apps.
+
+
 ## Building from Source
 
 See [BUILD.md](BUILD.md) for full instructions.
