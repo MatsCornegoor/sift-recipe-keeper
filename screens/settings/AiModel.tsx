@@ -181,7 +181,7 @@ export default function AiModel() {
         </TouchableOpacity>
 
         {advancedExpanded && (
-          <View style={styles.advancedForm}>
+          <View>
             <Text style={styles.label}>Temperature</Text>
             <TextInput
               style={styles.input}
@@ -217,7 +217,7 @@ export default function AiModel() {
         )}
 
         <TouchableOpacity
-          style={[styles.button, { marginBottom: 32, marginTop: 16, opacity: isTesting ? 0.7 : 1 }]}
+          style={[styles.button, { marginBottom: 32, marginTop: 30, opacity: isTesting ? 0.7 : 1 }]}
           onPress={saveAndTest}
           disabled={isTesting}
         >
@@ -254,9 +254,6 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     color: colors.text,
   },
   form: {
-    marginBottom: 8,
-  },
-  advancedForm: {
     marginBottom: 8,
   },
   label: {
