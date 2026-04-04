@@ -7,7 +7,6 @@ import { Recipe } from '../models/Recipe';
 import { useTheme } from '../hooks/useTheme';
 import Header from '../components/Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as KeepAwake from 'react-native-keep-awake';
 import CustomPopup from '../components/CustomPopup';
 
 export default function RecipeList({ navigation }: { navigation: any }) {
@@ -30,7 +29,6 @@ export default function RecipeList({ navigation }: { navigation: any }) {
   useEffect(() => {
     RecipeStore.loadRecipes();
     RecipeStore.addListener(setRecipes);
-    checkScreenAwake();
     return () => RecipeStore.removeListener(setRecipes);
   }, []);
 
@@ -52,17 +50,6 @@ export default function RecipeList({ navigation }: { navigation: any }) {
 
     checkAiSettings();
   }, [recipes]);
-
-  const checkScreenAwake = async () => {
-    try {
-      const awakeValue = await AsyncStorage.getItem('keepScreenAwake');
-      if (awakeValue === 'true') {
-        await KeepAwake.activateKeepAwake();
-      }
-    } catch (error) {
-      console.error('Error checking screen awake status:', error);
-    }
-  };
 
   const handleAddWithUrl = () => {
     setIsMenuVisible(false);
