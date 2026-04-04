@@ -4,6 +4,7 @@ import RNFS from 'react-native-fs';
 import { CURRENT_SCHEMA_VERSION } from '../models/RecipeMigrations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 interface ModelConfig {
   model: string;
   temperature: number;
@@ -40,40 +41,29 @@ class RecipeExtractorService {
         if (seed !== null) this.customSeed = parseInt(seed, 10);
         if (temperature !== null) this.customTemperature = parseFloat(temperature);
         if (supportsResponseFormat !== null) this.customSupportsResponseFormat = supportsResponseFormat === 'true';
-        console.log('Loaded custom AI model configuration.');
       }
     } catch (error) {
-      console.error('Failed to load custom AI model config', error);
+      console.error('Failed to load custom AI model config:', error);
     }
   }
 
 
   async extractRecipe(url: string, extraInstructions?: string): Promise<Recipe> {
     await this.loadCustomModelConfig();
-    try {
-      // Add cors proxy to the URL if on web platform
-      const fetchUrl = Platform.OS === 'web' ? this.corsProxy + url : url;
-      console.log('Fetching URL:', fetchUrl);
-      
-      // Fetch webpage content with appropriate headers
-      const headers: HeadersInit = Platform.OS === 'web' 
-        ? { 'Origin': (window?.location?.origin || 'https://localhost') }
-        : { 'User-Agent': 'Mozilla/5.0' }; // Add a user agent for mobile requests
-      
-      const response = await fetch(fetchUrl, { headers });
-      const html = await response.text();
-      
-      // Extract the first image URL
-      const imageUrl = this.extractFirstImage(html, url);
-      
-      // Download and save the image if found
-      const localImageUri = imageUrl ? await this.downloadAndSaveImage(imageUrl) : null;
-      
-      // Clean and prepare content
-      const cleanContent = this.cleanWebPageContent(html);
-      
-      // Prepare GPT prompt for groups schema (v2)
-      const prompt = `
+
+    const fetchUrl = Platform.OS === 'web' ? this.corsProxy + url : url;
+    const headers: HeadersInit = Platform.OS === 'web'
+      ? { 'Origin': (window?.location?.origin || 'https://localhost') }
+      : { 'User-Agent': 'Mozilla/5.0' };
+
+    const response = await fetch(fetchUrl, { headers });
+    const html = await response.text();
+
+    const imageUrl = this.extractFirstImage(html, url);
+    const localImageUri = imageUrl ? await this.downloadAndSaveImage(imageUrl) : null;
+    const cleanContent = this.cleanWebPageContent(html);
+
+    const prompt = `
         Extract recipe information from the following content.
         Your primary rule is to ONLY extract information that is explicitly present in the text.
         Do not invent, assume, translate, or generate any information.
@@ -114,15 +104,8 @@ class RecipeExtractorService {
         ${cleanContent}
       `;
 
-      // Call API
-      const gptResponse = await this.callGPTAPI(prompt);
-      
-      // Parse and create recipe with local image
-      return this.parseGPTResponse(gptResponse, localImageUri, url);
-    } catch (error) {
-      console.log('Error extracting recipe:', error);
-      throw error;
-    }
+    const gptResponse = await this.callGPTAPI(prompt);
+    return this.parseGPTResponse(gptResponse, localImageUri, url);
   }
 
   private cleanWebPageContent(html: string): string {
@@ -189,20 +172,14 @@ class RecipeExtractorService {
       throw new Error('AI model is not configured. Please configure it in the settings.');
     }
 
-    try {
-      console.log(`Trying custom model: ${this.customModel}`);
-      const customModelConfig: ModelConfig & { apiKey?: string | null } = {
-        model: this.customModel,
-        temperature: this.customTemperature,
-        seed: this.customSeed,
-        supportsResponseFormat: this.customSupportsResponseFormat,
-        apiKey: this.customApiKey,
-      };
-      return await this.callGPTAPIWithModel(customModelConfig, prompt, this.customEndpoint);
-    } catch (error) {
-      console.log(`Custom model failed: ${error}`);
-      throw new Error('Custom model failed to respond');
-    }
+    const customModelConfig: ModelConfig & { apiKey?: string | null } = {
+      model: this.customModel,
+      temperature: this.customTemperature,
+      seed: this.customSeed,
+      supportsResponseFormat: this.customSupportsResponseFormat,
+      apiKey: this.customApiKey,
+    };
+    return this.callGPTAPIWithModel(customModelConfig, prompt, this.customEndpoint);
   }
 
   private async callGPTAPIWithModel(modelConfig: ModelConfig & { apiKey?: string | null }, prompt: string, endpoint: string): Promise<string> {
@@ -221,8 +198,6 @@ class RecipeExtractorService {
       requestBody.response_format = { type: 'json_object' };
     }
 
-    console.log(`API request body for ${modelConfig.model}:`, JSON.stringify(requestBody, null, 2));
-
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
     if (modelConfig.apiKey) {
         headers['Authorization'] = `Bearer ${modelConfig.apiKey}`;
@@ -235,28 +210,24 @@ class RecipeExtractorService {
     });
 
     if (!response.ok) {
-      throw new Error(`API call failed: ${response.status}`);
+      throw new Error(`The AI service returned an error (HTTP ${response.status}). Please check your endpoint and API key.`);
     }
 
     const data = await response.json();
-    console.log(`GPT API response for ${modelConfig.model}:`, data);
-
     if (data.error) {
-      console.error(`API Error for ${modelConfig.model}:`, data.error);
-      throw new Error(`API Error: ${data.error.message || 'Unknown error'}`);
+      console.error(`API error from ${modelConfig.model}:`, data.error);
+      throw new Error(`AI service error: ${data.error.message || 'Unknown error'}`);
     }
 
     if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      console.error(`Invalid response structure for ${modelConfig.model}:`, data);
-      throw new Error('Invalid API response structure');
+      console.error(`Unexpected response structure from ${modelConfig.model}:`, data);
+      throw new Error('The AI returned an unexpected response format. Try a different model.');
     }
 
     const content = data.choices[0].message.content;
-    console.log(`GPT API content for ${modelConfig.model}:`, content);
 
     if (!content || content.trim() === '') {
-      console.error(`Empty content in API response for ${modelConfig.model}`);
-      throw new Error('Empty content in API response');
+      throw new Error('The AI returned an empty response. Please try again.');
     }
 
     return content;
@@ -347,15 +318,13 @@ class RecipeExtractorService {
       const downloadResult = RNFS.downloadFile({ fromUrl: imageUrl, toFile: imagePath });
       await downloadResult.promise;
 
-      console.log('Image downloaded successfully to:', imagePath);
-
       if (Platform.OS === 'android' || Platform.OS === 'ios') {
         return 'file://' + imagePath;
       }
 
       return imagePath;
     } catch (error) {
-      console.log('Error downloading image:', error);
+      console.warn('Error downloading image:', error);
       return null;
     }
   }
@@ -393,13 +362,10 @@ class RecipeExtractorService {
   }
 
   private parseGPTResponse(response: string, imageUrl: string | null, sourceUrl?: string): Recipe {
-    try {
-      console.log('Raw response to parse:', response);
-      
-      const start = response.indexOf('{');
+    const start = response.indexOf('{');
       if (start === -1) {
-        console.error('No JSON found in response. Full response:', response);
-        throw new Error('No JSON found in response');
+        console.error('No JSON found in AI response:', response);
+        throw new Error('No recipe was found on this page. The page may not contain a recipe or may be blocking access.');
       }
 
       let depth = 0;
@@ -418,20 +384,15 @@ class RecipeExtractorService {
       }
 
       if (end === -1) {
-        console.error('Unterminated JSON in response. Full response:', response);
-        throw new Error('Unterminated JSON in response');
+        console.error('Malformed JSON in AI response:', response);
+        throw new Error('The AI returned a malformed response. Please try again.');
       }
 
-      const jsonString = response.slice(start, end + 1);
-      console.log('Extracted JSON string:', jsonString);
-      
-      const data = JSON.parse(jsonString);
-      console.log('Parsed GPT response:', data);
-      console.log('Tags from response:', data.tags);
-      
+      const data = JSON.parse(response.slice(start, end + 1));
+
       if (!data.name) {
-        console.error('Missing name in parsed data:', data);
-        throw new Error('Missing name in recipe data');
+        console.error('Recipe name missing in parsed data:', data);
+        throw new Error('No recipe was found on this page. Try a different URL.');
       }
 
       // Read groups (required), fallback to legacy if absent
@@ -475,13 +436,7 @@ class RecipeExtractorService {
         schemaVersion: CURRENT_SCHEMA_VERSION,
       });
 
-      console.log('Created recipe with tags:', recipe.tags);
       return recipe;
-    } catch (error) {
-      console.error('Error parsing GPT response:', error);
-      console.error('Full response that failed to parse:', response);
-      throw error;
-    }
   }
 }
 
