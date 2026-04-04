@@ -48,13 +48,6 @@ export default function About() {
             </TouchableOpacity>
           </View>
 
-          {/* <Text style={styles.title}>
-            Free vs. paid models
-          </Text>
-          <Text style={[styles.description, { marginBottom: 16 }]}>
-            Many providers offer free models that are perfect for casual use. However, for the best performance and highest accuracy, you may want to consider a paid model. Paid models are generally more powerful and make fewer mistakes when reading recipes.
-          </Text> */}
-
           <Text style={styles.title}>
             Setting up your model
           </Text>
