@@ -132,7 +132,7 @@ export default function AiModel() {
             value={endpoint}
             onChangeText={setEndpoint}
             placeholder="https://api.openai.com/v1/chat/completions"
-            placeholderTextColor={colors.text}
+            placeholderTextColor={colors.placeholderText}
             autoCapitalize="none"
           />
 
@@ -142,7 +142,7 @@ export default function AiModel() {
             value={model}
             onChangeText={setModel}
             placeholder="gpt-4o-mini"
-            placeholderTextColor={colors.text}
+            placeholderTextColor={colors.placeholderText}
             autoCapitalize="none"
           />
 
@@ -152,7 +152,7 @@ export default function AiModel() {
             value={apiKey}
             onChangeText={setApiKey}
             placeholder="sk-..."
-            placeholderTextColor={colors.text}
+            placeholderTextColor={colors.placeholderText}
             secureTextEntry
             autoCapitalize="none"
           />
@@ -188,7 +188,7 @@ export default function AiModel() {
               value={temperature}
               onChangeText={setTemperature}
               placeholder="0.1"
-              placeholderTextColor={colors.text}
+              placeholderTextColor={colors.placeholderText}
               keyboardType="decimal-pad"
               autoCapitalize="none"
             />
@@ -199,7 +199,7 @@ export default function AiModel() {
               value={seed}
               onChangeText={setSeed}
               placeholder="1997"
-              placeholderTextColor={colors.text}
+              placeholderTextColor={colors.placeholderText}
               keyboardType="number-pad"
               autoCapitalize="none"
             />
