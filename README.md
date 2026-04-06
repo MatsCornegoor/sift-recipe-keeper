@@ -77,15 +77,15 @@ Endpoint: `https://api.openai.com/v1/chat/completions`
 
 
 ### Documentation Improvements
-- [ ] Short and clear documentation
+- [X] Short and clear documentation
 - [ ] List with supported models + estimated pricing
-- [ ] Collaboration guidelines
+- [X] Collaboration guidelines
 
 
 ### UX Improvements
-- [ ] Improved introduction flow — hide AI buttons if users want to use the app in manual mode
+- [X] Improved introduction flow
 - [ ] Multilayer menu to keep interface clean, but add extra functions
-- [ ] Clear error messages
+- [X] Clear error messages
 
 
 ### Import via Share Action
