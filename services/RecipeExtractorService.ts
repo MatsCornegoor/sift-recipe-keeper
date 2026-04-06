@@ -48,6 +48,67 @@ class RecipeExtractorService {
   }
 
 
+  async modifyRecipe(recipe: Recipe, userPrompt: string): Promise<Recipe> {
+    await this.loadCustomModelConfig();
+
+    const recipeJson = JSON.stringify({
+      name: recipe.name,
+      ingredientsGroups: (recipe.ingredientsGroups || []).map(g => ({
+        title: g.title || '',
+        items: g.items.map(i => i.name),
+      })),
+      instructionGroups: (recipe.instructionGroups || []).map(g => ({
+        title: g.title || '',
+        items: g.items,
+      })),
+      tags: recipe.tags,
+      cookingTime: recipe.cookingTime || '',
+      calories: recipe.calories || '',
+    }, null, 2);
+
+    const prompt = `
+      You are a recipe modification assistant. Modify the following recipe according to the user's request.
+      Apply only the changes needed to fulfill the request. Preserve all other details as-is.
+
+      User request: ${userPrompt}
+
+      Current recipe (JSON):
+      ${recipeJson}
+
+      Return the modified recipe as a JSON object matching this schema exactly:
+      {
+        "schemaVersion": 2,
+        "name": "Recipe Name",
+        "ingredientsGroups": [
+          {
+            "title": "Optional group title or empty string",
+            "items": ["ingredient1", "ingredient2"]
+          }
+        ],
+        "instructionGroups": [
+          {
+            "title": "Optional group title or empty string",
+            "items": ["step1", "step2"]
+          }
+        ],
+        "tags": ["tag1", "tag2"],
+        "cookingTime": "30 min",
+        "calories": "250 kcal"
+      }
+
+      CRITICAL:
+      - Respond with ONLY the JSON object; no extra text or markdown.
+      - Preserve the same group structure unless the modification requires changing it.
+      - Keep all fields that don't need to change identical to the original.
+    `;
+
+    const gptResponse = await this.callGPTAPI(prompt);
+    const modified = this.parseGPTResponse(gptResponse, recipe.imageUri, recipe.sourceUrl);
+    // Preserve the original recipe ID so saving updates the same recipe
+    modified.id = recipe.id;
+    return modified;
+  }
+
   async extractRecipe(url: string, extraInstructions?: string): Promise<Recipe> {
     await this.loadCustomModelConfig();
 

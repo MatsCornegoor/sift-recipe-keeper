@@ -102,6 +102,11 @@ export default function RecipeDetail() {
     navigation.navigate('EditRecipe', { id: recipe.id });
   };
 
+  const handleEditWithAI = () => {
+    setIsMenuVisible(false);
+    navigation.navigate('EditWithAI', { id: recipe.id });
+  };
+
   const handleIngredientCheck = (ingredientId: string) => {
     setCheckedIngredients(prev => {
       const next = new Set(prev);
@@ -305,6 +310,9 @@ export default function RecipeDetail() {
           }]}> 
             <TouchableOpacity style={styles.menuItem} onPress={handleEdit}>
               <Text style={styles.menuText}>Edit recipe</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem} onPress={handleEditWithAI}>
+              <Text style={styles.menuText}>Edit with AI</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.menuItem} onPress={handleDelete}>
               <Text style={[styles.menuText, styles.deleteMenuText]}>Delete recipe</Text>

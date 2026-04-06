@@ -14,8 +14,9 @@ export default function EditRecipe() {
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
   const { colors } = useTheme();
-  const { id } = route.params;
-  const originalRecipe = RecipeStore.getRecipeById(Array.isArray(id) ? id[0] : id);
+  const { id, aiModifiedRecipe } = route.params;
+  const storedRecipe = RecipeStore.getRecipeById(Array.isArray(id) ? id[0] : id);
+  const originalRecipe = aiModifiedRecipe ? new Recipe(aiModifiedRecipe) : storedRecipe;
 
   if (!originalRecipe) {
     navigation.goBack();
