@@ -25,7 +25,7 @@ export default function EditRecipe() {
 
   const handleSave = async (updated: Recipe) => {
     await RecipeStore.updateRecipe(updated);
-    navigation.goBack();
+    navigation.navigate('RecipeDetail', { id: updated.id });
   };
 
   return (
