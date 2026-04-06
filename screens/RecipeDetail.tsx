@@ -247,6 +247,12 @@ export default function RecipeDetail() {
                     <Text style={styles.detailText}>{recipe.calories}</Text>
                   </View>
                 )}
+                {recipe.servings && (
+                  <View style={styles.detailItem}>
+                    <Ionicons name="people-outline" size={16} color={colors.text} style={styles.detailIcon} />
+                    <Text style={styles.detailText}>{recipe.servings}</Text>
+                  </View>
+                )}
                 {recipe.sourceUrl && (
                   <View style={styles.detailItem}>
                     <Ionicons name="link-outline" size={16} color={colors.tint} style={styles.detailIcon} />

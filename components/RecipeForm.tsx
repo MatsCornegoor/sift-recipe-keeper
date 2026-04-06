@@ -65,6 +65,7 @@ export default function RecipeForm({ mode, initialRecipe, onSave, onCancel }: Re
 
   const [cookingTime, setCookingTime] = useState(initialRecipe?.cookingTime || '');
   const [calories, setCalories] = useState(initialRecipe?.calories || '');
+  const [servings, setServings] = useState(initialRecipe?.servings || '');
   const [sourceUrl, setSourceUrl] = useState(initialRecipe?.sourceUrl || '');
   const [newTag, setNewTag] = useState('');
   const [tags, setTags] = useState<string[]>(initialRecipe?.tags || []);
@@ -237,6 +238,7 @@ export default function RecipeForm({ mode, initialRecipe, onSave, onCancel }: Re
       sourceUrl: sourceUrl.trim() || undefined,
       cookingTime: cookingTime.trim() || undefined,
       calories: calories.trim() || undefined,
+      servings: servings.trim() || undefined,
       tags,
       schemaVersion: CURRENT_SCHEMA_VERSION,
       ingredientsGroups: ingredientsGroupsOut,
@@ -346,6 +348,16 @@ export default function RecipeForm({ mode, initialRecipe, onSave, onCancel }: Re
               value={calories}
               onChangeText={setCalories}
               style={{ height: 48 }}
+            />
+          </View>
+          <View style={styles.detailInput}>
+            <Text style={styles.detailLabel}>Servings</Text>
+            <Input
+              placeholder="e.g. 4"
+              value={servings}
+              onChangeText={setServings}
+              style={{ height: 48 }}
+              keyboardType="numeric"
             />
           </View>
         </View>
