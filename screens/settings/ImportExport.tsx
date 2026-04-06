@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Platform } from 'react-native';
+import Button from '../../components/ui/Button';
 import RNFS from 'react-native-fs';
 import DocumentPicker from 'react-native-document-picker';
 import { useNavigation } from '@react-navigation/native';
@@ -131,19 +132,10 @@ export default function ImportExport() {
     }
   };
 
-  const renderActionButton = (label: string, onPress: () => void) => (
-    <TouchableOpacity
-      style={styles.actionButton}
-      onPress={onPress}
-    >
-      <Text style={styles.actionLabel}>{label}</Text>
-    </TouchableOpacity>
-  );
-
   return (
     <View style={styles.flexView}>
       <Header title="Import/Export" />
-      <ScrollView 
+      <ScrollView
         style={styles.flexView}
         contentContainerStyle={styles.flexGrow}
       >
@@ -152,10 +144,10 @@ export default function ImportExport() {
             <Text style={styles.description}>
               Import or export your Sift recipes to create a backup or to transfer them to other devices.
             </Text>
-            
+
             <View style={styles.actionsContainer}>
-              {renderActionButton('Export recipes', handleExportPress)}
-              {renderActionButton('Import recipes', handleImport)}
+              <Button title="Export recipes" onPress={handleExportPress} />
+              <Button title="Import recipes" onPress={handleImport} />
             </View>
           </View>
         </ContentWrapper>
@@ -193,17 +185,6 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   },
   actionsContainer: {
     gap: 16,
-  },
-  actionButton: {
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-    backgroundColor: colors.tint,
-  },
-  actionLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.background,
   },
 });
  

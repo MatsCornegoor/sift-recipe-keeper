@@ -102,6 +102,11 @@ export default function RecipeDetail() {
     navigation.navigate('EditRecipe', { id: recipe.id });
   };
 
+  const handleEditWithAI = () => {
+    setIsMenuVisible(false);
+    navigation.navigate('EditWithAI', { id: recipe.id });
+  };
+
   const handleIngredientCheck = (ingredientId: string) => {
     setCheckedIngredients(prev => {
       const next = new Set(prev);
@@ -242,6 +247,12 @@ export default function RecipeDetail() {
                     <Text style={styles.detailText}>{recipe.calories}</Text>
                   </View>
                 )}
+                {recipe.servings && (
+                  <View style={styles.detailItem}>
+                    <Ionicons name="people-outline" size={16} color={colors.text} style={styles.detailIcon} />
+                    <Text style={styles.detailText}>{recipe.servings}</Text>
+                  </View>
+                )}
                 {recipe.sourceUrl && (
                   <View style={styles.detailItem}>
                     <Ionicons name="link-outline" size={16} color={colors.tint} style={styles.detailIcon} />
@@ -304,10 +315,13 @@ export default function RecipeDetail() {
             top: 80,
           }]}> 
             <TouchableOpacity style={styles.menuItem} onPress={handleEdit}>
-              <Text style={styles.menuText}>Edit recipe</Text>
+              <Text style={styles.menuText}>Edit manually</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem} onPress={handleEditWithAI}>
+              <Text style={styles.menuText}>Edit with AI</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.menuItem} onPress={handleDelete}>
-              <Text style={[styles.menuText, styles.deleteMenuText]}>Delete recipe</Text>
+              <Text style={[styles.menuText, styles.deleteMenuText]}>Delete</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>

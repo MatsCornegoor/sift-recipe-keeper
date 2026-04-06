@@ -14,8 +14,9 @@ export default function EditRecipe() {
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
   const { colors } = useTheme();
-  const { id } = route.params;
-  const originalRecipe = RecipeStore.getRecipeById(Array.isArray(id) ? id[0] : id);
+  const { id, aiModifiedRecipe } = route.params;
+  const storedRecipe = RecipeStore.getRecipeById(Array.isArray(id) ? id[0] : id);
+  const originalRecipe = aiModifiedRecipe ? new Recipe(aiModifiedRecipe) : storedRecipe;
 
   if (!originalRecipe) {
     navigation.goBack();
@@ -24,7 +25,7 @@ export default function EditRecipe() {
 
   const handleSave = async (updated: Recipe) => {
     await RecipeStore.updateRecipe(updated);
-    navigation.goBack();
+    navigation.navigate('RecipeDetail', { id: updated.id });
   };
 
   return (
@@ -33,7 +34,7 @@ export default function EditRecipe() {
         <Header title="Edit recipe" />
         <NestableScrollContainer style={{ flex: 1, backgroundColor: colors.background }}>
           <ContentWrapper>
-            <RecipeForm mode="edit" initialRecipe={originalRecipe} onSave={handleSave} />
+            <RecipeForm mode="edit" initialRecipe={originalRecipe} onSave={handleSave} onCancel={() => navigation.navigate('RecipeDetail', { id: originalRecipe.id })} />
           </ContentWrapper>
         </NestableScrollContainer>
       </View>

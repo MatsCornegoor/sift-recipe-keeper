@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import NetInfo from '@react-native-community/netinfo';
 import RecipeExtractorService from '../services/RecipeExtractorService';
@@ -15,6 +8,8 @@ import { useTheme } from '../hooks/useTheme';
 import Header from '../components/Header';
 import CustomPopup from '../components/CustomPopup';
 import ContentWrapper from '../components/ContentWrapper';
+import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
 
 // This helper function checks for a live internet connection in a privacy-friendly way.
 const checkInternetConnection = async () => {
@@ -113,36 +108,25 @@ export default function AddRecipeUrl() {
       >
         <ContentWrapper>
           <View style={styles.container}>
-            <TextInput
-              style={styles.input}
+            <Input
               placeholder="www.cookingwebsite.com/recipe"
-              placeholderTextColor={colors.deleteButton}
               value={url}
               onChangeText={setUrl}
               autoCapitalize="none"
               autoCorrect={false}
+              style={styles.input}
             />
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={handleExtractRecipe}
-              disabled={loading}
-            >
+            <Button onPress={handleExtractRecipe} disabled={loading}>
               {loading ? (
                 <View style={styles.loadingContainer}>
-                  <Text style={styles.buttonText}>
-                    Adding
-                  </Text>
-                  <Text style={[styles.buttonText, styles.dotsContainer]}>
-                    {dots}
-                  </Text>
+                  <Text style={[styles.buttonText, { color: colors.background }]}>Adding</Text>
+                  <Text style={[styles.buttonText, styles.dotsContainer, { color: colors.background }]}>{dots}</Text>
                 </View>
               ) : (
-                <Text style={styles.buttonText}>
-                  Add Recipe
-                </Text>
+                <Text style={[styles.buttonText, { color: colors.background }]}>Add Recipe</Text>
               )}
-            </TouchableOpacity>
+            </Button>
           </View>
         </ContentWrapper>
       </ScrollView>
@@ -171,32 +155,18 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     backgroundColor: 'transparent',
   },
   input: {
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-    fontSize: 16,
     height: 48,
-    textAlignVertical: 'center',
-    borderColor: colors.inputBorder,
-    color: colors.text,
-  },
-  button: {
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-    backgroundColor: colors.tint,
+    marginBottom: 16,
   },
   buttonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.background,
   },
   loadingContainer: {
     flexDirection: 'row',
   },
   dotsContainer: {
-    width: 24, // Fixed width for 3 dots
+    width: 24,
   },
 });
  

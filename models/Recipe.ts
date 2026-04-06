@@ -81,6 +81,7 @@ export interface Recipe {
   sourceUrl?: string;
   cookingTime?: string;
   calories?: string;
+  servings?: string;
   tags: string[];
   userId?: string;
   schemaVersion?: number; // persisted schema version
@@ -99,6 +100,7 @@ export class Recipe {
   sourceUrl?: string;
   cookingTime?: string;
   calories?: string;
+  servings?: string;
   tags: string[];
   userId?: string;
   schemaVersion?: number;
@@ -115,6 +117,7 @@ export class Recipe {
     sourceUrl,
     cookingTime,
     calories,
+    servings,
     tags = [],
     userId,
     schemaVersion,
@@ -155,6 +158,7 @@ export class Recipe {
     this.sourceUrl = sourceUrl;
     this.cookingTime = cookingTime;
     this.calories = calories;
+    this.servings = servings;
     this.tags = tags;
     this.userId = userId;
 
