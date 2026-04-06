@@ -7,6 +7,7 @@ const MODELS = [
   'mistralai/mistral-small-3.2-24b-instruct',
   'qwen/qwen3-coder-30b-a3b-instruct',
   'google/gemini-2.5-flash',
+  'google/gemma-4-31b-it',
   'google/gemma-3-12b-it',
   'meta-llama/llama-3.1-8b-instruct',
   'openai/gpt-4o-mini',

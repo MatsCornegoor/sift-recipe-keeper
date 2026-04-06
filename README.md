@@ -38,6 +38,7 @@ Endpoint: `https://openrouter.ai/api/v1/chat/completions`
 | `mistralai/mistral-small-3.2-24b-instruct` | On | $0.000425 |
 | `qwen/qwen3-coder-30b-a3b-instruct` | On | $0.000480 |
 | **Great quality, but more expensive** | | |
+| `google/gemma-4-31b-it` | On | $0.000820 |
 | `google/gemini-2.5-flash` | On | $0.003400 |
 | **Medium quality, cheap, but prone to mistakes** | | |
 | `google/gemma-3-12b-it` | On | $0.000250 |
