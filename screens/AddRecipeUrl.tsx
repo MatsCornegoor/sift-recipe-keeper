@@ -115,7 +115,7 @@ export default function AddRecipeUrl() {
           <View style={styles.container}>
             <TextInput
               style={styles.input}
-              placeholder="www.cookingwebite.com/recipe"
+              placeholder="www.cookingwebsite.com/recipe"
               placeholderTextColor={colors.deleteButton}
               value={url}
               onChangeText={setUrl}
