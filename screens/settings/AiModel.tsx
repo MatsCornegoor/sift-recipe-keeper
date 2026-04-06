@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Switch, Animated } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Switch, Animated, Linking } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '@/hooks/useTheme';
@@ -121,7 +121,8 @@ export default function AiModel() {
       <ScrollView style={styles.container}>
         <View style={styles.infoSection}>
           <Text style={styles.infoText}>
-            Sift uses a Bring Your Own Model (BYOM) approach. To enable recipe import from websites, you need to connect to an AI service. Please enter the details of your AI provider below.
+            Sift uses a Bring Your Own Model (BYOM) approach. To enable recipe import from websites, please enter the details of your AI provider below.{' '}
+            <Text style={styles.link} onPress={() => Linking.openURL('https://github.com/MatsCornegoor/sift-recipe-keeper')}>More info</Text>
           </Text>
         </View>
 
@@ -252,6 +253,10 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     lineHeight: 24,
     marginBottom: 16,
     color: colors.text,
+  },
+  link: {
+    color: colors.tint,
+    textDecorationLine: 'underline',
   },
   form: {
     marginBottom: 8,
