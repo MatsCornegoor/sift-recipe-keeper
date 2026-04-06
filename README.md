@@ -77,15 +77,15 @@ Endpoint: `https://api.openai.com/v1/chat/completions`
 
 ### Edit with AI
 - [X] Option to edit a imported recipe using AI (make guten free, convert to metric, make for 8 people etc)
-- [ ] Keep track of servings for easy conversion
+- [X] Keep track of servings for easy conversion
 
 ### Import via Share Action
-- [ ] By clicking the share link option in e.g. a web browser, users can send a URL directly to the Sift app for easy imports.
+- [ ] By clicking the share link option in e.g. a web browser, users can send a URL directly to the Sift app for easy imports
 
 
 ### Recipe Sharing
-- [ ] ZIP archives will get a custom `.sift` extension to auto-open the Sift app when clicked.
-- [ ] Recipes will get a share button to easily share a recipe archive with people on messaging apps.
+- [ ] ZIP archives will get a custom `.sift` extension to auto-open the Sift app when clicked
+- [ ] Recipes will get a share button to easily share a recipe archive with people on messaging apps
 
 
 ## Building from Source
