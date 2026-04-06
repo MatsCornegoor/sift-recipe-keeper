@@ -75,6 +75,8 @@ Endpoint: `https://api.openai.com/v1/chat/completions`
 - [ ] Multilayer menu to keep interface clean, but add extra functions
 - [X] Clear error messages
 
+### Edit with AI
+- [ ] Option to edit a imported recipe using AI (make guten free, convert to metric, make for 8 people etc)
 
 ### Import via Share Action
 - [ ] By clicking the share link option in e.g. a web browser, users can send a URL directly to the Sift app for easy imports.
