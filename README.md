@@ -76,7 +76,8 @@ Endpoint: `https://api.openai.com/v1/chat/completions`
 - [X] Clear error messages
 
 ### Edit with AI
-- [ ] Option to edit a imported recipe using AI (make guten free, convert to metric, make for 8 people etc)
+- [X] Option to edit a imported recipe using AI (make guten free, convert to metric, make for 8 people etc)
+- [ ] Keep track of servings for easy conversion
 
 ### Import via Share Action
 - [ ] By clicking the share link option in e.g. a web browser, users can send a URL directly to the Sift app for easy imports.
