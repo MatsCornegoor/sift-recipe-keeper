@@ -45,6 +45,7 @@ Endpoint: `https://openrouter.ai/api/v1/chat/completions`
 | `meta-llama/llama-3.1-8b-instruct` | On | $0.000110 |
 
 
+
 ### OpenAI
 
 Endpoint: `https://api.openai.com/v1/chat/completions`

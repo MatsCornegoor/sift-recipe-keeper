@@ -6,6 +6,7 @@
     "start": "react-native start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "react-native run-android",
+    "supported-models": "node ./supportedModels.js",
     "ios": "react-native run-ios",
     "test": "jest --watchAll",
     "lint": "eslint ."
