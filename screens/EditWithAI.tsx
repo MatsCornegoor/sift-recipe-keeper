@@ -36,6 +36,7 @@ export default function EditWithAI() {
   const [prompt, setPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [dots, setDots] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -53,6 +54,24 @@ export default function EditWithAI() {
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isLoading) {
+      interval = setInterval(() => {
+        setDots(prev => {
+          if (prev === '') return '.';
+          if (prev === '.') return '..';
+          if (prev === '..') return '...';
+          return '';
+        });
+      }, 400);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+      setDots('');
+    };
+  }, [isLoading]);
 
   const handleApply = async () => {
     if (!prompt.trim() || !recipe) return;
@@ -95,20 +114,19 @@ export default function EditWithAI() {
             editable={!isLoading}
           />
           <TouchableOpacity
-            style={[styles.button, (!prompt.trim() || isLoading) && styles.buttonDisabled]}
+            style={styles.button}
             onPress={handleApply}
             disabled={!prompt.trim() || isLoading}
-            activeOpacity={0.8}
           >
             {isLoading ? (
-              <Text style={styles.buttonText}>Editing recipe...</Text>
+              <View style={styles.loadingContainer}>
+                <Text style={styles.buttonText}>Editing recipe</Text>
+                <Text style={[styles.buttonText, styles.dotsContainer]}>{dots}</Text>
+              </View>
             ) : (
               <Text style={styles.buttonText}>Apply changes</Text>
             )}
           </TouchableOpacity>
-          {isLoading && (
-            <Text style={styles.loadingHint}>This may take a moment...</Text>
-          )}
         </View>
       </ContentWrapper>
       <CustomPopup
@@ -150,24 +168,20 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     marginBottom: 16,
   },
   button: {
-    backgroundColor: colors.tint,
-    borderRadius: 12,
-    paddingVertical: 16,
+    padding: 16,
+    borderRadius: 8,
     alignItems: 'center',
-  },
-  buttonDisabled: {
-    opacity: 0.4,
+    backgroundColor: colors.tint,
   },
   buttonText: {
-    color: colors.background,
     fontSize: 16,
     fontWeight: '600',
+    color: colors.background,
   },
-  loadingHint: {
-    marginTop: 12,
-    textAlign: 'center',
-    fontSize: 14,
-    color: colors.text,
-    opacity: 0.5,
+  loadingContainer: {
+    flexDirection: 'row',
+  },
+  dotsContainer: {
+    width: 24,
   },
 });
