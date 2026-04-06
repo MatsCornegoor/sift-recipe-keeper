@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Platform, Share } from 'react-native';
+import Button from '../../components/ui/Button';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RNFS from 'react-native-fs';
 import { zip } from 'react-native-zip-archive';
@@ -168,15 +169,12 @@ export default function ExportRecipes() {
           renderItem={renderItem}
           keyExtractor={item => item.id}
           ListFooterComponent={
-            <TouchableOpacity
-              style={[styles.actionButton, { opacity: selectedRecipes.length > 0 ? 1 : 0.5 }]}
+            <Button
+              title="Export Selected Recipes"
               onPress={handleExport}
               disabled={selectedRecipes.length === 0}
-            >
-              <Text style={styles.actionLabel}>
-                Export Selected Recipes
-              </Text>
-            </TouchableOpacity>
+              style={[styles.exportButton, { opacity: selectedRecipes.length > 0 ? 1 : 0.5 }]}
+            />
           }
         />
       </ContentWrapper>
@@ -209,17 +207,8 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     marginRight: 16,
     color: colors.text,
   },
-  actionButton: {
+  exportButton: {
     margin: 16,
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-    backgroundColor: colors.tint,
-  },
-  actionLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.background,
   },
 });
  

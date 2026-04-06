@@ -1,15 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Header from '../components/Header';
 import CustomPopup from '../components/CustomPopup';
 import ContentWrapper from '../components/ContentWrapper';
+import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
 import RecipeStore from '../store/RecipeStore';
 import RecipeExtractorService from '../services/RecipeExtractorService';
 import { useTheme } from '../hooks/useTheme';
@@ -40,7 +36,7 @@ export default function EditWithAI() {
   const [showPopup, setShowPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const styles = useMemo(() => stylesFactory(colors), [colors]);
+  const styles = stylesFactory();
 
   useEffect(() => {
     if (!recipe) {
@@ -95,38 +91,36 @@ export default function EditWithAI() {
   if (!recipe) return null;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Header title="Edit with AI" />
       <ContentWrapper>
         <View style={styles.content}>
-          <Text style={styles.description}>
+          <Text style={[styles.description, { color: colors.text }]}>
             Describe how you'd like to modify "{recipe.name}" and AI will apply the changes for you to review.
           </Text>
-          <TextInput
-            style={styles.input}
+          <Input
             value={prompt}
             onChangeText={setPrompt}
             placeholder={PLACEHOLDER_SUGGESTIONS[placeholderIndex]}
-            placeholderTextColor={colors.placeholderText}
             multiline
             numberOfLines={4}
             textAlignVertical="top"
             editable={!isLoading}
+            style={styles.input}
           />
-          <TouchableOpacity
-            style={styles.button}
+          <Button
             onPress={handleApply}
             disabled={!prompt.trim() || isLoading}
           >
             {isLoading ? (
               <View style={styles.loadingContainer}>
-                <Text style={styles.buttonText}>Editing recipe</Text>
-                <Text style={[styles.buttonText, styles.dotsContainer]}>{dots}</Text>
+                <Text style={[styles.buttonText, { color: colors.background }]}>Editing recipe</Text>
+                <Text style={[styles.buttonText, styles.dotsContainer, { color: colors.background }]}>{dots}</Text>
               </View>
             ) : (
-              <Text style={styles.buttonText}>Apply changes</Text>
+              <Text style={[styles.buttonText, { color: colors.background }]}>Apply changes</Text>
             )}
-          </TouchableOpacity>
+          </Button>
         </View>
       </ContentWrapper>
       <CustomPopup
@@ -140,10 +134,9 @@ export default function EditWithAI() {
   );
 }
 
-const stylesFactory = (colors: any) => StyleSheet.create({
+const stylesFactory = () => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   content: {
     padding: 16,
@@ -151,32 +144,19 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   },
   description: {
     fontSize: 16,
-    color: colors.text,
     opacity: 0.7,
     marginBottom: 20,
     lineHeight: 22,
   },
   input: {
-    backgroundColor: colors.inputBackground,
-    borderRadius: 12,
-    padding: 16,
-    fontSize: 16,
-    color: colors.text,
     minHeight: 120,
-    borderWidth: 1,
-    borderColor: colors.inputBorder,
-    marginBottom: 16,
-  },
-  button: {
     padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-    backgroundColor: colors.tint,
+    marginBottom: 16,
+    textAlignVertical: 'top',
   },
   buttonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.background,
   },
   loadingContainer: {
     flexDirection: 'row',

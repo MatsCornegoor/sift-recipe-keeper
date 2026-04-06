@@ -309,13 +309,13 @@ export default function RecipeDetail() {
             top: 80,
           }]}> 
             <TouchableOpacity style={styles.menuItem} onPress={handleEdit}>
-              <Text style={styles.menuText}>Edit recipe</Text>
+              <Text style={styles.menuText}>Edit manually</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.menuItem} onPress={handleEditWithAI}>
               <Text style={styles.menuText}>Edit with AI</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.menuItem} onPress={handleDelete}>
-              <Text style={[styles.menuText, styles.deleteMenuText]}>Delete recipe</Text>
+              <Text style={[styles.menuText, styles.deleteMenuText]}>Delete</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>

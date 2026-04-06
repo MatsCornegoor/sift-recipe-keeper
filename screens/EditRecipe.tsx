@@ -34,7 +34,7 @@ export default function EditRecipe() {
         <Header title="Edit recipe" />
         <NestableScrollContainer style={{ flex: 1, backgroundColor: colors.background }}>
           <ContentWrapper>
-            <RecipeForm mode="edit" initialRecipe={originalRecipe} onSave={handleSave} />
+            <RecipeForm mode="edit" initialRecipe={originalRecipe} onSave={handleSave} onCancel={() => navigation.navigate('RecipeDetail', { id: originalRecipe.id })} />
           </ContentWrapper>
         </NestableScrollContainer>
       </View>

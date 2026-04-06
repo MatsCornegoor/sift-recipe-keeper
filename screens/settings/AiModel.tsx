@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Switch, Animated, Linking } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Animated, Linking } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '@/hooks/useTheme';
 import Header from '@/components/Header';
 import CustomPopup from '@/components/CustomPopup';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
 
 export default function AiModel() {
   const { colors } = useTheme();
@@ -128,34 +130,31 @@ export default function AiModel() {
 
         <View style={styles.form}>
           <Text style={styles.label}>Model endpoint</Text>
-          <TextInput
-            style={styles.input}
+          <Input
             value={endpoint}
             onChangeText={setEndpoint}
             placeholder="https://api.openai.com/v1/chat/completions"
-            placeholderTextColor={colors.placeholderText}
             autoCapitalize="none"
+            style={styles.input}
           />
 
           <Text style={styles.label}>Model name</Text>
-          <TextInput
-            style={styles.input}
+          <Input
             value={model}
             onChangeText={setModel}
             placeholder="gpt-4o-mini"
-            placeholderTextColor={colors.placeholderText}
             autoCapitalize="none"
+            style={styles.input}
           />
 
           <Text style={styles.label}>API key</Text>
-          <TextInput
-            style={styles.input}
+          <Input
             value={apiKey}
             onChangeText={setApiKey}
             placeholder="sk-..."
-            placeholderTextColor={colors.placeholderText}
             secureTextEntry
             autoCapitalize="none"
+            style={styles.input}
           />
         </View>
 
@@ -184,25 +183,23 @@ export default function AiModel() {
         {advancedExpanded && (
           <View>
             <Text style={styles.label}>Temperature</Text>
-            <TextInput
-              style={styles.input}
+            <Input
               value={temperature}
               onChangeText={setTemperature}
               placeholder="0.1"
-              placeholderTextColor={colors.placeholderText}
               keyboardType="decimal-pad"
               autoCapitalize="none"
+              style={styles.input}
             />
 
             <Text style={styles.label}>Seed</Text>
-            <TextInput
-              style={styles.input}
+            <Input
               value={seed}
               onChangeText={setSeed}
               placeholder="1997"
-              placeholderTextColor={colors.placeholderText}
               keyboardType="number-pad"
               autoCapitalize="none"
+              style={styles.input}
             />
 
             <View style={styles.switchRow}>
@@ -217,13 +214,12 @@ export default function AiModel() {
           </View>
         )}
 
-        <TouchableOpacity
-          style={[styles.button, { marginBottom: 32, marginTop: 30, opacity: isTesting ? 0.7 : 1 }]}
+        <Button
+          title={isTesting ? 'Testing model...' : 'Save & Test'}
           onPress={saveAndTest}
           disabled={isTesting}
-        >
-          <Text style={styles.buttonText}>{isTesting ? 'Testing model...' : 'Save & Test'}</Text>
-        </TouchableOpacity>
+          style={{ marginBottom: 32, marginTop: 30, opacity: isTesting ? 0.7 : 1 }}
+        />
       </ScrollView>
       <CustomPopup
         visible={showPopup}
@@ -269,14 +265,9 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     color: colors.text,
   },
   input: {
-    fontSize: 16,
-    padding: 12,
-    borderWidth: 1,
-    borderRadius: 8,
+    height: 48,
     marginBottom: 16,
-    backgroundColor: colors.inputBackground,
-    color: colors.text,
-    borderColor: colors.inputBorder,
+    paddingHorizontal: 12,
   },
   accordionHeader: {
     flexDirection: 'row',
@@ -304,16 +295,5 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     fontSize: 16,
     marginRight: 16,
     color: colors.text,
-  },
-  button: {
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-    backgroundColor: colors.tint,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.background,
   },
 });

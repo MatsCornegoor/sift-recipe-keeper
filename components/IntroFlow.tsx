@@ -1,13 +1,7 @@
 import React, { useMemo, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Modal,
-  Dimensions,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Dimensions } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
+import Button from './ui/Button';
 
 const FORCE_SHOW_INTRO = false; // Set to true to always show the intro during development
 
@@ -104,17 +98,11 @@ export default function IntroFlow({ visible, onSkip, onSetupModel }: IntroFlowPr
 
           {isLast ? (
             <View style={styles.lastStepButtons}>
-              <TouchableOpacity style={styles.buttonOutlined} onPress={handleSkip}>
-                <Text style={styles.buttonTextOutlined}>Skip for now</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.button, styles.buttonPrimary]} onPress={handleSetupModel}>
-                <Text style={styles.buttonText}>Setup Model</Text>
-              </TouchableOpacity>
+              <Button variant="secondary" title="Skip for now" onPress={handleSkip} />
+              <Button title="Setup Model" onPress={handleSetupModel} />
             </View>
           ) : (
-            <TouchableOpacity style={[styles.button, styles.buttonPrimary]} onPress={handleNext}>
-              <Text style={styles.buttonText}>Next</Text>
-            </TouchableOpacity>
+            <Button title="Next" onPress={handleNext} />
           )}
 
         </View>
@@ -180,32 +168,7 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   lineSpacing: {
     marginTop: 4,
   },
-  button: {
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  buttonPrimary: {
-    backgroundColor: colors.tint,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.background,
-  },
   lastStepButtons: {
     gap: 10,
-  },
-  buttonOutlined: {
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: colors.inputBorder,
-  },
-  buttonTextOutlined: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.deleteButton,
   },
 });
