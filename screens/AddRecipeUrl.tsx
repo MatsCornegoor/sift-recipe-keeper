@@ -81,7 +81,7 @@ export default function AddRecipeUrl() {
 
     setLoading(true);
     try {
-      const recipe = await RecipeExtractorService.extractRecipe(url);
+      const recipe = await RecipeExtractorService.extractRecipeFromUrl(url);
       recipe.sourceUrl = url.trim();
       await RecipeStore.addRecipe(recipe);
       navigation.goBack();
