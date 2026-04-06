@@ -86,6 +86,9 @@ function processRow(line, tableHasPrice, prices) {
     } else {
       cols[cols.length - 1] = ` ${priceStr} `;
     }
+  } else if (!tableHasPrice) {
+    // Label row (e.g. quality heading) — add empty cell to keep column count consistent
+    cols.push(' ');
   }
 
   return ['', ...cols, ''].join('|');

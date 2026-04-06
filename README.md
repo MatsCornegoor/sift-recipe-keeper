@@ -1,6 +1,6 @@
 # Sift - Recipe Keeper
 
-A minimalist recipe keeper that uses AI to extract clean recipes from any website — no ads, no stories, just the recipe.
+A minimalist recipe keeper that uses AI to extract clean recipes from any website. No ads, no stories, just the recipe.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -31,24 +31,15 @@ Sift works with any provider that supports the OpenAI API format. Below are test
 
 Endpoint: `https://openrouter.ai/api/v1/chat/completions`
 
-**Good quality — best balance between accuracy and price**
-
 | Model name | Response format | Est. price |
 |---|---|---|
+| **Good quality, best balance between accuracy and price** | | |
 | `google/gemma-3-27b-it` | On | $0.000400 |
 | `mistralai/mistral-small-3.2-24b-instruct` | On | $0.000425 |
 | `qwen/qwen3-coder-30b-a3b-instruct` | On | $0.000480 |
-
-**Great quality, but more expensive**
-
-| Model name | Response format | Est. price |
-|---|---|---|
+| **Great quality, but more expensive** | | |
 | `google/gemini-2.5-flash` | On | $0.003400 |
-
-**Medium quality, cheap, but prone to mistakes**
-
-| Model name | Response format | Est. price |
-|---|---|---|
+| **Medium quality, cheap, but prone to mistakes** | | |
 | `google/gemma-3-12b-it` | On | $0.000250 |
 | `meta-llama/llama-3.1-8b-instruct` | On | $0.000110 |
 
@@ -57,17 +48,12 @@ Endpoint: `https://openrouter.ai/api/v1/chat/completions`
 
 Endpoint: `https://api.openai.com/v1/chat/completions`
 
-**Good quality — best balance between accuracy and price**
-
 | Model name | Response format | Est. price |
 |---|---|---|
+| **Good quality, best balance between accuracy and price** | | |
 | `gpt-4o-mini` | On | $0.001050 |
 | `gpt-5.4-nano` | On | $0.001850 |
-
-**Great quality, but more expensive**
-
-| Model name | Response format | Est. price |
-|---|---|---|
+| **Great quality, but more expensive** | | |
 | `gpt-5.4-mini` | On | $0.006750 |
 
 
