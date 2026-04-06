@@ -1,6 +1,6 @@
-Sift is a minimalist recipe keeper for saving, organizing, and accessing your favorite recipes — without ads or distractions.
+Sift is a minimalist recipe keeper. It uses AI to extract just the recipe from a website, leaving out ads and long stories. You get a clean, easy-to-read recipe.
 
 - Import recipes from any website using AI by connecting to a LLM provider
 - Add recipes manually
 - Edit and organize recipes with custom tags
-- Local-first storage — your data stays on your device
+- Local-first storage, your data stays on your device

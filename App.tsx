@@ -13,7 +13,7 @@ function AppContent() {
     const initKeepAwake = async () => {
       try {
         const value = await AsyncStorage.getItem('keepScreenAwake');
-        if (value === 'true') {
+        if (value === null || value === 'true') {
           KeepAwake.activate();
         }
       } catch (error) {

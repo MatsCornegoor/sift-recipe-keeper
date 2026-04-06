@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Switch, Animated } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Switch, Animated, Linking } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '@/hooks/useTheme';
@@ -121,7 +121,8 @@ export default function AiModel() {
       <ScrollView style={styles.container}>
         <View style={styles.infoSection}>
           <Text style={styles.infoText}>
-            Sift uses a Bring Your Own Model (BYOM) approach. To enable recipe import from websites, you need to connect to an AI service. Please enter the details of your AI provider below.
+            Sift uses a Bring Your Own Model (BYOM) approach. To enable recipe import from websites, please enter the details of your AI provider below.{' '}
+            <Text style={styles.link} onPress={() => Linking.openURL('https://github.com/MatsCornegoor/sift-recipe-keeper')}>More info</Text>
           </Text>
         </View>
 
@@ -132,7 +133,7 @@ export default function AiModel() {
             value={endpoint}
             onChangeText={setEndpoint}
             placeholder="https://api.openai.com/v1/chat/completions"
-            placeholderTextColor={colors.text}
+            placeholderTextColor={colors.placeholderText}
             autoCapitalize="none"
           />
 
@@ -142,7 +143,7 @@ export default function AiModel() {
             value={model}
             onChangeText={setModel}
             placeholder="gpt-4o-mini"
-            placeholderTextColor={colors.text}
+            placeholderTextColor={colors.placeholderText}
             autoCapitalize="none"
           />
 
@@ -152,7 +153,7 @@ export default function AiModel() {
             value={apiKey}
             onChangeText={setApiKey}
             placeholder="sk-..."
-            placeholderTextColor={colors.text}
+            placeholderTextColor={colors.placeholderText}
             secureTextEntry
             autoCapitalize="none"
           />
@@ -181,14 +182,14 @@ export default function AiModel() {
         </TouchableOpacity>
 
         {advancedExpanded && (
-          <View style={styles.advancedForm}>
+          <View>
             <Text style={styles.label}>Temperature</Text>
             <TextInput
               style={styles.input}
               value={temperature}
               onChangeText={setTemperature}
               placeholder="0.1"
-              placeholderTextColor={colors.text}
+              placeholderTextColor={colors.placeholderText}
               keyboardType="decimal-pad"
               autoCapitalize="none"
             />
@@ -199,7 +200,7 @@ export default function AiModel() {
               value={seed}
               onChangeText={setSeed}
               placeholder="1997"
-              placeholderTextColor={colors.text}
+              placeholderTextColor={colors.placeholderText}
               keyboardType="number-pad"
               autoCapitalize="none"
             />
@@ -217,7 +218,7 @@ export default function AiModel() {
         )}
 
         <TouchableOpacity
-          style={[styles.button, { marginBottom: 32, marginTop: 16, opacity: isTesting ? 0.7 : 1 }]}
+          style={[styles.button, { marginBottom: 32, marginTop: 30, opacity: isTesting ? 0.7 : 1 }]}
           onPress={saveAndTest}
           disabled={isTesting}
         >
@@ -253,10 +254,11 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     marginBottom: 16,
     color: colors.text,
   },
-  form: {
-    marginBottom: 8,
+  link: {
+    color: colors.tint,
+    textDecorationLine: 'underline',
   },
-  advancedForm: {
+  form: {
     marginBottom: 8,
   },
   label: {

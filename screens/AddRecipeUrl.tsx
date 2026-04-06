@@ -92,9 +92,10 @@ export default function AddRecipeUrl() {
       navigation.goBack();
     } catch (error) {
       console.error('Failed to extract recipe from URL:', error);
+      const message = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
       setPopupConfig({
-        title: 'Error',
-        message: 'Failed to extract recipe. Please try again.',
+        title: 'Could not import recipe',
+        message,
         buttons: [{ text: 'OK', onPress: () => setShowPopup(false) }],
       });
       setShowPopup(true);
@@ -114,7 +115,7 @@ export default function AddRecipeUrl() {
           <View style={styles.container}>
             <TextInput
               style={styles.input}
-              placeholder="www.cookingwebite.com/recipe"
+              placeholder="www.cookingwebsite.com/recipe"
               placeholderTextColor={colors.deleteButton}
               value={url}
               onChangeText={setUrl}

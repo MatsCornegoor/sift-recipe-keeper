@@ -7,7 +7,7 @@ import { Recipe } from '../models/Recipe';
 import { useTheme } from '../hooks/useTheme';
 import Header from '../components/Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CustomPopup from '../components/CustomPopup';
+import IntroFlow from '../components/IntroFlow';
 
 export default function RecipeList({ navigation }: { navigation: any }) {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -171,22 +171,13 @@ export default function RecipeList({ navigation }: { navigation: any }) {
             </View>
           </TouchableOpacity>
         </Modal>
-        <CustomPopup
+        <IntroFlow
           visible={showAiPopup}
-          title="Welcome to Sift!"
-          message="To import recipes from websites, you need to configure an AI model."
-          buttons={[
-            { text: 'How Sift Works', onPress: () => {
-                setShowAiPopup(false);
-                navigation.navigate('About');
-            }, style: 'cancel'},
-            { text: 'Setup Model', onPress: () => {
-              setShowAiPopup(false);
-              navigation.navigate('AiModel');
-            }}
-          ]}
-          onClose={() => setShowAiPopup(false)}
-          type="info"
+          onSkip={() => setShowAiPopup(false)}
+          onSetupModel={() => {
+            setShowAiPopup(false);
+            navigation.navigate('AiModel');
+          }}
         />
       </View>
     </View>

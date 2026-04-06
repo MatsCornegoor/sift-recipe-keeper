@@ -18,7 +18,7 @@ export default function Appearance() {
   const loadPreferences = async () => {
     try {
       const awakeValue = await AsyncStorage.getItem('keepScreenAwake');
-      const isAwake = awakeValue === 'true';
+      const isAwake = awakeValue === null || awakeValue === 'true';
       setIsScreenAwake(isAwake);
       
       if (isAwake) {

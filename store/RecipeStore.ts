@@ -48,8 +48,6 @@ class RecipeStore {
   }
 
   async addRecipe(recipe: Recipe) {
-    console.log('Adding recipe with tags:', recipe.tags);
-
     if (recipe.imageUri && !recipe.imageUri.startsWith('file://')) {
       try {
         const newPath = await this.copyImageToAppDirectory(recipe.imageUri);

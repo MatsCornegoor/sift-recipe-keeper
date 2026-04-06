@@ -1,6 +1,6 @@
 # Sift - Recipe Keeper
 
-A minimalist recipe keeper that uses AI to extract clean recipes from any website — no ads, no stories, just the recipe.
+A minimalist recipe keeper that uses AI to extract clean recipes from any website. No ads, no stories, just the recipe.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -31,44 +31,32 @@ Sift works with any provider that supports the OpenAI API format. Below are test
 
 Endpoint: `https://openrouter.ai/api/v1/chat/completions`
 
-**Good quality — best balance between accuracy and price**
+| Model name | Response format | Est. price |
+|---|---|---|
+| **Good quality, best balance between accuracy and price** | | |
+| `google/gemma-3-27b-it` | On | $0.000400 |
+| `mistralai/mistral-small-3.2-24b-instruct` | On | $0.000425 |
+| `qwen/qwen3-coder-30b-a3b-instruct` | On | $0.000480 |
+| **Great quality, but more expensive** | | |
+| `google/gemma-4-31b-it` | On | $0.000820 |
+| `google/gemini-2.5-flash` | On | $0.003400 |
+| **Medium quality, cheap, but prone to mistakes** | | |
+| `google/gemma-3-12b-it` | On | $0.000250 |
+| `meta-llama/llama-3.1-8b-instruct` | On | $0.000110 |
 
-| Model name | Response format |
-|---|---|
-| `google/gemma-3-27b-it` | On |
-| `mistralai/mistral-small-3.2-24b-instruct` | On |
-| `qwen/qwen3-coder-30b-a3b-instruct` | On |
-
-**Great quality, but more expensive**
-
-| Model name | Response format |
-|---|---|
-| `google/gemini-2.5-flash` | On |
-
-**Medium quality, cheap, but prone to mistakes**
-
-| Model name | Response format |
-|---|---|
-| `google/gemma-3-12b-it` | On |
-| `meta-llama/llama-3.1-8b-instruct` | On |
 
 
 ### OpenAI
 
 Endpoint: `https://api.openai.com/v1/chat/completions`
 
-**Good quality — best balance between accuracy and price**
-
-| Model name | Response format |
-|---|---|
-| `gpt-4o-mini` | On |
-| `gpt-5.4-nano` | On |
-
-**Great quality, but more expensive**
-
-| Model name | Response format |
-|---|---|
-| `gpt-5.4-mini` | On |
+| Model name | Response format | Est. price |
+|---|---|---|
+| **Good quality, best balance between accuracy and price** | | |
+| `gpt-4o-mini` | On | $0.001050 |
+| `gpt-5.4-nano` | On | $0.001850 |
+| **Great quality, but more expensive** | | |
+| `gpt-5.4-mini` | On | $0.006750 |
 
 
 
@@ -77,16 +65,18 @@ Endpoint: `https://api.openai.com/v1/chat/completions`
 
 
 ### Documentation Improvements
-- [ ] Short and clear documentation
-- [ ] List with supported models + estimated pricing
-- [ ] Collaboration guidelines
+- [X] Short and clear documentation
+- [X] List with supported models + estimated pricing
+- [X] Collaboration guidelines
 
 
 ### UX Improvements
-- [ ] Improved introduction flow — hide AI buttons if users want to use the app in manual mode
+- [X] Improved introduction flow
 - [ ] Multilayer menu to keep interface clean, but add extra functions
-- [ ] Clear error messages
+- [X] Clear error messages
 
+### Edit with AI
+- [ ] Option to edit a imported recipe using AI (make guten free, convert to metric, make for 8 people etc)
 
 ### Import via Share Action
 - [ ] By clicking the share link option in e.g. a web browser, users can send a URL directly to the Sift app for easy imports.
