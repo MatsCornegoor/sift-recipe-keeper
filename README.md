@@ -43,6 +43,8 @@ Endpoint: `https://openrouter.ai/api/v1/chat/completions`
 | **Medium quality, cheap, but prone to mistakes** | | |
 | `google/gemma-3-12b-it` | On | $0.000250 |
 | `meta-llama/llama-3.1-8b-instruct` | On | $0.000110 |
+| **Free, rate limits might apply** | | |
+| `arcee-ai/trinity-large-preview:free` | On | |
 
 
 
