@@ -41,6 +41,12 @@ const SECTIONS = [
           'meta-llama/llama-3.1-8b-instruct',
         ],
       },
+      {
+        label: 'Free, rate limits might apply' 
+        models: [
+          'arcee-ai/trinity-large-preview:free'
+        ], 
+      },
     ],
   },
   {
