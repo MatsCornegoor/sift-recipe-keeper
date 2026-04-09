@@ -51,12 +51,17 @@ export default function RecipeList({ navigation }: { navigation: any }) {
     checkAiSettings();
   }, [recipes]);
 
-  const handleAddWithUrl = () => {
+  const handleAddFromUrl = () => {
     setIsMenuVisible(false);
     navigation.navigate('AddRecipeUrl');
   };
 
-  const handleAddManually = () => {
+  const handleAddFromFile = () => {
+    setIsMenuVisible(false);
+    navigation.navigate('AddRecipeFile');
+  };
+
+  const handleAddFromScratch = () => {
     setIsMenuVisible(false);
     navigation.navigate('AddRecipe');
   };
@@ -162,11 +167,14 @@ export default function RecipeList({ navigation }: { navigation: any }) {
               bottom: 90,
               right: 20 
             }]}>
-              <TouchableOpacity style={styles.menuItem} onPress={handleAddWithUrl}>
-                <Text style={styles.menuText}>Add recipe from website</Text>
+              <TouchableOpacity style={styles.menuItem} onPress={handleAddFromUrl}>
+                <Text style={styles.menuText}>Add from website</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.menuItem} onPress={handleAddManually}>
-                <Text style={styles.menuText}>Add recipe manually</Text>
+              <TouchableOpacity style={styles.menuItem} onPress={handleAddFromFile}>
+                <Text style={styles.menuText}>Add from file</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.menuItem} onPress={handleAddFromScratch}>
+                <Text style={styles.menuText}>Add from scratch</Text>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
