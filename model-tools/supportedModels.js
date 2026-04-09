@@ -1,3 +1,11 @@
+#!/usr/bin/env node
+
+// Updates the supported-models tables in README.md by fetching live pricing
+// and response-format support from the OpenRouter API.
+//
+// Usage:
+//   OPENROUTER_API_KEY=<key> node supportedModels.js
+
 const fs = require('fs');
 const path = require('path');
 
@@ -9,7 +17,7 @@ const path = require('path');
 const ESTIMATED_INPUT_TOKENS = 3000;
 const ESTIMATED_OUTPUT_TOKENS = 1000;
 
-const README_PATH = path.join(__dirname, 'README.md');
+const README_PATH = path.join(__dirname, '..', 'README.md');
 
 // Table structure for the README. Edit supportedModels.json to add/remove models.
 const SECTIONS = require('./supportedModels.json');
