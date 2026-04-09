@@ -11,64 +11,8 @@ const ESTIMATED_OUTPUT_TOKENS = 1000;
 
 const README_PATH = path.join(__dirname, 'README.md');
 
-// Table structure for the README. Each section maps to a provider heading.
-// models use OpenRouter IDs; displayName strips the provider prefix for
-// sections where the native API doesn't use it (e.g. OpenAI).
-const SECTIONS = [
-  {
-    heading: '### OpenRouter',
-    stripProviderPrefix: false,
-    groups: [
-      {
-        label: 'Good quality, best balance between accuracy and price',
-        models: [
-          'google/gemma-3-27b-it',
-          'mistralai/mistral-small-3.2-24b-instruct',
-          'qwen/qwen3-coder-30b-a3b-instruct',
-        ],
-      },
-      {
-        label: 'Great quality, but more expensive',
-        models: [
-          'google/gemma-4-31b-it',
-          'google/gemini-2.5-flash',
-        ],
-      },
-      {
-        label: 'Medium quality, cheap, but prone to mistakes',
-        models: [
-          'google/gemma-3-12b-it',
-          'meta-llama/llama-3.1-8b-instruct',
-        ],
-      },
-      {
-        label: 'Free, rate limits might apply' 
-        models: [
-          'arcee-ai/trinity-large-preview:free'
-        ], 
-      },
-    ],
-  },
-  {
-    heading: '### OpenAI',
-    stripProviderPrefix: true,
-    groups: [
-      {
-        label: 'Good quality, best balance between accuracy and price',
-        models: [
-          'openai/gpt-4o-mini',
-          'openai/gpt-5.4-nano',
-        ],
-      },
-      {
-        label: 'Great quality, but more expensive',
-        models: [
-          'openai/gpt-5.4-mini',
-        ],
-      },
-    ],
-  },
-];
+// Table structure for the README. Edit supportedModels.json to add/remove models.
+const SECTIONS = require('./supportedModels.json');
 
 // ─── Fetch ────────────────────────────────────────────────────────────────────
 
