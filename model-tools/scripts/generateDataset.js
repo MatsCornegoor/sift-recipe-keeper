@@ -4,19 +4,19 @@
 // Run this once (or whenever TEST_URLS change) before running tests.
 //
 // Usage:
-//   OPENROUTER_API_KEY=<key> node generateDataset.js
+//   node model-tools/scripts/generateDataset.js
 
 const fs = require('fs');
 const path = require('path');
-const { fetchAndClean, extractRecipe } = require('./extract');
-const { TEST_URLS, DATASET_MODEL } = require('./config');
+const { fetchAndClean, extractRecipe } = require('../lib/extract');
+const { TEST_URLS, DATASET_MODEL } = require('../lib/config');
 
-const DATASET_PATH = path.join(__dirname, 'testDataset.json');
+const DATASET_PATH = path.join(__dirname, '..', 'cache', 'groundTruth.json');
 const API_KEY = process.env.OPENROUTER_API_KEY;
 
 async function main() {
   if (!API_KEY) {
-    console.error('Error: OPENROUTER_API_KEY environment variable is required.');
+    console.error('Error: OPENROUTER_API_KEY is not set. Add it to model-tools/.env or set it in your environment.');
     process.exit(1);
   }
 
@@ -54,7 +54,7 @@ async function main() {
   };
 
   fs.writeFileSync(DATASET_PATH, JSON.stringify(dataset, null, 2));
-  console.log(`\nDataset saved to ${path.relative(process.cwd(), DATASET_PATH)}`);
+  console.log(`\nGround truth saved to model-tools/cache/groundTruth.json`);
   console.log('Run testModels.js to benchmark models against it.');
 }
 

@@ -4,10 +4,11 @@
 // and response-format support from the OpenRouter API.
 //
 // Usage:
-//   OPENROUTER_API_KEY=<key> node supportedModels.js
+//   node model-tools/scripts/supportedModels.js
 
 const fs = require('fs');
 const path = require('path');
+require('../lib/config'); // loads .env
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
@@ -17,10 +18,8 @@ const path = require('path');
 const ESTIMATED_INPUT_TOKENS = 3000;
 const ESTIMATED_OUTPUT_TOKENS = 1000;
 
-const README_PATH = path.join(__dirname, '..', 'README.md');
-
-// Table structure for the README. Edit supportedModels.json to add/remove models.
-const SECTIONS = require('./supportedModels.json');
+const README_PATH = path.join(__dirname, '..', '..', 'README.md');
+const SECTIONS = require('../supportedModels.json');
 
 // ─── Fetch ────────────────────────────────────────────────────────────────────
 
@@ -89,7 +88,6 @@ function updateReadme(modelData) {
       continue;
     }
 
-    // Find the start and end of the table after this heading
     let tableStart = -1;
     let tableEnd = -1;
     for (let i = headingIdx + 1; i < lines.length; i++) {
@@ -118,7 +116,6 @@ function updateReadme(modelData) {
 async function main() {
   const modelData = await fetchModelData();
 
-  // Print results to console
   const col1 = 50;
   const col2 = 10;
   const col3 = 18;
@@ -127,11 +124,7 @@ async function main() {
   console.log(`Input tokens:  ${ESTIMATED_INPUT_TOKENS}`);
   console.log(`Output tokens: ${ESTIMATED_OUTPUT_TOKENS}`);
   console.log();
-  console.log(
-    'Model'.padEnd(col1) +
-    'Res. fmt'.padEnd(col2) +
-    'Est. per recipe'
-  );
+  console.log('Model'.padEnd(col1) + 'Res. fmt'.padEnd(col2) + 'Est. per recipe');
   console.log('-'.repeat(col1 + col2 + col3));
 
   for (const section of SECTIONS) {

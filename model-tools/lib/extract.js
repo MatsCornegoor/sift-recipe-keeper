@@ -29,10 +29,7 @@ function extractJson(text) {
   // Strip thinking blocks emitted by reasoning models (e.g. gemini-2.5-pro).
   const stripped = text.replace(/<thinking>[\s\S]*?<\/thinking>/gi, '');
   const start = stripped.indexOf('{');
-  if (start === -1) {
-    console.error('\n[debug] No JSON found. Response (first 500 chars):', JSON.stringify(stripped.slice(0, 500)));
-    throw new Error('No JSON object found in response');
-  }
+  if (start === -1) throw new Error('No JSON object found in response');
 
   let depth = 0, inString = false, escape = false;
   for (let i = start; i < stripped.length; i++) {
@@ -44,8 +41,17 @@ function extractJson(text) {
     if (ch === '{') depth++;
     else if (ch === '}') { depth--; if (depth === 0) return JSON.parse(stripped.slice(start, i + 1)); }
   }
-  console.error('\n[debug] Unbalanced braces. Response (first 500 chars):', JSON.stringify(stripped.slice(0, 500)));
-  console.error('[debug] Response (last 200 chars):', JSON.stringify(stripped.slice(-200)));
+
+  // Recovery: response was likely truncated (e.g. thinking model hit max_tokens).
+  // Try closing the unclosed braces and parsing anyway.
+  if (depth > 0) {
+    try {
+      return JSON.parse(stripped.slice(start) + '}'.repeat(depth));
+    } catch {
+      // fall through to error
+    }
+  }
+
   throw new Error('Malformed JSON: unbalanced braces');
 }
 

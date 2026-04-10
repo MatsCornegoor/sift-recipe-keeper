@@ -5,16 +5,16 @@
 // so re-runs only re-score, not re-extract.
 //
 // Usage:
-//   OPENROUTER_API_KEY=<key> node testModels.js
+//   node model-tools/scripts/testModels.js
 
 const fs = require('fs');
 const path = require('path');
-const SECTIONS = require('./supportedModels.json');
-const { fetchAndClean, extractRecipe, extractJson } = require('./extract');
-const { TEST_URLS, OPENROUTER_ENDPOINT, DATASET_MODEL } = require('./config');
+const SECTIONS = require('../supportedModels.json');
+const { fetchAndClean, extractRecipe, extractJson } = require('../lib/extract');
+const { TEST_URLS, OPENROUTER_ENDPOINT, DATASET_MODEL } = require('../lib/config');
 
-const DATASET_PATH = path.join(__dirname, 'testDataset.json');
-const CACHE_PATH = path.join(__dirname, 'extractionCache.json');
+const DATASET_PATH = path.join(__dirname, '..', 'cache', 'groundTruth.json');
+const CACHE_PATH = path.join(__dirname, '..', 'cache', 'modelExtractions.json');
 const API_KEY = process.env.OPENROUTER_API_KEY;
 
 // ─── Extraction cache ─────────────────────────────────────────────────────────
@@ -57,12 +57,11 @@ ${JSON.stringify(groundTruth, null, 2)}
 Extracted:
 ${JSON.stringify(extracted, null, 2)}
 
-List every mistake in the extracted recipe. Be specific — name the exact ingredient, step, or field that is wrong. ONLY mark something as a mistake when it actually changes the outcome of the recipe. Simplified steps are fine. Sligthly differnt naming is fine. Notes are fine.
-
+List every mistake in the extracted recipe. Be specific — name the exact ingredient, step, or field that is wrong. ONLY mark something as a mistake when it actually changes the outcome of the recipe. Simplified steps are fine. Slightly different naming is fine. Notes are fine.
 
 Severity levels:
 - critical: completely wrong or missing key information (wrong recipe name, missing entire ingredient group, recipe not extracted at all)
-- major: significant error affecting usability (missing ingredient, missing stpe, wrong quantity)
+- major: significant error affecting usability (missing ingredient, missing step, wrong quantity)
 - minor: small inaccuracy
 
 Respond with ONLY this JSON — no extra text or markdown:
@@ -98,7 +97,7 @@ async function rateExtraction(extracted, groundTruth) {
       model: DATASET_MODEL,
       messages: [{ role: 'user', content: buildRatingPrompt(extracted, groundTruth) }],
       temperature: 0,
-      max_tokens: 4000,
+      max_tokens: 16000,
     }),
   });
 
@@ -115,13 +114,13 @@ async function rateExtraction(extracted, groundTruth) {
 
 async function main() {
   if (!API_KEY) {
-    console.error('Error: OPENROUTER_API_KEY environment variable is required.');
+    console.error('Error: OPENROUTER_API_KEY is not set. Add it to model-tools/.env or set it in your environment.');
     process.exit(1);
   }
 
   if (!fs.existsSync(DATASET_PATH)) {
     console.error('Error: testDataset.json not found.');
-    console.error('Run generateDataset.js first to create the ground-truth dataset.');
+    console.error('Run generateDataset.js first to create the ground truth.');
     process.exit(1);
   }
 
