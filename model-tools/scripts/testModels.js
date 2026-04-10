@@ -1,0 +1,250 @@
+#!/usr/bin/env node
+
+// Benchmarks every model in supportedModels.json against the ground-truth
+// dataset in testDataset.json. Extractions are cached in extractionCache.json
+// so re-runs only re-score, not re-extract.
+//
+// Usage:
+//   node model-tools/scripts/testModels.js
+
+const fs = require('fs');
+const path = require('path');
+const SECTIONS = require('../supportedModels.json');
+const { fetchAndClean, extractRecipe, extractJson } = require('../lib/extract');
+const { TEST_URLS, OPENROUTER_ENDPOINT, DATASET_MODEL } = require('../lib/config');
+
+const DATASET_PATH = path.join(__dirname, '..', 'cache', 'groundTruth.json');
+const CACHE_PATH = path.join(__dirname, '..', 'cache', 'modelExtractions.json');
+const API_KEY = process.env.OPENROUTER_API_KEY;
+
+// ─── Cache ────────────────────────────────────────────────────────────────────
+// Structure: { datasetGeneratedAt, entries: { "modelId||url": { extractedAt, recipe, rating? } } }
+// Ratings are invalidated when the ground truth is regenerated; extractions are kept.
+
+function loadCache() {
+  if (!fs.existsSync(CACHE_PATH)) return { datasetGeneratedAt: null, entries: {} };
+  const raw = JSON.parse(fs.readFileSync(CACHE_PATH, 'utf-8'));
+  // Migrate old flat format (no entries wrapper)
+  if (!raw.entries) return { datasetGeneratedAt: null, entries: raw };
+  return raw;
+}
+
+function saveCache(cache) {
+  fs.writeFileSync(CACHE_PATH, JSON.stringify(cache, null, 2));
+}
+
+function cacheKey(modelId, url) {
+  return `${modelId}||${url}`;
+}
+
+function syncCacheToDataset(cache, datasetGeneratedAt) {
+  if (cache.datasetGeneratedAt !== datasetGeneratedAt) {
+    const ratingCount = Object.values(cache.entries).filter(e => e.rating).length;
+    if (ratingCount > 0) console.log(`Ground truth updated — clearing ${ratingCount} cached rating(s), keeping extractions.\n`);
+    for (const entry of Object.values(cache.entries)) delete entry.rating;
+    cache.datasetGeneratedAt = datasetGeneratedAt;
+  }
+}
+
+async function getOrExtract(modelId, url, cleanContent, cache) {
+  const key = cacheKey(modelId, url);
+  if (cache.entries[key]) return cache.entries[key].recipe;
+  process.stdout.write('extracting... ');
+  const recipe = await extractRecipe(modelId, cleanContent, API_KEY);
+  cache.entries[key] = { extractedAt: new Date().toISOString(), recipe };
+  saveCache(cache);
+  return recipe;
+}
+
+async function getOrRate(modelId, url, extracted, groundTruth, cache) {
+  const key = cacheKey(modelId, url);
+  const entry = cache.entries[key];
+  if (entry?.rating) {
+    process.stdout.write('(cached) ');
+    return entry.rating;
+  }
+  process.stdout.write('rating... ');
+  const result = await rateExtraction(extracted, groundTruth);
+  cache.entries[key] = { ...entry, rating: { ratedAt: new Date().toISOString(), ...result } };
+  saveCache(cache);
+  return result;
+}
+
+// ─── AI rating ────────────────────────────────────────────────────────────────
+
+function buildRatingPrompt(extracted, groundTruth) {
+  return `
+You are evaluating an AI recipe extraction by comparing it against a ground-truth recipe.
+
+Ground truth:
+${JSON.stringify(groundTruth, null, 2)}
+
+Extracted:
+${JSON.stringify(extracted, null, 2)}
+
+List every mistake in the extracted recipe. Be specific — name the exact ingredient, step, or field that is wrong. ONLY mark something as a mistake when it actually changes the outcome of the recipe. Simplified steps are fine. Slightly different naming is fine. Notes are fine.
+
+Severity levels:
+- critical: completely wrong or missing key information (wrong recipe name, missing entire ingredient group, recipe not extracted at all)
+- major: significant error affecting usability (missing ingredient, missing step, wrong quantity)
+- minor: small inaccuracy
+
+Respond with ONLY this JSON — no extra text or markdown:
+{
+  "mistakes": [
+    {
+      "category": "name|ingredients|instructions|schema",
+      "severity": "critical|major|minor",
+      "description": "specific description"
+    }
+  ]
+}
+
+If there are no mistakes, return { "mistakes": [] }.
+`;
+}
+
+const MISTAKE_WEIGHTS = { critical: 10, major: 5, minor: 2 };
+
+function computeScore(mistakes) {
+  const deductions = mistakes.reduce((sum, m) => sum + (MISTAKE_WEIGHTS[m.severity] ?? 2), 0);
+  return Math.max(0, 50 - deductions);
+}
+
+async function rateExtraction(extracted, groundTruth) {
+  const response = await fetch(OPENROUTER_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: DATASET_MODEL,
+      messages: [{ role: 'user', content: buildRatingPrompt(extracted, groundTruth) }],
+      temperature: 0,
+      max_tokens: 16000,
+    }),
+  });
+
+  if (!response.ok) throw new Error(`Rating API ${response.status}`);
+
+  const data = await response.json();
+  if (data.error) throw new Error(`Rating model error: ${data.error.message || JSON.stringify(data.error)}`);
+
+  const { mistakes } = extractJson(data.choices[0].message.content ?? '');
+  return { mistakes, score: computeScore(mistakes) };
+}
+
+// ─── Main ─────────────────────────────────────────────────────────────────────
+
+async function main() {
+  if (!API_KEY) {
+    console.error('Error: OPENROUTER_API_KEY is not set. Add it to model-tools/.env or set it in your environment.');
+    process.exit(1);
+  }
+
+  if (!fs.existsSync(DATASET_PATH)) {
+    console.error('Error: testDataset.json not found.');
+    console.error('Run generateDataset.js first to create the ground truth.');
+    process.exit(1);
+  }
+
+  const dataset = JSON.parse(fs.readFileSync(DATASET_PATH, 'utf-8'));
+  const cache = loadCache();
+  syncCacheToDataset(cache, dataset.generatedAt);
+
+  const entryCount = Object.keys(cache.entries).length;
+  const ratedCount = Object.values(cache.entries).filter(e => e.rating).length;
+
+  console.log(`Dataset: ${dataset.entries.length} URLs, generated by ${dataset.model} on ${dataset.generatedAt.slice(0, 10)}`);
+  console.log(`Cache: ${entryCount} extraction(s), ${ratedCount} rating(s)`);
+  console.log(`Rating model: ${DATASET_MODEL}\n`);
+
+  const allModels = SECTIONS.flatMap(s => s.groups.flatMap(g => g.models));
+  console.log(`Testing ${allModels.length} models\n`);
+
+  // Fetch and clean each test page once, shared across all models.
+  console.log('Fetching test pages...');
+  const cleanPages = await Promise.all(
+    TEST_URLS.map(async (url) => {
+      process.stdout.write(`  ${url.slice(0, 60)}... `);
+      const content = await fetchAndClean(url);
+      console.log('done');
+      return content;
+    })
+  );
+
+  const report = [];
+
+  for (const section of SECTIONS) {
+    console.log(`\n${section.heading}`);
+
+    for (const group of section.groups) {
+      console.log(`\n  ${group.label}`);
+
+      for (const modelId of group.models) {
+        console.log(`\n  ${modelId}`);
+        const results = [];
+
+        for (let i = 0; i < TEST_URLS.length; i++) {
+          const url = TEST_URLS[i];
+          const cleanContent = cleanPages[i];
+          const groundTruth = dataset.entries.find(e => e.url === url)?.recipe;
+
+          if (!groundTruth) {
+            console.log(`    [${i + 1}/${TEST_URLS.length}] No dataset entry for ${url} — skipping`);
+            continue;
+          }
+
+          process.stdout.write(`    [${i + 1}/${TEST_URLS.length}] ${url.slice(0, 55)}... `);
+
+          try {
+            const extracted = await getOrExtract(modelId, url, cleanContent, cache);
+            const { mistakes, score } = await getOrRate(modelId, url, extracted, groundTruth, cache);
+            console.log(`${score}/50 (${mistakes.length} mistake${mistakes.length !== 1 ? 's' : ''})`);
+            results.push({ url, score, mistakes });
+          } catch (err) {
+            console.log(`ERROR: ${err.message.slice(0, 80)}`);
+            results.push({ url, score: 0, error: err.message });
+          }
+        }
+
+        const totalScore = results.reduce((sum, r) => sum + (r.score ?? 0), 0);
+        const maxScore = results.length * 50;
+        const pct = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
+        console.log(`  => ${totalScore}/${maxScore} (${pct}%)`);
+
+        for (const r of results) {
+          if (r.mistakes?.length) {
+            console.log(`     ${new URL(r.url).hostname}:`);
+            for (const m of r.mistakes) {
+              const tag = m.severity === 'critical' ? '[!!]' : m.severity === 'major' ? '[!] ' : '[-] ';
+              console.log(`       ${tag} ${m.description}`);
+            }
+          }
+        }
+
+        report.push({ modelId, results, totalScore, maxScore, pct });
+      }
+    }
+  }
+
+  // ─── Summary table ──────────────────────────────────────────────────────────
+
+  const col = 52;
+  console.log('\n\n' + '='.repeat(col + 20));
+  console.log('SUMMARY (sorted by score)');
+  console.log('='.repeat(col + 20));
+  console.log(`${'Model'.padEnd(col)} Score     %`);
+  console.log('-'.repeat(col + 20));
+
+  for (const { modelId, totalScore, maxScore, pct } of [...report].sort((a, b) => b.pct - a.pct)) {
+    const bar = '█'.repeat(Math.round(pct / 10)).padEnd(10);
+    console.log(`${modelId.padEnd(col)} ${String(totalScore).padStart(3)}/${maxScore}  ${bar} ${pct}%`);
+  }
+}
+
+main().catch(err => {
+  console.error(err.message);
+  process.exit(1);
+});

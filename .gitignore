@@ -27,6 +27,9 @@ yarn-error.*
 .env*.local
 local-gradle.properties
 
+# model-tools generated cache
+model-tools/cache/
+
 # typescript
 *.tsbuildinfo
 

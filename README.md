@@ -34,15 +34,16 @@ Endpoint: `https://openrouter.ai/api/v1/chat/completions`
 | Model name | Response format | Est. price |
 |---|---|---|
 | **Good quality, best balance between accuracy and price** | | |
-| `google/gemma-3-27b-it` | On | $0.000400 |
 | `mistralai/mistral-small-3.2-24b-instruct` | On | $0.000425 |
+| `google/gemma-3-27b-it` | On | $0.000400 |
 | `qwen/qwen3-coder-30b-a3b-instruct` | On | $0.000480 |
 | **Great quality, but more expensive** | | |
-| `google/gemma-4-31b-it` | On | $0.000820 |
 | `google/gemini-2.5-flash` | On | $0.003400 |
 | **Medium quality, cheap, but prone to mistakes** | | |
-| `google/gemma-3-12b-it` | On | $0.000250 |
 | `meta-llama/llama-3.1-8b-instruct` | On | $0.000110 |
+| `google/gemma-3-12b-it` | On | $0.000250 |
+| **Free, might be unstable and have rate limits** | | |
+| `arcee-ai/trinity-large-preview:free` | On | $0.000000 |
 
 
 
@@ -53,8 +54,8 @@ Endpoint: `https://api.openai.com/v1/chat/completions`
 | Model name | Response format | Est. price |
 |---|---|---|
 | **Good quality, best balance between accuracy and price** | | |
-| `gpt-4o-mini` | On | $0.001050 |
 | `gpt-5.4-nano` | On | $0.001850 |
+| `gpt-4o-mini` | On | $0.001050 |
 | **Great quality, but more expensive** | | |
 | `gpt-5.4-mini` | On | $0.006750 |
 
