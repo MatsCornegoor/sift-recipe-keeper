@@ -1,0 +1,1906 @@
+{
+  "google/gemma-3-27b-it||https://www.indianhealthyrecipes.com/butter-chicken/": {
+    "extractedAt": "2026-04-09T19:06:13.264Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Butter Chicken Recipe (Indian Chicken Makhani)",
+      "ingredientsGroups": [
+        {
+          "title": "First Marination",
+          "items": [
+            "½ kg (1.1 lbs) boneless chicken (cut to 1 inch pieces)",
+            "½ to ¾ teaspoon Kashmiri red chili powder (or paprika adjust to taste, reduce for kids)",
+            "¼ to ⅓ teaspoon salt (adjust to taste)",
+            "¾ to 1 tablespoon lemon juice"
+          ]
+        },
+        {
+          "title": "Second Marination",
+          "items": [
+            "⅓ cup Greek yogurt (hung curd/thick curd)",
+            "¾ tablespoon ginger garlic paste (or ½ tbsp fine grated ginger + ½ tbsp fine grated garlic)",
+            "⅛ teaspoon turmeric (haldi, optional)",
+            "¾ to 1 teaspoon garam masala (adjust to taste)",
+            "½ teaspoon cumin powder (optional)",
+            "1 teaspoon coriander powder (optional)",
+            "1 teaspoon kasuri methi (optional, dried fenugreek leaves)",
+            "¾ to 1 tablespoon oil"
+          ]
+        },
+        {
+          "title": "For sauce",
+          "items": [
+            "2 to 3 tablespoons butter or ghee (divided)",
+            "2 inch cinnamon piece (optional, for extra flavor)",
+            "2 to 4 green cardamoms (optional, for added flavor)",
+            "2 to 4 cloves (optional)",
+            "1½ cups (130 grams) onions sliced (optional)",
+            "600 grams (1.3 lbs.) fresh tomatoes (or 1 cup passata/canned tomato puree or ⅓ cup double concentrate tomato paste)",
+            "¾ tablespoon ginger garlic paste (or ½ tbsp each fine grated ginger and garlic)",
+            "1 to 2 green chilies (optional, deseed, slit or chop)",
+            "28 (42 grams,⅓ cup) whole raw cashews (soaked in hot water, sub with ¼ to ⅓ cup heavy cream)",
+            "½ cup water to blend (more if required)",
+            "1 to 2 teaspoons Kashmiri chili powder (reduce for kids, adjust to taste)",
+            "1 to 1½ teaspoons garam masala (divided, adjust to taste)",
+            "1 to 1½ teaspoon coriander powder (optional, adjust to taste)",
+            "½ teaspoon cumin powder (optional, adjust to taste)",
+            "½ to ¾ teaspoon salt (adjust to taste)",
+            "1 teaspoon sugar (to balance the flavors)",
+            "½ tablespoon Kasuri methi (dried fenugreek leaves)",
+            "1½ cups hot water to make gravy (cut down to 1 cup if omitting cashews)",
+            "⅓ cup (80 to 100 ml) heavy cream or whipping cream (divided)",
+            "2 tablespoons coriander leaves (fine chopped to garnish)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "",
+          "items": [
+            "Marinate chicken with lemon juice, chili powder and salt. Cover and rest for 20 minutes.",
+            "Next add yogurt, kasuri methi, oil, turmeric, ginger garlic paste, coriander powder, cumin powder and garam masala powder.",
+            "Marinate and rest for a minimum of 30 minutes, or overnight for best results. Cover and refrigerate.",
+            "Optional – If using onion, sauté in 1 tablespoon oil until lightly golden, for 7 minutes. Cool down.",
+            "To a blender, add tomatoes, sautéed onions, cashews and water. Blend to a smooth puree.",
+            "If you want you can also blend the cashews separately with water to a smooth cream.",
+            "Remove the chicken from the refrigerator, to bring it close to room temperature.",
+            "Melt butter in a pan & add all the whole spices – cinnamon, cloves and cardamoms.",
+            "When they begin to sizzle, stir in the ginger garlic paste & green chilies. Fry on a low heat, for a minute or 2, till it turns fragrant but not burnt.",
+            "Turn off the heat and stir in red chili powder, garam masala, cumin and coriander powder.",
+            "Stir in the tomato cashew puree. If it is not smooth, strain it to the pan.",
+            "Mix well and cover partially. Bring it to a boil on a medium high heat, reduce the heat to low or medium. Cook until the puree turns thick, keep stirring occasionally.",
+            "Pour hot water and simmer for 10 mins, until the sauce thickens & traces of fats are visible on top of the sauce. Remove the whole spices and discard at this stage.",
+            "Spread one tbsp. butter or ghee in a griddle/pan and heat it well. Place the marinated chicken pieces, spacing them a little apart.",
+            "Fry on a medium heat for 2 mins and turn them. Don’t burn and do not overcook. Cook till the chicken is just cooked and all the marinade dries up. It is not necessary to fully cook the chicken at this stage.",
+            "This way roast the chicken pieces in 2 to 3 batches, depending on the size of your skillet.",
+            "Add chicken to the butter chicken gravy. Pour more hot water (about ½ cup, not in the recipe) if the sauce is too thick. Cover and simmer for about 5 to 7 minutes till it becomes tender.",
+            "Stir in salt, sugar and kasuri methi. Taste test and optionally add more garam masala & another tablespoon butter for additional flavour (both are optional).",
+            "Turn off and stir in the heavy cream. Garnish Butter Chicken with chopped coriander leaves and some cream. Serve with Turmeric rice , steamed Basmati Rice , Butter naan or Cumin Rice ."
+          ]
+        }
+      ],
+      "tags": [
+        "chicken",
+        "indian",
+        "butter chicken",
+        "creamy",
+        "spicy"
+      ],
+      "cookingTime": "30 minutes",
+      "calories": "385",
+      "servings": "4"
+    }
+  },
+  "google/gemma-3-27b-it||https://www.recipetineats.com/spaghetti-bolognese/": {
+    "extractedAt": "2026-04-09T19:07:02.727Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Spaghetti Bolognese",
+      "ingredientsGroups": [
+        {
+          "title": "",
+          "items": [
+            "1 1/2 tbsp olive oil",
+            "2 garlic cloves, minced",
+            "1 onion, finely chopped",
+            "1 lb / 500g beef mince (ground beef) OR half pork, half beef",
+            "1/2 cup (125 ml) dry red wine",
+            "2 beef bouillon cubes, crumbled OR granulated beef bouillon",
+            "800g / 28 oz can crushed tomato (or tomato passata)",
+            "2 tbsp tomato paste",
+            "2 tsp white sugar, if needed",
+            "2 tsp Worcestershire sauce",
+            "2 dried bay leaves",
+            "2 sprigs fresh thyme (or 1/2 tsp dried thyme or oregano)",
+            "3/4 tsp cooking salt (kosher salt)",
+            "1/2 tsp black pepper"
+          ]
+        },
+        {
+          "title": "To Serve",
+          "items": [
+            "400 g / 13 oz spaghetti, dried",
+            "Parmesan cheese",
+            "finely chopped parsley"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "",
+          "items": [
+            "Heat oil in a large pot or deep skillet over medium high heat. Add onion and garlic, cook for 3 minutes or until light golden and softened.",
+            "Turn heat up to high and add beef. Cook, breaking it up as your go, until browned.",
+            "Add red wine. Bring to simmer and cook for 1 minute, scraping the bottom of the pot, until the alcohol smell is gone.",
+            "Add the remaining ingredients. Stir, bring to a simmer then turn down to medium so it bubbles gently. Cook for 20 – 30 minutes (no lid), adding water if the sauce gets too thick for your taste. Stir occasionally.",
+            "Slow simmer option: Add 3/4 cup of water, cover with lid and simmer on very low for 2 – 2.5 hours, stirring every 30 minutes or so.",
+            "Uncover, simmer 20 minutes to thicken sauce.",
+            "Taste and add more salt it desired.",
+            "Bring a large pot of salted water to boil. Add pasta and cook per packet directions MINUS 1 minute.",
+            "Scoop out a mug of pasta cooking water and set aside, then drain the pasta.",
+            "Add pasta into the bolognese sauce with about 1/2 cup (125 ml) of reserved pasta water over medium heat. Toss gently for 1 1/2 – 2 minutes, or until the spaghetti turns red and the sauce thickens.",
+            "Divide between bowls. Garnish with parmesan and parsley if desired."
+          ]
+        }
+      ],
+      "tags": [
+        "Italian",
+        "Pasta",
+        "Beef",
+        "Dinner",
+        "Bolognese"
+      ],
+      "cookingTime": "30 minutes mins",
+      "calories": "510 cal",
+      "servings": "5"
+    }
+  },
+  "mistralai/mistral-small-3.2-24b-instruct||https://www.indianhealthyrecipes.com/butter-chicken/": {
+    "extractedAt": "2026-04-09T19:07:51.818Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Butter Chicken Recipe (Chicken Makhani)",
+      "ingredientsGroups": [
+        {
+          "title": "First Marination",
+          "items": [
+            "½ kg (1.1 lbs) boneless chicken (cut to 1 inch pieces)",
+            "½ to ¾ teaspoon Kashmiri red chili powder (or paprika adjust to taste, reduce for kids)",
+            "¼ to ⅓ teaspoon salt (adjust to taste)",
+            "¾ to 1 tablespoon lemon juice"
+          ]
+        },
+        {
+          "title": "Second Marination",
+          "items": [
+            "⅓ cup Greek yogurt (hung curd/thick curd, refer notes)",
+            "¾ tablespoon ginger garlic paste (or ½ tbsp fine grated ginger + ½ tbsp fine grated garlic)",
+            "⅛ teaspoon turmeric (haldi, optional)",
+            "¾ to 1 teaspoon garam masala (adjust to taste)",
+            "½ teaspoon cumin powder (optional)",
+            "1 teaspoon coriander powder (optional)",
+            "1 teaspoon kasuri methi (optional, dried fenugreek leaves)",
+            "¾ to 1 tablespoon oil"
+          ]
+        },
+        {
+          "title": "For sauce",
+          "items": [
+            "2 to 3 tablespoons butter or ghee (divided)",
+            "2 inch cinnamon piece (optional, for extra flavor)",
+            "2 to 4 green cardamoms (optional, for added flavor)",
+            "2 to 4 cloves (optional)",
+            "1½ cups (130 grams) onions sliced (optional, *updated, cuts down acidity from tomatoes)",
+            "600 grams (1.3 lbs.) fresh tomatoes (or 1 cup passata/canned tomato puree or ⅓ cup double concentrate tomato paste – for 1x)",
+            "¾ tablespoon ginger garlic paste (or ½ tbsp each fine grated ginger and garlic)",
+            "1 to 2 green chilies (optional, deseed, slit or chop)",
+            "28 (42 grams,⅓ cup) whole raw cashews (soaked in hot water, sub with ¼ to ⅓ cup heavy cream)",
+            "½ cup water to blend (more if required)",
+            "1 to 2 teaspoons Kashmiri chili powder (reduce for kids, adjust to taste)",
+            "1 to 1½ teaspoons garam masala (divided, adjust to taste)",
+            "1 to 1½ teaspoon coriander powder (optional, adjust to taste)",
+            "½ teaspoon cumin powder (optional, adjust to taste)",
+            "½ to ¾ teaspoon salt (adjust to taste)",
+            "1 teaspoon sugar (to balance the flavors)",
+            "½ tablespoon Kasuri methi (dried fenugreek leaves)",
+            "1½ cups hot water to make gravy (cut down to 1 cup if omitting cashews)",
+            "⅓ cup (80 to 100 ml) heavy cream or whipping cream (divided)",
+            "2 tablespoons coriander leaves (fine chopped to garnish)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "Marination",
+          "items": [
+            "Marinate chicken with lemon juice, chili powder and salt. Cover and rest for 20 minutes.",
+            "Next add yogurt, kasuri methi, oil, turmeric, ginger garlic paste, coriander powder, cumin powder and garam masala powder.",
+            "Marinate and rest for a minimum of 30 minutes, or overnight for best results. Cover and refrigerate."
+          ]
+        },
+        {
+          "title": "Optional – If using onion",
+          "items": [
+            "Sauté in 1 tablespoon oil until lightly golden, for 7 minutes. Cool down."
+          ]
+        },
+        {
+          "title": "To a blender",
+          "items": [
+            "Add tomatoes, sautéed onions, cashews and water. Blend to a smooth puree. If you want you can also blend the cashews separately with water to a smooth cream."
+          ]
+        },
+        {
+          "title": "Make the sauce",
+          "items": [
+            "Remove the chicken from the refrigerator, to bring it close to room temperature.",
+            "Melt butter in a pan & add all the whole spices – cinnamon, cloves and cardamoms.",
+            "When they begin to sizzle, stir in the ginger garlic paste & green chilies. Fry on a low heat, for a minute or 2, till it turns fragrant but not burnt.",
+            "Turn off the heat and stir in red chili powder, garam masala, cumin and coriander powder.",
+            "Stir in the tomato cashew puree. If it is not smooth, strain it to the pan.",
+            "Mix well and cover partially. Bring it to a boil on a medium high heat, reduce the heat to low or medium. Cook until the puree turns thick, keep stirring occasionally.",
+            "Pour hot water and simmer for 10 mins, until the sauce thickens & traces of fats are visible on top of the sauce. Remove the whole spices and discard at this stage."
+          ]
+        },
+        {
+          "title": "Grill or roast chicken",
+          "items": [
+            "Spread one tbsp. butter or ghee in a griddle/pan and heat it well. Place the marinated chicken pieces, spacing them a little apart.",
+            "Fry on a medium heat for 2 mins and turn them. Don’t burn and do not overcook. Cook till the chicken is just cooked and all the marinade dries up. It is not necessary to fully cook the chicken at this stage.",
+            "This way roast the chicken pieces in 2 to 3 batches, depending on the size of your skillet."
+          ]
+        },
+        {
+          "title": "How to make Butter Chicken",
+          "items": [
+            "Add chicken to the butter chicken gravy. Pour more hot water (about ½ cup, not in the recipe) if the sauce is too thick. Cover and simmer for about 5 to 7 minutes till it becomes tender.",
+            "Stir in salt, sugar and kasuri methi. Taste test and optionally add more garam masala & another tablespoon butter for additional flavour (both are optional).",
+            "Turn off and stir in the heavy cream. Garnish Butter Chicken with chopped coriander leaves and some cream."
+          ]
+        }
+      ],
+      "tags": [
+        "Indian",
+        "Creamy",
+        "Tomato Gravy",
+        "Grilled Chicken",
+        "Spicy"
+      ],
+      "cookingTime": "30 minutes",
+      "calories": "385 kcal",
+      "servings": "4"
+    }
+  },
+  "mistralai/mistral-small-3.2-24b-instruct||https://www.recipetineats.com/spaghetti-bolognese/": {
+    "extractedAt": "2026-04-09T19:08:45.331Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Spaghetti Bolognese",
+      "ingredientsGroups": [
+        {
+          "title": "",
+          "items": [
+            "1 1/2 tbsp olive oil",
+            "2 garlic cloves, minced",
+            "1 onion, finely chopped (brown, yellow or white)",
+            "1 lb / 500g beef mince (ground beef) OR half pork, half beef",
+            "1/2 cup (125 ml) dry red wine (sub water or beef broth/stock)",
+            "2 beef bouillon cubes, crumbled OR granulated beef bouillon",
+            "800g / 28 oz can crushed tomato (or tomato passata)",
+            "2 tbsp tomato paste",
+            "2 tsp white sugar, if needed",
+            "2 tsp Worcestershire sauce",
+            "2 dried bay leaves",
+            "2 sprigs fresh thyme (or 1/2 tsp dried thyme or oregano)",
+            "3/4 tsp cooking salt (kosher salt)",
+            "1/2 tsp black pepper"
+          ]
+        },
+        {
+          "title": "To Serve",
+          "items": [
+            "400 g / 13 oz spaghetti, dried",
+            "Parmesan cheese and finely chopped parsley (optional)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "",
+          "items": [
+            "Sauté – Heat oil in a large pot or deep skillet over medium high heat. Add onion and garlic, cook for 3 minutes or until light golden and softened.",
+            "Cook beef – Turn heat up to high and add beef. Cook, breaking it up as your go, until browned.",
+            "Reduce wine – Add red wine. Bring to simmer and cook for 1 minute, scraping the bottom of the pot, until the alcohol smell is gone.",
+            "Simmer – Add the remaining ingredients. Stir, bring to a simmer then turn down to medium so it bubbles gently. Cook for 20 – 30 minutes (no lid), adding water if the sauce gets too thick for your taste. Stir occasionally.",
+            "Slow simmer option: really takes this to another level, if you have the time! Add 3/4 cup of water, cover with lid and simmer on very low for 2 – 2.5 hours, stirring every 30 minutes or so. Uncover, simmer 20 minutes to thicken sauce.",
+            "Taste and add more salt it desired.",
+            "Serve over spaghetti – though if you have the time, I recommend tossing the sauce and pasta per steps below."
+          ]
+        },
+        {
+          "title": "Tossing Sauce and Spaghetti (optional)",
+          "items": [
+            "Bring a large pot of salted water to boil. Add pasta and cook per packet directions MINUS 1 minute.",
+            "Scoop out a mug of pasta cooking water and set aside, then drain the pasta.",
+            "Add pasta into the bolognese sauce with about 1/2 cup (125 ml) of reserved pasta water over medium heat.",
+            "Toss gently for 1 1/2 – 2 minutes, or until the spaghetti turns red and the sauce thickens.",
+            "Divide between bowls. Garnish with parmesan and parsley if desired."
+          ]
+        }
+      ],
+      "tags": [
+        "Italian",
+        "Western",
+        "Dinner",
+        "Pasta",
+        "Beef"
+      ],
+      "cookingTime": "30 min",
+      "calories": "510 kcal",
+      "servings": "5"
+    }
+  },
+  "qwen/qwen3-coder-30b-a3b-instruct||https://www.indianhealthyrecipes.com/butter-chicken/": {
+    "extractedAt": "2026-04-09T19:09:27.220Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Butter Chicken Recipe (Indian Chicken Makhani)",
+      "ingredientsGroups": [
+        {
+          "title": "First Marination",
+          "items": [
+            "½ kg (1.1 lbs) boneless chicken (cut to 1 inch pieces)",
+            "½ to ¾ teaspoon Kashmiri red chili powder (or paprika adjust to taste, reduce for kids)",
+            "¼ to ⅓ teaspoon salt (adjust to taste)",
+            "¾ to 1 tablespoon lemon juice"
+          ]
+        },
+        {
+          "title": "Second Marination",
+          "items": [
+            "⅓ cup Greek yogurt (hung curd/thick curd, refer notes)",
+            "¾ tablespoon ginger garlic paste (or ½ tbsp fine grated ginger + ½ tbsp fine grated garlic)",
+            "⅛ teaspoon turmeric (haldi, optional)",
+            "¾ to 1 teaspoon garam masala (adjust to taste)",
+            "½ teaspoon cumin powder (optional)",
+            "1 teaspoon coriander powder (optional)",
+            "1 teaspoon kasuri methi (optional, dried fenugreek leaves)",
+            "¾ to 1 tablespoon oil"
+          ]
+        },
+        {
+          "title": "For sauce",
+          "items": [
+            "2 to 3 tablespoons butter or ghee (divided)",
+            "2 inch cinnamon piece (optional, for extra flavor)",
+            "2 to 4 green cardamoms (optional, for added flavor)",
+            "2 to 4 cloves (optional)",
+            "1½ cups (130 grams) onions sliced (optional, *updated, cuts down acidity from tomatoes)",
+            "600 grams (1.3 lbs.) fresh tomatoes (or 1 cup passata/canned tomato puree or ⅓ cup double concentrate tomato paste – for 1x)",
+            "¾ tablespoon ginger garlic paste (or ½ tbsp each fine grated ginger and garlic)",
+            "1 to 2 green chilies (optional, deseed, slit or chop)",
+            "28 (42 grams,⅓ cup) whole raw cashews (soaked in hot water, sub with ¼ to ⅓ cup heavy cream)",
+            "½ cup water to blend (more if required)",
+            "1 to 2 teaspoons Kashmiri chili powder (reduce for kids, adjust to taste)",
+            "1 to 1½ teaspoons garam masala (divided, adjust to taste)",
+            "1 to 1½ teaspoon coriander powder (optional, adjust to taste)",
+            "½ teaspoon cumin powder (optional, adjust to taste)",
+            "½ to ¾ teaspoon salt (adjust to taste)",
+            "1 teaspoon sugar (to balance the flavors)",
+            "½ tablespoon Kasuri methi (dried fenugreek leaves)",
+            "1½ cups hot water to make gravy (cut down to 1 cup if omitting cashews)",
+            "⅓ cup (80 to 100 ml) heavy cream or whipping cream (divided)",
+            "2 tablespoons coriander leaves (fine chopped to garnish)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "",
+          "items": [
+            "Marinate chicken with lemon juice, chili powder and salt. Cover and rest for 20 minutes.",
+            "Next add yogurt, kasuri methi, oil, turmeric, ginger garlic paste, coriander powder, cumin powder and garam masala powder.",
+            "Marinate and rest for a minimum of 30 minutes, or overnight for best results. Cover and refrigerate."
+          ]
+        },
+        {
+          "title": "",
+          "items": [
+            "Optional – If using onion, sauté in 1 tablespoon oil until lightly golden, for 7 minutes. Cool down."
+          ]
+        },
+        {
+          "title": "",
+          "items": [
+            "To a blender, add tomatoes, sautéed onions, cashews and water. Blend to a smooth puree.",
+            "If you want you can also blend the cashews separately with water to a smooth cream."
+          ]
+        },
+        {
+          "title": "Make the sauce",
+          "items": [
+            "Remove the chicken from the refrigerator, to bring it close to room temperature.",
+            "Melt butter in a pan & add all the whole spices – cinnamon, cloves and cardamoms.",
+            "When they begin to sizzle, stir in the ginger garlic paste & green chilies.",
+            "Fry on a low heat, for a minute or 2, till it turns fragrant but not burnt.",
+            "Turn off the heat and stir in red chili powder, garam masala, cumin and coriander powder.",
+            "Stir in the tomato cashew puree.",
+            "If it is not smooth, strain it to the pan.",
+            "Mix well and cover partially.",
+            "Bring it to a boil on a medium high heat, reduce the heat to low or medium.",
+            "Cook until the puree turns thick, keep stirring occasionally.",
+            "Pour hot water and simmer for 10 mins, until the sauce thickens & traces of fats are visible on top of the sauce.",
+            "Remove the whole spices and discard at this stage."
+          ]
+        },
+        {
+          "title": "Grill or roast chicken",
+          "items": [
+            "Spread one tbsp. butter or ghee in a griddle/pan and heat it well.",
+            "Place the marinated chicken pieces, spacing them a little apart.",
+            "Fry on a medium heat for 2 mins and turn them.",
+            "Don’t burn and do not overcook.",
+            "Cook till the chicken is just cooked and all the marinade dries up.",
+            "It is not necessary to fully cook the chicken at this stage.",
+            "This way roast the chicken pieces in 2 to 3 batches, depending on the size of your skillet."
+          ]
+        },
+        {
+          "title": "How to make Butter Chicken",
+          "items": [
+            "Add chicken to the butter chicken gravy.",
+            "Pour more hot water (about ½ cup, not in the recipe) if the sauce is too thick.",
+            "Cover and simmer for about 5 to 7 minutes till it becomes tender.",
+            "Stir in salt, sugar and kasuri methi.",
+            "Taste test and optionally add more garam masala & another tablespoon butter for additional flavour (both are optional).",
+            "Turn off and stir in the heavy cream.",
+            "Garnish Butter Chicken with chopped coriander leaves and some cream."
+          ]
+        }
+      ],
+      "tags": [
+        "Indian",
+        "Chicken",
+        "Creamy",
+        "Butter",
+        "Tandoori"
+      ],
+      "cookingTime": "30 minutes minutes",
+      "calories": "385 Calories",
+      "servings": "4"
+    }
+  },
+  "qwen/qwen3-coder-30b-a3b-instruct||https://www.recipetineats.com/spaghetti-bolognese/": {
+    "extractedAt": "2026-04-09T19:11:03.920Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Spaghetti Bolognese",
+      "ingredientsGroups": [
+        {
+          "title": "",
+          "items": [
+            "1 1/2 tbsp olive oil",
+            "2 garlic cloves, minced",
+            "1 onion, finely chopped (brown, yellow or white)",
+            "1 lb / 500g beef mince (ground beef) OR half pork, half beef (Note 1)",
+            "1/2 cup (125 ml) dry red wine (sub water or beef broth/stock)",
+            "2 beef bouillon cubes, crumbled OR granulated beef bouillon (Note 2)",
+            "800g / 28 oz can crushed tomato (or tomato passata)",
+            "2 tbsp tomato paste",
+            "2 tsp white sugar, if needed (Note 3)",
+            "2 tsp Worcestershire sauce",
+            "2 dried bay leaves",
+            "2 sprigs fresh thyme (or 1/2 tsp dried thyme or oregano)",
+            "3/4 tsp cooking salt (kosher salt)",
+            "1/2 tsp black pepper",
+            "400 g / 13 oz spaghetti, dried",
+            "Parmesan cheese and finely chopped parsley (optional)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "",
+          "items": [
+            "Sauté - Heat oil in a large pot or deep skillet over medium high heat. Add onion and garlic, cook for 3 minutes or until light golden and softened.",
+            "Cook beef - Turn heat up to high and add beef. Cook, breaking it up as you go, until browned.",
+            "Reduce wine - Add red wine. Bring to simmer and cook for 1 minute, scraping the bottom of the pot, until the alcohol smell is gone.",
+            "Simmer - Add the remaining ingredients. Stir, bring to a simmer then turn down to medium so it bubbles gently. Cook for 20 - 30 minutes (no lid), adding water if the sauce gets too thick for your taste. Stir occasionally.",
+            "Slow simmer option: really takes this to another level, if you have the time! Add 3/4 cup of water, cover with lid and simmer on very low for 2 - 2.5 hours, stirring every 30 minutes or so. (Note 5) Uncover, simmer 20 minutes to thicken sauce. (Note 6 for slow cooker)",
+            "Taste and add more salt if desired.",
+            "Serve over spaghetti - though if you have the time, I recommend tossing the sauce and pasta per steps below.",
+            "Tossing Sauce and Spaghetti (optional, Note 4) Bring a large pot of salted water to boil. Add pasta and cook per packet directions MINUS 1 minute. Scoop out a mug of pasta cooking water and set aside, then drain the pasta. Add pasta into the bolognese sauce with about 1/2 cup (125 ml) of reserved pasta water over medium heat. Toss gently for 1 1/2 - 2 minutes, or until the spaghetti turns red and the sauce thickens. Divide between bowls. Garnish with parmesan and parsley if desired."
+          ]
+        }
+      ],
+      "tags": [
+        "Italian",
+        "Beef",
+        "Pasta",
+        "Dinner",
+        "Quick Meal"
+      ],
+      "cookingTime": "30 minutes",
+      "calories": "510 cal",
+      "servings": "5"
+    }
+  },
+  "google/gemini-2.5-flash||https://www.indianhealthyrecipes.com/butter-chicken/": {
+    "extractedAt": "2026-04-09T19:11:34.703Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Butter Chicken Recipe (Indian Chicken Makhani)",
+      "ingredientsGroups": [
+        {
+          "title": "First Marination",
+          "items": [
+            "½ kg (1.1 lbs) boneless chicken (cut to 1 inch pieces)",
+            "½ to ¾ teaspoon Kashmiri red chili powder (or paprika adjust to taste, reduce for kids)",
+            "¼ to ⅓ teaspoon salt (adjust to taste)",
+            "¾ to 1 tablespoon lemon juice"
+          ]
+        },
+        {
+          "title": "Second Marination",
+          "items": [
+            "⅓ cup Greek yogurt (hung curd/thick curd, refer notes)",
+            "¾ tablespoon ginger garlic paste (or ½ tbsp fine grated ginger + ½ tbsp fine grated garlic)",
+            "⅛ teaspoon turmeric (haldi, optional)",
+            "¾ to 1 teaspoon garam masala (adjust to taste)",
+            "½ teaspoon cumin powder (optional)",
+            "1 teaspoon coriander powder (optional)",
+            "1 teaspoon kasuri methi (optional, dried fenugreek leaves)",
+            "¾ to 1 tablespoon oil"
+          ]
+        },
+        {
+          "title": "For sauce",
+          "items": [
+            "2 to 3 tablespoons butter or ghee (divided)",
+            "2 inch cinnamon piece (optional, for extra flavor)",
+            "2 to 4 green cardamoms (optional, for added flavor)",
+            "2 to 4 cloves (optional)",
+            "1½ cups (130 grams) onions sliced (optional, *updated, cuts down acidity from tomatoes)",
+            "600 grams (1.3 lbs.) fresh tomatoes (or 1 cup passata/canned tomato puree or ⅓ cup double concentrate tomato paste – for 1x)",
+            "¾ tablespoon ginger garlic paste (or ½ tbsp each fine grated ginger and garlic)",
+            "1 to 2 green chilies (optional, deseed, slit or chop)",
+            "28 (42 grams,⅓ cup) whole raw cashews (soaked in hot water, sub with ¼ to ⅓ cup heavy cream)",
+            "½ cup water to blend (more if required)",
+            "1 to 2 teaspoons Kashmiri chili powder (reduce for kids, adjust to taste)",
+            "1 to 1½ teaspoons garam masala (divided, adjust to taste)",
+            "1 to 1½ teaspoon coriander powder (optional, adjust to taste)",
+            "½ teaspoon cumin powder (optional, adjust to taste)",
+            "½ to ¾ teaspoon salt (adjust to taste)",
+            "1 teaspoon sugar (to balance the flavors)",
+            "½ tablespoon Kasuri methi (dried fenugreek leaves)",
+            "1½ cups hot water to make gravy (cut down to 1 cup if omitting cashews)",
+            "⅓ cup (80 to 100 ml) heavy cream or whipping cream (divided)",
+            "2 tablespoons coriander leaves (fine chopped to garnish)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "",
+          "items": [
+            "Marinate chicken with lemon juice, chili powder and salt. Cover and rest for 20 minutes. Next add yogurt, kasuri methi, oil, turmeric, ginger garlic paste, coriander powder, cumin powder and garam masala powder.",
+            "Marinate and rest for a minimum of 30 minutes, or overnight for best results. Cover and refrigerate.",
+            "Optional – If using onion, sauté in 1 tablespoon oil until lightly golden, for 7 minutes. Cool down.",
+            "To a blender, add tomatoes, sautéed onions, cashews and water. Blend to a smooth puree. If you want you can also blend the cashews separately with water to a smooth cream."
+          ]
+        },
+        {
+          "title": "Make the sauce",
+          "items": [
+            "Remove the chicken from the refrigerator, to bring it close to room temperature.",
+            "Melt butter in a pan & add all the whole spices – cinnamon, cloves and cardamoms.",
+            "When they begin to sizzle, stir in the ginger garlic paste & green chilies. Fry on a low heat, for a minute or 2, till it turns fragrant but not burnt.",
+            "Turn off the heat and stir in red chili powder, garam masala, cumin and coriander powder.",
+            "Stir in the tomato cashew puree. If it is not smooth, strain it to the pan.",
+            "Mix well and cover partially. Bring it to a boil on a medium high heat, reduce the heat to low or medium. Cook until the puree turns thick, keep stirring occasionally.",
+            "Pour hot water and simmer for 10 mins, until the sauce thickens & traces of fats are visible on top of the sauce. Remove the whole spices and discard at this stage."
+          ]
+        },
+        {
+          "title": "Grill or roast chicken",
+          "items": [
+            "Spread one tbsp. butter or ghee in a griddle/pan and heat it well. Place the marinated chicken pieces, spacing them a little apart.",
+            "Fry on a medium heat for 2 mins and turn them. Don’t burn and do not overcook. Cook till the chicken is just cooked and all the marinade dries up. It is not necessary to fully cook the chicken at this stage.",
+            "This way roast the chicken pieces in 2 to 3 batches, depending on the size of your skillet."
+          ]
+        },
+        {
+          "title": "How to make Butter Chicken",
+          "items": [
+            "Add chicken to the butter chicken gravy. Pour more hot water (about ½ cup, not in the recipe) if the sauce is too thick. Cover and simmer for about 5 to 7 minutes till it becomes tender.",
+            "Stir in salt, sugar and kasuri methi. Taste test and optionally add more garam masala & another tablespoon butter for additional flavour (both are optional).",
+            "Turn off and stir in the heavy cream. Garnish Butter Chicken with chopped coriander leaves and some cream. Serve with Turmeric rice , steamed Basmati Rice , Butter naan or Cumin Rice ."
+          ]
+        }
+      ],
+      "tags": [
+        "Indian",
+        "Chicken",
+        "Curry",
+        "Creamy",
+        "Makhani"
+      ],
+      "cookingTime": "30 minutes",
+      "calories": "385 Calories",
+      "servings": "4"
+    }
+  },
+  "google/gemini-2.5-flash||https://www.recipetineats.com/spaghetti-bolognese/": {
+    "extractedAt": "2026-04-09T19:11:54.336Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Spaghetti Bolognese",
+      "ingredientsGroups": [
+        {
+          "title": "",
+          "items": [
+            "1 1/2 tbsp olive oil",
+            "2 garlic cloves, minced",
+            "1 onion, finely chopped (brown, yellow or white)",
+            "1 lb / 500g beef mince (ground beef) OR half pork, half beef (Note 1)",
+            "1/2 cup (125 ml) dry red wine (sub water or beef broth/stock)",
+            "2 beef bouillon cubes, crumbled OR granulated beef bouillon (Note 2)",
+            "800g / 28 oz can crushed tomato (or tomato passata)",
+            "2 tbsp tomato paste",
+            "2 tsp white sugar, if needed (Note 3)",
+            "2 tsp Worcestershire sauce",
+            "2 dried bay leaves",
+            "2 sprigs fresh thyme (or 1/2 tsp dried thyme or oregano)",
+            "3/4 tsp cooking salt (kosher salt)",
+            "1/2 tsp black pepper"
+          ]
+        },
+        {
+          "title": "To Serve",
+          "items": [
+            "400 g / 13 oz spaghetti, dried",
+            "Parmesan cheese and finely chopped parsley (optional)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "",
+          "items": [
+            "Heat oil in a large pot or deep skillet over medium high heat.",
+            "Add onion and garlic, cook for 3 minutes or until light golden and softened.",
+            "Turn heat up to high and add beef.",
+            "Cook, breaking it up as your go, until browned.",
+            "Add red wine.",
+            "Bring to simmer and cook for 1 minute, scraping the bottom of the pot, until the alcohol smell is gone.",
+            "Add the remaining ingredients.",
+            "Stir, bring to a simmer then turn down to medium so it bubbles gently.",
+            "Cook for 20 – 30 minutes (no lid), adding water if the sauce gets too thick for your taste.",
+            "Stir occasionally.",
+            "Slow simmer option: Add 3/4 cup of water, cover with lid and simmer on very low for 2 – 2.5 hours, stirring every 30 minutes or so. (Note 5)",
+            "Uncover, simmer 20 minutes to thicken sauce.",
+            "Taste and add more salt it desired.",
+            "Serve over spaghetti – though if you have the time, I recommend tossing the sauce and pasta per steps below."
+          ]
+        },
+        {
+          "title": "Tossing Sauce and Spaghetti (optional, Note 4)",
+          "items": [
+            "Bring a large pot of salted water to boil.",
+            "Add pasta and cook per packet directions MINUS 1 minute.",
+            "Scoop out a mug of pasta cooking water and set aside, then drain the pasta.",
+            "Add pasta into the bolognese sauce with about 1/2 cup (125 ml) of reserved pasta water over medium heat.",
+            "Toss gently for 1 1/2 – 2 minutes, or until the spaghetti turns red and the sauce thickens.",
+            "Divide between bowls.",
+            "Garnish with parmesan and parsley if desired."
+          ]
+        }
+      ],
+      "tags": [
+        "Italian",
+        "Meat Sauce",
+        "Pasta",
+        "Dinner",
+        "Quick"
+      ],
+      "cookingTime": "30 minutes mins",
+      "calories": "510 cal",
+      "servings": "5"
+    }
+  },
+  "google/gemma-3-12b-it||https://www.indianhealthyrecipes.com/butter-chicken/": {
+    "extractedAt": "2026-04-09T19:13:43.281Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Butter Chicken Recipe (Indian Chicken Makhani)",
+      "ingredientsGroups": [
+        {
+          "title": "First Marination",
+          "items": [
+            "500 grams boneless chicken",
+            "¾ to 1 tablespoon lemon juice",
+            "¼ to ⅓ teaspoon salt",
+            "¾ to 1 tablespoon Kashmiri red chili powder",
+            "¾ to 1 teaspoon garam masala",
+            "1 teaspoon kasuri methi",
+            "⅛ teaspoon turmeric",
+            "½ teaspoon cumin powder",
+            "1 teaspoon coriander powder",
+            "¾ to 1 tablespoon oil",
+            "¾ tablespoon ginger garlic paste"
+          ]
+        },
+        {
+          "title": "Second Marination",
+          "items": [
+            "⅓ cup Greek yogurt or hung curd"
+          ]
+        },
+        {
+          "title": "For sauce",
+          "items": [
+            "2 to 3 tablespoons butter",
+            "1 cinnamon piece",
+            "2 to 4 green cardamoms",
+            "2 to 4 cloves",
+            "1½ cups sliced onions",
+            "600 grams fresh tomatoes",
+            "¾ tablespoon ginger garlic paste",
+            "1 to 2 green chilies",
+            "28 whole raw cashews",
+            "½ cup water",
+            "1 to 2 teaspoons Kashmiri chili powder",
+            "1 to 1½ teaspoons garam masala",
+            "1 to 1½ teaspoon coriander powder",
+            "½ teaspoon cumin powder",
+            "½ to ¾ teaspoon salt",
+            "1 teaspoon sugar",
+            "½ tablespoon Kasuri methi",
+            "1½ cups hot water",
+            "⅓ cup heavy cream",
+            "2 tablespoons coriander leaves"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "Marinade",
+          "items": [
+            "Pat chicken dry",
+            "Mix with lemon juice, chili powder and salt",
+            "Add yogurt, kasuri methi, oil, turmeric, ginger garlic paste, coriander powder, cumin powder and garam masala",
+            "Marinate and rest for a minimum of 30 minutes, or overnight"
+          ]
+        },
+        {
+          "title": "Prepare Sauce",
+          "items": [
+            "Sauté onions (optional)",
+            "Blend tomatoes, onions, cashews and water",
+            "Melt butter and add spices",
+            "Stir in tomato cashew puree",
+            "Pour hot water and simmer"
+          ]
+        },
+        {
+          "title": "Grill or roast chicken",
+          "items": [
+            "Spread butter in a griddle/pan",
+            "Fry chicken until cooked"
+          ]
+        },
+        {
+          "title": "Make Chicken Makhani",
+          "items": [
+            "Add chicken to the gravy",
+            "Simmer",
+            "Stir in salt, sugar and kasuri methi",
+            "Stir in heavy cream"
+          ]
+        }
+      ],
+      "tags": [
+        "chicken",
+        "indian",
+        "butter chicken",
+        "makhani",
+        "creamy",
+        "curry"
+      ],
+      "cookingTime": "30 minutes",
+      "calories": "",
+      "servings": "4"
+    }
+  },
+  "google/gemma-3-12b-it||https://www.recipetineats.com/spaghetti-bolognese/": {
+    "extractedAt": "2026-04-09T19:14:40.147Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Spaghetti Bolognese",
+      "ingredientsGroups": [
+        {
+          "title": "",
+          "items": [
+            "1 1/2 tbsp olive oil",
+            "2 garlic cloves, minced",
+            "1 onion, finely chopped (brown, yellow or white)",
+            "1 lb / 500g beef mince (ground beef) OR half pork, half beef",
+            "1/2 cup (125 ml) dry red wine (sub water or beef broth/stock)",
+            "2 beef bouillon cubes, crumbled OR granulated beef bouillon",
+            "800g / 28 oz can crushed tomato (or tomato passata)",
+            "2 tbsp tomato paste",
+            "2 tsp white sugar, if needed",
+            "2 tsp Worcestershire sauce",
+            "2 dried bay leaves",
+            "2 sprigs fresh thyme (or 1/2 tsp dried thyme or oregano)",
+            "3/4 tsp cooking salt (kosher salt)",
+            "1/2 tsp black pepper"
+          ]
+        },
+        {
+          "title": "To Serve",
+          "items": [
+            "400 g / 13 oz spaghetti, dried",
+            "Parmesan cheese and finely chopped parsley (optional)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "Saut&eacute;",
+          "items": [
+            "Heat oil in a large pot or deep skillet over medium high heat.",
+            "Add onion and garlic, cook for 3 minutes or until light golden and softened."
+          ]
+        },
+        {
+          "title": "Cook beef",
+          "items": [
+            "Turn heat up to high and add beef.",
+            "Cook, breaking it up as your go, until browned."
+          ]
+        },
+        {
+          "title": "Reduce wine",
+          "items": [
+            "Add red wine.",
+            "Bring to simmer and cook for 1 minute, scraping the bottom of the pot, until the alcohol smell is gone."
+          ]
+        },
+        {
+          "title": "Simmer",
+          "items": [
+            "Add the remaining ingredients.",
+            "Stir, bring to a simmer then turn down to medium so it bubbles gently.",
+            "Cook for 20 – 30 minutes (no lid), adding water if the sauce gets too thick for your taste.",
+            "Stir occasionally."
+          ]
+        },
+        {
+          "title": "Slow simmer option",
+          "items": [
+            "Add 3/4 cup of water, cover with lid and simmer on very low for 2 – 2.5 hours, stirring every 30 minutes or so.",
+            "Uncover, simmer 20 minutes to thicken sauce."
+          ]
+        },
+        {
+          "title": "Serve over spaghetti",
+          "items": [
+            "Taste and add more salt it desired.",
+            "Toss the sauce and pasta"
+          ]
+        }
+      ],
+      "tags": [
+        "Italian",
+        "Western",
+        "Dinner",
+        "Beef",
+        "Pasta"
+      ],
+      "cookingTime": "40 minutes",
+      "calories": "",
+      "servings": "4"
+    }
+  },
+  "meta-llama/llama-3.1-8b-instruct||https://www.indianhealthyrecipes.com/butter-chicken/": {
+    "extractedAt": "2026-04-09T19:15:48.347Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Butter Chicken Recipe (Indian Chicken Makhani)",
+      "ingredientsGroups": [
+        {
+          "title": "First Marination",
+          "items": [
+            "boneless chicken (cut to 1 inch pieces)",
+            "Kashmiri red chili powder (or paprika adjust to taste, reduce for kids)",
+            "salt (adjust to taste)",
+            "lemon juice"
+          ]
+        },
+        {
+          "title": "Second Marination",
+          "items": [
+            "Greek yogurt (hung curd/thick curd, refer notes)",
+            "ginger garlic paste (or ½ tbsp fine grated ginger + ½ tbsp fine grated garlic)",
+            "turmeric (haldi, optional)",
+            "garam masala (adjust to taste)",
+            "cumin powder (optional)",
+            "coriander powder (optional)",
+            "kasuri methi (optional, dried fenugreek leaves)",
+            "oil"
+          ]
+        },
+        {
+          "title": "For sauce",
+          "items": [
+            "butter or ghee (divided)",
+            "cinnamon (optional, for extra flavor)",
+            "green cardamoms (optional, for added flavor)",
+            "cloves (optional)",
+            "onions (sliced, optional, *updated, cuts down acidity from tomatoes)",
+            "fresh tomatoes (or 1 cup passata/canned tomato puree or ⅓ cup double concentrate tomato paste)",
+            "ginger garlic paste (or ½ tbsp each fine grated ginger and garlic)",
+            "green chilies (optional, deseed, slit or chop)",
+            "whole raw cashews (soaked in hot water, sub with ¼ to ⅓ cup heavy cream)",
+            "water",
+            "Kashmiri chili powder (reduce for kids, adjust to taste)",
+            "garam masala (divided, adjust to taste)",
+            "coriander powder (optional, adjust to taste)",
+            "cumin powder (optional, adjust to taste)",
+            "salt (adjust to taste)",
+            "sugar (to balance the flavors)",
+            "Kasuri methi (dried fenugreek leaves)",
+            "hot water to make gravy (cut down to 1 cup if omitting cashews)",
+            "heavy cream or whipping cream (divided)",
+            "coriander leaves (fine chopped to garnish)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "Marinate chicken with lemon juice, chili powder and salt. Cover and rest for 20 minutes.",
+          "items": [
+            "Next add yogurt, kasuri methi, oil, turmeric, ginger garlic paste, coriander powder, cumin powder and garam masala powder.",
+            "Marinate and rest for a minimum of 30 minutes, or overnight for best results. Cover and refrigerate."
+          ]
+        },
+        {
+          "title": "Optional – If using onion, sauté in 1 tablespoon oil until lightly golden, for 7 minutes. Cool down.",
+          "items": [
+            "To a blender, add tomatoes, sautéed onions, cashews and water. Blend to a smooth puree.",
+            "If you want you can also blend the cashews separately with water to a smooth cream."
+          ]
+        },
+        {
+          "title": "Make the sauce",
+          "items": [
+            "Remove the chicken from the refrigerator, to bring it close to room temperature.",
+            "Melt butter in a pan & add all the whole spices – cinnamon, cloves and cardamoms.",
+            "When they begin to sizzle, stir in the ginger garlic paste & green chilies. Fry on a low heat, for a minute or 2, till it turns fragrant but not burnt.",
+            "Turn off the heat and stir in red chili powder, garam masala, cumin and coriander powder.",
+            "Stir in the tomato cashew puree. If it is not smooth, strain it to the pan.",
+            "Mix well and cover partially. Bring it to a boil on a medium high heat, reduce the heat to low or medium. Cook until the puree turns thick, keep stirring occasionally.",
+            "Pour hot water and simmer for 10 mins, until the sauce thickens & traces of fats are visible on top of the sauce. Remove the whole spices and discard at this stage."
+          ]
+        },
+        {
+          "title": "Grill or roast chicken",
+          "items": [
+            "Spread one tbsp. butter or ghee in a griddle/pan and heat it well.",
+            "Place the marinated chicken pieces, spacing them a little apart.",
+            "Fry on a medium heat for 2 mins and turn them. Don’t burn and do not overcook.",
+            "Cook till the chicken is just cooked and all the marinade dries up. It is not necessary to fully cook the chicken at this stage.",
+            "This way roast the chicken pieces in 2 to 3 batches, depending on the size of your skillet."
+          ]
+        },
+        {
+          "title": "How to make Butter Chicken",
+          "items": [
+            "Add chicken to the butter chicken gravy.",
+            "Pour more hot water (about ½ cup, not in the recipe) if the sauce is too thick.",
+            "Cover and simmer for about 5 to 7 minutes till it becomes tender.",
+            "Stir in salt, sugar and kasuri methi.",
+            "Taste test and optionally add more garam masala & another tablespoon butter for additional flavour (both are optional).",
+            "Turn off and stir in the heavy cream.",
+            "Garnish Butter Chicken with chopped coriander leaves and some cream.",
+            "Serve with Turmeric rice , steamed Basmati Rice , Butter naan or Cumin Rice ."
+          ]
+        }
+      ],
+      "tags": [
+        "butter chicken",
+        "indian recipe",
+        "chicken makhani",
+        "makhani recipe",
+        "butter chicken recipe"
+      ],
+      "cookingTime": "30 min",
+      "calories": "385",
+      "servings": "4"
+    }
+  },
+  "meta-llama/llama-3.1-8b-instruct||https://www.recipetineats.com/spaghetti-bolognese/": {
+    "extractedAt": "2026-04-09T19:16:35.110Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Spaghetti Bolognese",
+      "ingredientsGroups": [
+        {
+          "title": "",
+          "items": [
+            "1 1/2 tbsp olive oil",
+            "2 garlic cloves",
+            "1 onion",
+            "1 lb / 500g beef mince (ground beef) OR half pork, half beef",
+            "1/2 cup (125 ml) dry red wine",
+            "2 beef bouillon cubes",
+            "800g / 28 oz can crushed tomato",
+            "2 tbsp tomato paste",
+            "2 tsp white sugar",
+            "2 tsp Worcestershire sauce",
+            "2 dried bay leaves",
+            "2 sprigs fresh thyme",
+            "3/4 tsp cooking salt",
+            "1/2 tsp black pepper",
+            "400 g / 13 oz spaghetti",
+            "Parmesan cheese and finely chopped parsley (optional)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "",
+          "items": [
+            "Sauté – Heat oil in a large pot or deep skillet over medium high heat. Add onion and garlic, cook for 3 minutes or until light golden and softened.",
+            "Cook beef – Turn heat up to high and add beef. Cook, breaking it up as your go, until browned.",
+            "Reduce wine – Add red wine. Bring to simmer and cook for 1 minute, scraping the bottom of the pot, until the alcohol smell is gone.",
+            "Simmer – Add the remaining ingredients. Stir, bring to a simmer then turn down to medium so it bubbles gently. Cook for 20 – 30 minutes (no lid), adding water if the sauce gets too thick for your taste. Stir occasionally.",
+            "Slow simmer option: really takes this to another level, if you have the time! Add 3/4 cup of water, cover with lid and simmer on very low for 2 – 2.5 hours, stirring every 30 minutes or so.",
+            "Uncover, simmer 20 minutes to thicken sauce.",
+            "Taste and add more salt it desired.",
+            "Serve over spaghetti – though if you have the time, I recommend tossing the sauce and pasta per steps below.",
+            "Tossing Sauce and Spaghetti (optional, Note 4) Bring a large pot of salted water to boil. Add pasta and cook per packet directions MINUS 1 minute.",
+            "Scoop out a mug of pasta cooking water and set aside, then drain the pasta.",
+            "Add pasta into the bolognese sauce with about 1/2 cup (125 ml) of reserved pasta water over medium heat.",
+            "Toss gently for 1 1/2 – 2 minutes, or until the spaghetti turns red and the sauce thickens.",
+            "Divide between bowls.",
+            "Garnish with parmesan and parsley if desired."
+          ]
+        }
+      ],
+      "tags": [
+        "Bolognese Sauce",
+        "Meat sauce",
+        "Spagetti Bolognese"
+      ],
+      "cookingTime": "30 min",
+      "calories": "510 cal",
+      "servings": "5"
+    }
+  },
+  "arcee-ai/trinity-large-preview:free||https://www.indianhealthyrecipes.com/butter-chicken/": {
+    "extractedAt": "2026-04-09T19:19:58.307Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Butter Chicken Recipe (Indian Chicken Makhani)",
+      "ingredientsGroups": [
+        {
+          "title": "First Marination",
+          "items": [
+            "½ kg (1.1 lbs) boneless chicken (cut to 1 inch pieces)",
+            "½ to ¾ teaspoon Kashmiri red chili powder (or paprika adjust to taste, reduce for kids)",
+            "¼ to ⅓ teaspoon salt (adjust to taste)",
+            "¾ to 1 tablespoon lemon juice"
+          ]
+        },
+        {
+          "title": "Second Marination",
+          "items": [
+            "⅓ cup Greek yogurt (hung curd/thick curd, refer notes)",
+            "¾ tablespoon ginger garlic paste (or ½ tbsp fine grated ginger + ½ tbsp fine grated garlic)",
+            "⅛ teaspoon turmeric (haldi, optional)",
+            "¾ to 1 teaspoon garam masala (adjust to taste)",
+            "½ teaspoon cumin powder (optional)",
+            "1 teaspoon coriander powder (optional)",
+            "1 teaspoon kasuri methi (optional, dried fenugreek leaves)",
+            "¾ to 1 tablespoon oil"
+          ]
+        },
+        {
+          "title": "For sauce",
+          "items": [
+            "2 to 3 tablespoons butter or ghee (divided)",
+            "2 inch cinnamon piece (optional, for extra flavor)",
+            "2 to 4 green cardamoms (optional, for added flavor)",
+            "2 to 4 cloves (optional)",
+            "1½ cups (130 grams) onions sliced (optional, *updated, cuts down acidity from tomatoes)",
+            "600 grams (1.3 lbs.) fresh tomatoes (or 1 cup passata/canned tomato puree or ⅓ cup double concentrate tomato paste – for 1x)",
+            "¾ tablespoon ginger garlic paste (or ½ tbsp each fine grated ginger and garlic)",
+            "1 to 2 green chilies (optional, deseed, slit or chop)",
+            "28 (42 grams,⅓ cup) whole raw cashews (soaked in hot water, sub with ¼ to ⅓ heavy cream)",
+            "½ cup water to blend (more if required)",
+            "1 to 2 teaspoons Kashmiri chili powder (reduce for kids, adjust to taste)",
+            "1 to 1½ teaspoons garam masala (divided, adjust to taste)",
+            "1 to 1½ teaspoon coriander powder (optional, adjust to taste)",
+            "½ teaspoon cumin powder (optional, adjust to taste)",
+            "½ to ¾ teaspoon salt (adjust to taste)",
+            "1 teaspoon sugar (to balance the flavors)",
+            "½ tablespoon Kasuri methi (dried fenugreek leaves)",
+            "1½ cups hot water to make gravy (cut down to 1 cup if omitting cashews)",
+            "⅓ cup (80 to 100 ml) heavy cream or whipping cream (divided)",
+            "2 tablespoons coriander leaves (fine chopped to garnish)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "Marinate chicken",
+          "items": [
+            "Marinate chicken with lemon juice, chili powder and salt. Cover and rest for 20 minutes.",
+            "Next add yogurt, kasuri methi, oil, turmeric, ginger garlic paste, coriander powder, cumin powder and garam masala powder.",
+            "Marinate and rest for a minimum of 30 minutes, or overnight for best results. Cover and refrigerate."
+          ]
+        },
+        {
+          "title": "Prepare sauce",
+          "items": [
+            "Optional – If using onion, sauté in 1 tablespoon oil until lightly golden, for 7 minutes. Cool down.",
+            "To a blender, add tomatoes, sautéed onions, cashews and water. Blend to a smooth puree.",
+            "If you want you can also blend the cashews separately with water to a smooth cream.",
+            "Remove the chicken from the refrigerator, to bring it close to room temperature.",
+            "Melt butter in a pan & add all the whole spices – cinnamon, cloves and cardamoms.",
+            "When they begin to sizzle, stir in the ginger garlic paste & green chilies. Fry on a low heat, for a minute or 2, till it turns fragrant but not burnt.",
+            "Turn off the heat and stir in red chili powder, garam masala, cumin and coriander powder.",
+            "Stir in the tomato cashew puree. If it is not smooth, strain it to the pan.",
+            "Mix well and cover partially. Bring it to a boil on a medium high heat, reduce the heat to low or medium. Cook until the puree turns thick, keep stirring occasionally.",
+            "Pour hot water and simmer for 10 mins, until the sauce thickens & traces of fats are visible on top of the sauce. Remove the whole spices and discard at this stage."
+          ]
+        },
+        {
+          "title": "Grill or roast chicken",
+          "items": [
+            "Spread one tbsp. butter or ghee in a griddle/pan and heat it well. Place the marinated chicken pieces, spacing them a little apart.",
+            "Fry on a medium heat for 2 mins and turn them. Don’t burn and do not overcook. Cook till the chicken is just cooked and all the marinade dries up.",
+            "It is not necessary to fully cook the chicken at this stage.",
+            "This way roast the chicken pieces in 2 to 3 batches, depending on the size of your skillet."
+          ]
+        },
+        {
+          "title": "Make Butter Chicken",
+          "items": [
+            "Add chicken to the butter chicken gravy. Pour more hot water (about ½ cup, not in the recipe) if the sauce is too thick. Cover and simmer for about 5 to 7 minutes till it becomes tender.",
+            "Stir in salt, sugar and kasuri methi. Taste test and optionally add more garam masala & another tablespoon butter for additional flavour (both are optional).",
+            "Turn off and stir in the heavy cream.",
+            "Garnish Butter Chicken with chopped coriander leaves and some cream."
+          ]
+        }
+      ],
+      "tags": [
+        "Indian",
+        "Chicken",
+        "Curry",
+        "Creamy",
+        "Spicy"
+      ],
+      "cookingTime": "45 minutes",
+      "calories": "",
+      "servings": "4"
+    }
+  },
+  "arcee-ai/trinity-large-preview:free||https://www.recipetineats.com/spaghetti-bolognese/": {
+    "extractedAt": "2026-04-09T19:22:37.122Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Spaghetti Bolognese",
+      "ingredientsGroups": [
+        {
+          "title": "",
+          "items": [
+            "1 1/2 tbsp olive oil",
+            "2 garlic cloves, minced",
+            "1 onion, finely chopped (brown, yellow or white)",
+            "1 lb / 500g beef mince (ground beef) OR half pork, half beef",
+            "1/2 cup (125 ml) dry red wine (sub water or beef broth/stock)",
+            "2 beef bouillon cubes, crumbled OR granulated beef bouillon",
+            "800g / 28 oz can crushed tomato (or tomato passata)",
+            "2 tbsp tomato paste",
+            "2 tsp white sugar, if needed",
+            "2 tsp Worcestershire sauce",
+            "2 dried bay leaves",
+            "2 sprigs fresh thyme (or 1/2 tsp dried thyme or oregano)",
+            "3/4 tsp cooking salt (kosher salt)",
+            "1/2 tsp black pepper",
+            "400 g / 13 oz spaghetti, dried",
+            "Parmesan cheese and finely chopped parsley (optional)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "",
+          "items": [
+            "Sauté – Heat oil in a large pot or deep skillet over medium high heat. Add onion and garlic, cook for 3 minutes or until light golden and softened.",
+            "Cook beef – Turn heat up to high and add beef. Cook, breaking it up as your go, until browned.",
+            "Reduce wine – Add red wine. Bring to simmer and cook for 1 minute, scraping the bottom of the pot, until the alcohol smell is gone.",
+            "Simmer – Add the remaining ingredients. Stir, bring to a simmer then turn down to medium so it bubbles gently. Cook for 20 – 30 minutes (no lid), adding water if the sauce gets too thick for your taste. Stir occasionally.",
+            "Slow simmer option: really takes this to another level, if you have the time! Add 3/4 cup of water, cover with lid and simmer on very low for 2 – 2.5 hours, stirring every 30 minutes or so.",
+            "Uncover, simmer 20 minutes to thicken sauce.",
+            "Taste and add more salt it desired.",
+            "Serve over spaghetti – though if you have the time, I recommend tossing the sauce and pasta per steps below.",
+            "Tossing Sauce and Spaghetti (optional) – Bring a large pot of salted water to boil. Add pasta and cook per packet directions MINUS 1 minute. Scoop out a mug of pasta cooking water and set aside, then drain the pasta.",
+            "Add pasta into the bolognese sauce with about 1/2 cup (125 ml) of reserved pasta water over medium heat. Toss gently for 1 1/2 – 2 minutes, or until the spaghetti turns red and the sauce thickens.",
+            "Divide between bowls.",
+            "Garnish with parmesan and parsley if desired."
+          ]
+        }
+      ],
+      "tags": [
+        "Italian",
+        "Pasta",
+        "Beef",
+        "Tomato",
+        "Dinner"
+      ],
+      "cookingTime": "30 minutes",
+      "calories": "510 cal",
+      "servings": "5"
+    }
+  },
+  "openai/gpt-4o-mini||https://www.indianhealthyrecipes.com/butter-chicken/": {
+    "extractedAt": "2026-04-09T19:23:28.763Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Butter Chicken Recipe (Chicken Makhani)",
+      "ingredientsGroups": [
+        {
+          "title": "First Marination",
+          "items": [
+            "500 grams (1.1 lbs) boneless chicken (cut to 1 inch pieces)",
+            "½ to ¾ teaspoon Kashmiri red chili powder (or paprika adjust to taste, reduce for kids)",
+            "¼ to ⅓ teaspoon salt (adjust to taste)",
+            "¾ to 1 tablespoon lemon juice"
+          ]
+        },
+        {
+          "title": "Second Marination",
+          "items": [
+            "⅓ cup Greek yogurt (hung curd/thick curd)",
+            "¾ tablespoon ginger garlic paste (or ½ tbsp fine grated ginger + ½ tbsp fine grated garlic)",
+            "⅛ teaspoon turmeric (haldi, optional)",
+            "¾ to 1 teaspoon garam masala (adjust to taste)",
+            "½ teaspoon cumin powder (optional)",
+            "1 teaspoon coriander powder (optional)",
+            "1 teaspoon kasuri methi (optional, dried fenugreek leaves)",
+            "¾ to 1 tablespoon oil"
+          ]
+        },
+        {
+          "title": "For Sauce",
+          "items": [
+            "2 to 3 tablespoons butter or ghee (divided)",
+            "2 inch cinnamon piece (optional)",
+            "2 to 4 green cardamoms (optional)",
+            "2 to 4 cloves (optional)",
+            "1½ cups (130 grams) onions sliced (optional)",
+            "600 grams (1.3 lbs.) fresh tomatoes (or 1 cup passata/canned tomato puree or ⅓ cup double concentrate tomato paste)",
+            "¾ tablespoon ginger garlic paste (or ½ tbsp each fine grated ginger and garlic)",
+            "1 to 2 green chilies (optional)",
+            "28 (42 grams, ⅓ cup) whole raw cashews (soaked in hot water, sub with ¼ to ⅓ cup heavy cream)",
+            "½ cup water to blend (more if required)",
+            "1 to 2 teaspoons Kashmiri chili powder (reduce for kids, adjust to taste)",
+            "1 to 1½ teaspoons garam masala (divided, adjust to taste)",
+            "1 to 1½ teaspoon coriander powder (optional, adjust to taste)",
+            "½ teaspoon cumin powder (optional, adjust to taste)",
+            "½ to ¾ teaspoon salt (adjust to taste)",
+            "1 teaspoon sugar (to balance the flavors)",
+            "½ tablespoon Kasuri methi (dried fenugreek leaves)",
+            "1½ cups hot water to make gravy (cut down to 1 cup if omitting cashews)",
+            "⅓ cup (80 to 100 ml) heavy cream (divided)",
+            "2 tablespoons coriander leaves (fine chopped to garnish)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "Marination",
+          "items": [
+            "Marinate chicken with lemon juice, chili powder and salt. Cover and rest for 20 minutes.",
+            "Next add yogurt, kasuri methi, oil, turmeric, ginger garlic paste, coriander powder, cumin powder and garam masala powder.",
+            "Marinate and rest for a minimum of 30 minutes, or overnight for best results. Cover and refrigerate."
+          ]
+        },
+        {
+          "title": "Optional Onion Preparation",
+          "items": [
+            "If using onion, sauté in 1 tablespoon oil until lightly golden, for 7 minutes. Cool down."
+          ]
+        },
+        {
+          "title": "Make the Sauce",
+          "items": [
+            "Remove the chicken from the refrigerator, to bring it close to room temperature.",
+            "Melt butter in a pan & add all the whole spices – cinnamon, cloves and cardamoms.",
+            "When they begin to sizzle, stir in the ginger garlic paste & green chilies. Fry on a low heat, for a minute or 2, till it turns fragrant but not burnt.",
+            "Turn off the heat and stir in red chili powder, garam masala, cumin and coriander powder.",
+            "Stir in the tomato cashew puree. If it is not smooth, strain it to the pan.",
+            "Mix well and cover partially. Bring it to a boil on a medium high heat, reduce the heat to low or medium. Cook until the puree turns thick, keep stirring occasionally.",
+            "Pour hot water and simmer for 10 mins, until the sauce thickens & traces of fats are visible on top of the sauce.",
+            "Remove the whole spices and discard at this stage."
+          ]
+        },
+        {
+          "title": "Grill or Roast Chicken",
+          "items": [
+            "Spread one tbsp. butter or ghee in a griddle/pan and heat it well.",
+            "Place the marinated chicken pieces, spacing them a little apart.",
+            "Fry on a medium heat for 2 mins and turn them. Don’t burn and do not overcook. Cook till the chicken is just cooked and all the marinade dries up."
+          ]
+        },
+        {
+          "title": "How to make Butter Chicken",
+          "items": [
+            "Add chicken to the butter chicken gravy.",
+            "Pour more hot water (about ½ cup, not in the recipe) if the sauce is too thick.",
+            "Cover and simmer for about 5 to 7 minutes till it becomes tender.",
+            "Stir in salt, sugar and kasuri methi. Taste test and optionally add more garam masala & another tablespoon butter for additional flavour.",
+            "Turn off and stir in the heavy cream.",
+            "Garnish Butter Chicken with chopped coriander leaves and some cream."
+          ]
+        }
+      ],
+      "tags": [
+        "Indian",
+        "Chicken",
+        "Curry",
+        "Butter Chicken",
+        "Makhani"
+      ],
+      "cookingTime": "30 minutes",
+      "calories": "385 kcal",
+      "servings": "4"
+    }
+  },
+  "openai/gpt-4o-mini||https://www.recipetineats.com/spaghetti-bolognese/": {
+    "extractedAt": "2026-04-09T19:24:36.937Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Spaghetti Bolognese",
+      "ingredientsGroups": [
+        {
+          "title": "",
+          "items": [
+            "1 1/2 tbsp olive oil",
+            "2 garlic cloves, minced",
+            "1 onion, finely chopped (brown, yellow or white)",
+            "1 lb / 500g beef mince (ground beef) OR half pork, half beef",
+            "1/2 cup (125 ml) dry red wine",
+            "2 beef bouillon cubes, crumbled OR granulated beef bouillon",
+            "800g / 28 oz can crushed tomato (or tomato passata)",
+            "2 tbsp tomato paste",
+            "2 tsp white sugar, if needed",
+            "2 tsp Worcestershire sauce",
+            "2 dried bay leaves",
+            "2 sprigs fresh thyme (or 1/2 tsp dried thyme or oregano)",
+            "3/4 tsp cooking salt (kosher salt)",
+            "1/2 tsp black pepper",
+            "400 g / 13 oz spaghetti, dried",
+            "Parmesan cheese and finely chopped parsley (optional)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "",
+          "items": [
+            "Heat oil in a large pot or deep skillet over medium high heat.",
+            "Add onion and garlic, cook for 3 minutes or until light golden and softened.",
+            "Turn heat up to high and add beef.",
+            "Cook, breaking it up as your go, until browned.",
+            "Add red wine.",
+            "Bring to simmer and cook for 1 minute, scraping the bottom of the pot, until the alcohol smell is gone.",
+            "Add the remaining ingredients.",
+            "Stir, bring to a simmer then turn down to medium so it bubbles gently.",
+            "Cook for 20 – 30 minutes (no lid), adding water if the sauce gets too thick for your taste.",
+            "For slow simmer option, add 3/4 cup of water, cover with lid and simmer on very low for 2 – 2.5 hours, stirring every 30 minutes or so.",
+            "Uncover, simmer 20 minutes to thicken sauce.",
+            "Bring a large pot of salted water to boil.",
+            "Add pasta and cook per packet directions MINUS 1 minute.",
+            "Scoop out a mug of pasta cooking water and set aside, then drain the pasta.",
+            "Add pasta into the bolognese sauce with about 1/2 cup (125 ml) of reserved pasta water over medium heat.",
+            "Toss gently for 1 1/2 – 2 minutes, or until the spaghetti turns red and the sauce thickens.",
+            "Divide between bowls.",
+            "Garnish with parmesan and parsley if desired."
+          ]
+        }
+      ],
+      "tags": [
+        "Italian",
+        "Pasta",
+        "Dinner",
+        "Comfort Food",
+        "Quick Meal"
+      ],
+      "cookingTime": "30 minutes",
+      "calories": "510 cal",
+      "servings": "5"
+    }
+  },
+  "openai/gpt-5.4-nano||https://www.indianhealthyrecipes.com/butter-chicken/": {
+    "extractedAt": "2026-04-09T19:25:10.847Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Butter Chicken Recipe (Chicken Makhani)",
+      "ingredientsGroups": [
+        {
+          "title": "First Marination",
+          "items": [
+            "½ kg (1.1 lbs) boneless chicken (cut to 1 inch pieces)",
+            "½ to ¾ teaspoon Kashmiri red chili powder (or paprika adjust to taste, reduce for kids)",
+            "¼ to ⅓ teaspoon salt (adjust to taste)",
+            "¾ to 1 tablespoon lemon juice"
+          ]
+        },
+        {
+          "title": "Second Marination",
+          "items": [
+            "⅓ cup Greek yogurt (hung curd/thick curd, refer notes)",
+            "¾ tablespoon ginger garlic paste (or ½ tbsp fine grated ginger + ½ tbsp fine grated garlic)",
+            "⅛ teaspoon turmeric (haldi, optional)",
+            "¾ to 1 teaspoon garam masala (adjust to taste)",
+            "½ teaspoon cumin powder (optional)",
+            "1 teaspoon coriander powder (optional)",
+            "1 teaspoon kasuri methi (optional, dried fenugreek leaves)",
+            "¾ to 1 tablespoon oil"
+          ]
+        },
+        {
+          "title": "For sauce",
+          "items": [
+            "2 to 3 tablespoons butter or ghee (divided)",
+            "2 inch cinnamon piece (optional, for extra flavor)",
+            "2 to 4 green cardamoms (optional, for added flavor)",
+            "2 to 4 cloves (optional)",
+            "1½ cups (130 grams) onions sliced (optional, *updated, cuts down acidity from tomatoes)",
+            "600 grams (1.3 lbs.) fresh tomatoes (or 1 cup passata/canned tomato puree or ⅓ cup double concentrate tomato paste — for 1x)",
+            "¾ tablespoon ginger garlic paste (or ½ tbsp each fine grated ginger and garlic)",
+            "1 to 2 green chilies (optional, deseed, slit or chop)",
+            "28 (42 grams,⅓ cup) whole raw cashews (soaked in hot water, sub with ¼ to ⅓ cup heavy cream)",
+            "½ cup water to blend (more if required)",
+            "1 to 2 teaspoons Kashmiri chili powder (reduce for kids, adjust to taste)",
+            "1 to 1½ teaspoons garam masala (divided, adjust to taste)",
+            "1 to 1½ teaspoon coriander powder (optional, adjust to taste)",
+            "½ teaspoon cumin powder (optional, adjust to taste)",
+            "½ to ¾ teaspoon salt (adjust to taste)",
+            "1 teaspoon sugar (to balance the flavors)",
+            "½ tablespoon Kasuri methi (dried fenugreek leaves)",
+            "1½ cups hot water to make gravy (cut down to 1 cup if omitting cashews)",
+            "⅓ cup (80 to 100 ml) heavy cream or whipping cream (divided)",
+            "2 tablespoons coriander leaves (fine chopped to garnish)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "Marinate chicken",
+          "items": [
+            "Marinate chicken with lemon juice, chili powder and salt. Cover and rest for 20 minutes.",
+            "Next add yogurt, kasuri methi, oil, turmeric, ginger garlic paste, coriander powder, cumin powder and garam masala powder.",
+            "Marinate and rest for a minimum of 30 minutes, or overnight for best results.",
+            "Cover and refrigerate."
+          ]
+        },
+        {
+          "title": "Optional – sauté onions",
+          "items": [
+            "Optional – If using onion, sauté in 1 tablespoon oil until lightly golden, for 7 minutes.",
+            "Cool down."
+          ]
+        },
+        {
+          "title": "Blend sauce",
+          "items": [
+            "To a blender, add tomatoes, sautéed onions, cashews and water.",
+            "Blend to a smooth puree.",
+            "If you want you can also blend the cashews separately with water to a smooth cream."
+          ]
+        },
+        {
+          "title": "Make the sauce",
+          "items": [
+            "Remove the chicken from the refrigerator, to bring it close to room temperature.",
+            "Melt butter in a pan & add all the whole spices – cinnamon, cloves and cardamoms.",
+            "When they begin to sizzle, stir in the ginger garlic paste & green chilies.",
+            "Fry on a low heat, for a minute or 2, till it turns fragrant but not burnt.",
+            "Turn off the heat and stir in red chili powder, garam masala, cumin and coriander powder.",
+            "Stir in the tomato cashew puree. If it is not smooth, strain it to the pan.",
+            "Mix well and cover partially.",
+            "Bring it to a boil on a medium high heat, reduce the heat to low or medium.",
+            "Cook until the puree turns thick, keep stirring occasionally.",
+            "Pour hot water and simmer for 10 mins, until the sauce thickens & traces of fats are visible on top of the sauce.",
+            "Remove the whole spices and discard at this stage."
+          ]
+        },
+        {
+          "title": "Grill or roast chicken",
+          "items": [
+            "Spread one tbsp. butter or ghee in a griddle/pan and heat it well.",
+            "Place the marinated chicken pieces, spacing them a little apart.",
+            "Fry on a medium heat for 2 mins and turn them.",
+            "Don’t burn and do not overcook.",
+            "Cook till the chicken is just cooked and all the marinade dries up.",
+            "It is not necessary to fully cook the chicken at this stage.",
+            "This way roast the chicken pieces in 2 to 3 batches, depending on the size of your skillet."
+          ]
+        },
+        {
+          "title": "Make Butter Chicken",
+          "items": [
+            "Add chicken to the butter chicken gravy.",
+            "Pour more hot water (about ½ cup, not in the recipe) if the sauce is too thick.",
+            "Cover and simmer for about 5 to 7 minutes till it becomes tender.",
+            "Stir in salt, sugar and kasuri methi.",
+            "Taste test and optionally add more garam masala & another tablespoon butter for additional flavour (both are optional).",
+            "Turn off and stir in the heavy cream.",
+            "Garnish Butter Chicken with chopped coriander leaves and some cream."
+          ]
+        },
+        {
+          "title": "Serve",
+          "items": [
+            "Serve with Turmeric rice , steamed Basmati Rice , Butter naan or Cumin Rice ."
+          ]
+        }
+      ],
+      "tags": [
+        "Indian",
+        "Butter Chicken",
+        "Chicken Makhani",
+        "Creamy Tomato Gravy",
+        "Spiced Chicken"
+      ],
+      "cookingTime": "30 minutes",
+      "calories": "385 Calories",
+      "servings": "4"
+    }
+  },
+  "openai/gpt-5.4-nano||https://www.recipetineats.com/spaghetti-bolognese/": {
+    "extractedAt": "2026-04-09T19:25:48.422Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Spaghetti Bolognese",
+      "ingredientsGroups": [
+        {
+          "title": "",
+          "items": [
+            "1 1/2 tbsp olive oil",
+            "2 garlic cloves , minced",
+            "1 onion , finely chopped (brown, yellow or white)",
+            "1 lb / 500g beef mince (ground beef) OR half pork, half beef (Note 1)",
+            "1/2 cup (125 ml) dry red wine (sub water or beef broth/stock)",
+            "2 beef bouillon cubes , crumbled OR granulated beef bouillon (Note 2)",
+            "800g / 28 oz can crushed tomato (or tomato passata)",
+            "2 tbsp tomato paste",
+            "2 tsp white sugar , if needed (Note 3)",
+            "2 tsp Worcestershire sauce",
+            "2 dried bay leaves",
+            "2 sprigs fresh thyme (or 1/2 tsp dried thyme or oregano)",
+            "3/4 tsp cooking salt (kosher salt)",
+            "1/2 tsp black pepper"
+          ]
+        },
+        {
+          "title": "To Serve",
+          "items": [
+            "400 g / 13 oz spaghetti , dried",
+            "Parmesan cheese and finely chopped parsley (optional)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "",
+          "items": [
+            "Sauté – Heat oil in a large pot or deep skillet over medium high heat.",
+            "Add onion and garlic, cook for 3 minutes or until light golden and softened.",
+            "Cook beef – Turn heat up to high and add beef.",
+            "Cook, breaking it up as your go, until browned.",
+            "Reduce wine – Add red wine.",
+            "Bring to simmer and cook for 1 minute, scraping the bottom of the pot, until the alcohol smell is gone.",
+            "Simmer – Add the remaining ingredients.",
+            "Stir, bring to a simmer then turn down to medium so it bubbles gently.",
+            "Cook for 20 – 30 minutes (no lid), adding water if the sauce gets too thick for your taste.",
+            "Stir occasionally."
+          ]
+        },
+        {
+          "title": "Slow simmer option",
+          "items": [
+            "Add 3/4 cup of water, cover with lid and simmer on very low for 2 – 2.5 hours, stirring every 30 minutes or so. (Note 5)",
+            "Uncover, simmer 20 minutes to thicken sauce. (Note 6 for slow cooker)",
+            "Taste and add more salt it desired.",
+            "Serve over spaghetti – though if you have the time, I recommend tossing the sauce and pasta per steps below."
+          ]
+        },
+        {
+          "title": "Tossing Sauce and Spaghetti (optional, Note 4)",
+          "items": [
+            "Bring a large pot of salted water to boil.",
+            "Add pasta and cook per packet directions MINUS 1 minute.",
+            "Scoop out a mug of pasta cooking water and set aside, then drain the pasta.",
+            "Add pasta into the bolognese sauce with about 1/2 cup (125 ml) of reserved pasta water over medium heat.",
+            "Toss gently for 1 1/2 – 2 minutes, or until the spaghetti turns red and the sauce thickens.",
+            "Divide between bowls.",
+            "Garnish with parmesan and parsley if desired."
+          ]
+        }
+      ],
+      "tags": [
+        "Dinner",
+        "Italian",
+        "Western",
+        "Spaghetti",
+        "Bolognese Sauce"
+      ],
+      "cookingTime": "30 minutes mins",
+      "calories": "510 cal",
+      "servings": "5"
+    }
+  },
+  "openai/gpt-5.4-mini||https://www.indianhealthyrecipes.com/butter-chicken/": {
+    "extractedAt": "2026-04-09T19:26:13.538Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Butter Chicken Recipe (Indian Chicken Makhani)",
+      "ingredientsGroups": [
+        {
+          "title": "",
+          "items": [
+            "½ kg (1.1 lbs) boneless chicken (cut to 1 inch pieces)",
+            "½ to ¾ teaspoon Kashmiri red chili powder (or paprika adjust to taste, reduce for kids)",
+            "¼ to ⅓ teaspoon salt (adjust to taste)",
+            "¾ to 1 tablespoon lemon juice",
+            "⅓ cup Greek yogurt (hung curd/thick curd, refer notes)",
+            "¾ tablespoon ginger garlic paste (or ½ tbsp fine grated ginger + ½ tbsp fine grated garlic)",
+            "⅛ teaspoon turmeric (haldi, optional)",
+            "¾ to 1 teaspoon garam masala (adjust to taste)",
+            "½ teaspoon cumin powder (optional)",
+            "1 teaspoon coriander powder (optional)",
+            "1 teaspoon kasuri methi (optional, dried fenugreek leaves)",
+            "¾ to 1 tablespoon oil",
+            "2 to 3 tablespoons butter or ghee (divided)",
+            "2 inch cinnamon piece (optional, for extra flavor)",
+            "2 to 4 green cardamoms (optional, for added flavor)",
+            "2 to 4 cloves (optional)",
+            "1½ cups (130 grams) onions sliced (optional, *updated, cuts down acidity from tomatoes)",
+            "600 grams (1.3 lbs.) fresh tomatoes (or 1 cup passata/canned tomato puree or ⅓ cup double concentrate tomato paste – for 1x)",
+            "¾ tablespoon ginger garlic paste (or ½ tbsp each fine grated ginger and garlic)",
+            "1 to 2 green chilies (optional, deseed, slit or chop)",
+            "28 (42 grams,⅓ cup) whole raw cashews (soaked in hot water, sub with ¼ to ⅓ cup heavy cream)",
+            "½ cup water to blend (more if required)",
+            "1 to 2 teaspoons Kashmiri chili powder (reduce for kids, adjust to taste)",
+            "1 to 1½ teaspoons garam masala (divided, adjust to taste)",
+            "1 to 1½ teaspoon coriander powder (optional, adjust to taste)",
+            "½ teaspoon cumin powder (optional, adjust to taste)",
+            "½ to ¾ teaspoon salt (adjust to taste)",
+            "1 teaspoon sugar (to balance the flavors)",
+            "½ tablespoon Kasuri methi (dried fenugreek leaves)",
+            "1½ cups hot water to make gravy (cut down to 1 cup if omitting cashews)",
+            "⅓ cup (80 to 100 ml) heavy cream or whipping cream (divided)",
+            "2 tablespoons coriander leaves (fine chopped to garnish)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "",
+          "items": [
+            "Marinate chicken with lemon juice, chili powder and salt.",
+            "Cover and rest for 20 minutes.",
+            "Next add yogurt, kasuri methi, oil, turmeric, ginger garlic paste, coriander powder, cumin powder and garam masala powder.",
+            "Marinate and rest for a minimum of 30 minutes, or overnight for best results.",
+            "Cover and refrigerate.",
+            "Optional – If using onion, sauté in 1 tablespoon oil until lightly golden, for 7 minutes.",
+            "Cool down.",
+            "To a blender, add tomatoes, sautéed onions, cashews and water.",
+            "Blend to a smooth puree.",
+            "If you want you can also blend the cashews separately with water to a smooth cream.",
+            "Remove the chicken from the refrigerator, to bring it close to room temperature.",
+            "Melt butter in a pan & add all the whole spices – cinnamon, cloves and cardamoms.",
+            "When they begin to sizzle, stir in the ginger garlic paste & green chilies.",
+            "Fry on a low heat, for a minute or 2, till it turns fragrant but not burnt.",
+            "Turn off the heat and stir in red chili powder, garam masala, cumin and coriander powder.",
+            "Stir in the tomato cashew puree.",
+            "If it is not smooth, strain it to the pan.",
+            "Mix well and cover partially.",
+            "Bring it to a boil on a medium high heat, reduce the heat to low or medium.",
+            "Cook until the puree turns thick, keep stirring occasionally.",
+            "Pour hot water and simmer for 10 mins, until the sauce thickens & traces of fats are visible on top of the sauce.",
+            "Remove the whole spices and discard at this stage.",
+            "Spread one tbsp. butter or ghee in a griddle/pan and heat it well.",
+            "Place the marinated chicken pieces, spacing them a little apart.",
+            "Fry on a medium heat for 2 mins and turn them.",
+            "Don’t burn and do not overcook.",
+            "Cook till the chicken is just cooked and all the marinade dries up.",
+            "It is not necessary to fully cook the chicken at this stage.",
+            "This way roast the chicken pieces in 2 to 3 batches, depending on the size of your skillet.",
+            "Add chicken to the butter chicken gravy.",
+            "Pour more hot water (about ½ cup, not in the recipe) if the sauce is too thick.",
+            "Cover and simmer for about 5 to 7 minutes till it becomes tender.",
+            "Stir in salt, sugar and kasuri methi.",
+            "Taste test and optionally add more garam masala & another tablespoon butter for additional flavour (both are optional).",
+            "Turn off and stir in the heavy cream.",
+            "Garnish Butter Chicken with chopped coriander leaves and some cream.",
+            "Serve with Turmeric rice , steamed Basmati Rice , Butter naan or Cumin Rice ."
+          ]
+        }
+      ],
+      "tags": [
+        "Indian",
+        "chicken",
+        "butter chicken",
+        "creamy",
+        "tomato"
+      ],
+      "cookingTime": "30 minutes",
+      "calories": "385 Calories",
+      "servings": "4"
+    }
+  },
+  "openai/gpt-5.4-mini||https://www.recipetineats.com/spaghetti-bolognese/": {
+    "extractedAt": "2026-04-09T19:26:42.010Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Spaghetti Bolognese",
+      "ingredientsGroups": [
+        {
+          "title": "",
+          "items": [
+            "1 1/2 tbsp olive oil",
+            "2 garlic cloves , minced",
+            "1 onion , finely chopped (brown, yellow or white)",
+            "1 lb / 500g beef mince (ground beef) OR half pork, half beef (Note 1)",
+            "1/2 cup (125 ml) dry red wine (sub water or beef broth/stock)",
+            "2 beef bouillon cubes , crumbled OR granulated beef bouillon (Note 2)",
+            "800g / 28 oz can crushed tomato (or tomato passata)",
+            "2 tbsp tomato paste",
+            "2 tsp white sugar , if needed (Note 3)",
+            "2 tsp Worcestershire sauce",
+            "2 dried bay leaves",
+            "2 sprigs fresh thyme (or 1/2 tsp dried thyme or oregano)",
+            "3/4 tsp cooking salt (kosher salt)",
+            "1/2 tsp black pepper",
+            "400 g / 13 oz spaghetti , dried",
+            "Parmesan cheese and finely chopped parsley (optional)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "",
+          "items": [
+            "Heat oil in a large pot or deep skillet over medium high heat.",
+            "Add onion and garlic, cook for 3 minutes or until light golden and softened.",
+            "Turn heat up to high and add beef.",
+            "Cook, breaking it up as your go, until browned.",
+            "Add red wine.",
+            "Bring to simmer and cook for 1 minute, scraping the bottom of the pot, until the alcohol smell is gone.",
+            "Add the remaining ingredients.",
+            "Stir, bring to a simmer then turn down to medium so it bubbles gently.",
+            "Cook for 20 – 30 minutes (no lid), adding water if the sauce gets too thick for your taste.",
+            "Stir occasionally.",
+            "Add 3/4 cup of water, cover with lid and simmer on very low for 2 – 2.5 hours, stirring every 30 minutes or so.",
+            "Uncover, simmer 20 minutes to thicken sauce.",
+            "Taste and add more salt it desired.",
+            "Bring a large pot of salted water to boil.",
+            "Add pasta and cook per packet directions MINUS 1 minute.",
+            "Scoop out a mug of pasta cooking water and set aside, then drain the pasta.",
+            "Add pasta into the bolognese sauce with about 1/2 cup (125 ml) of reserved pasta water over medium heat.",
+            "Toss gently for 1 1/2 – 2 minutes, or until the spaghetti turns red and the sauce thickens.",
+            "Divide between bowls.",
+            "Garnish with parmesan and parsley if desired."
+          ]
+        }
+      ],
+      "tags": [
+        "bolognese sauce",
+        "meat sauce",
+        "spaghetti",
+        "italian",
+        "western"
+      ],
+      "cookingTime": "30 minutes",
+      "calories": "510 cal",
+      "servings": "5"
+    }
+  },
+  "google/gemma-4-31b-it||https://www.recipetineats.com/spaghetti-bolognese/": {
+    "extractedAt": "2026-04-09T19:40:35.890Z",
+    "recipe": {
+      "schemaVersion": 2,
+      "name": "Spaghetti Bolognese",
+      "ingredientsGroups": [
+        {
+          "title": "",
+          "items": [
+            "1 1/2 tbsp olive oil",
+            "2 garlic cloves , minced",
+            "1 onion , finely chopped (brown, yellow or white)",
+            "1 lb / 500g beef mince (ground beef) OR half pork, half beef (Note 1)",
+            "1/2 cup (125 ml) dry red wine (sub water or beef broth/stock)",
+            "2 beef bouillon cubes , crumbled OR granulated beef bouillon (Note 2)",
+            "800g / 28 oz can crushed tomato (or tomato passata)",
+            "2 tbsp tomato paste",
+            "2 tsp white sugar , if needed (Note 3)",
+            "2 tsp Worcestershire sauce",
+            "2 dried bay leaves",
+            "2 sprigs fresh thyme (or 1/2 tsp dried thyme or oregano)",
+            "3/4 tsp cooking salt (kosher salt)",
+            "1/2 tsp black pepper"
+          ]
+        },
+        {
+          "title": "To Serve",
+          "items": [
+            "400 g / 13 oz spaghetti , dried",
+            "Parmesan cheese and finely chopped parsley (optional)"
+          ]
+        }
+      ],
+      "instructionGroups": [
+        {
+          "title": "Sauté",
+          "items": [
+            "Heat oil in a large pot or deep skillet over medium high heat.",
+            "Add onion and garlic, cook for 3 minutes or until light golden and softened."
+          ]
+        },
+        {
+          "title": "Cook beef",
+          "items": [
+            "Turn heat up to high and add beef.",
+            "Cook, breaking it up as your go, until browned."
+          ]
+        },
+        {
+          "title": "Reduce wine",
+          "items": [
+            "Add red wine.",
+            "Bring to simmer and cook for 1 minute, scraping the bottom of the pot, until the alcohol smell is gone."
+          ]
+        },
+        {
+          "title": "Simmer",
+          "items": [
+            "Add the remaining ingredients.",
+            "Stir, bring to a simmer then turn down to medium so it bubbles gently.",
+            "Cook for 20 – 30 minutes (no lid), adding water if the sauce gets too thick for your taste.",
+            "Stir occasionally."
+          ]
+        },
+        {
+          "title": "Tossing Sauce and Spaghetti (optional, Note 4)",
+          "items": [
+            "Bring a large pot of salted water to boil.",
+            "Add pasta and cook per packet directions MINUS 1 minute.",
+            "Scoop out a mug of pasta cooking water and set aside, then drain the pasta.",
+            "Add pasta into the bolognese sauce with about 1/2 cup (125 ml) of reserved pasta water over medium heat.",
+            "Toss gently for 1 1/2 – 2 minutes, or until the spaghetti turns red and the sauce thickens.",
+            "Divide between bowls.",
+            "Garnish with parmesan and parsley if desired."
+          ]
+        }
+      ],
+      "tags": [
+        "Italian",
+        "Pasta",
+        "Beef",
+        "Dinner",
+        "Main Course"
+      ],
+      "cookingTime": "30 minutes",
+      "calories": "510 cal",
+      "servings": "5"
+    }
+  }
+}
