@@ -31,6 +31,7 @@ module.exports = {
 
   // Smart model used to generate the ground-truth dataset and rate extractions.
   DATASET_MODEL: 'google/gemini-2.5-pro',
+  // DATASET_MODEL: 'anthropic/claude-sonnet-4.6',
 
   // Recipe pages used for testing. Edit here to add/remove test cases,
   // then re-run generateDataset.js to refresh the ground truth.
