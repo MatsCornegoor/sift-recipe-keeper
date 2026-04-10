@@ -75,3 +75,22 @@ model-tools/
   .env                 — API keys (gitignored)
   .env.example         — template for .env
 ```
+
+
+Last score:
+========================================================================
+SUMMARY (sorted by score)
+========================================================================
+Model                                                Score     %
+------------------------------------------------------------------------
+google/gemini-2.5-flash                              100/100  ██████████ 100%
+mistralai/mistral-small-3.2-24b-instruct              94/100  █████████  94%
+openai/gpt-5.4-nano                                   93/100  █████████  93%
+google/gemma-3-27b-it                                 80/100  ████████   80%
+openai/gpt-5.4-mini                                   79/100  ████████   79%
+openai/gpt-4o-mini                                    78/100  ████████   78%
+qwen/qwen3-coder-30b-a3b-instruct                     75/100  ████████   75%
+arcee-ai/trinity-large-preview:free                   75/100  ████████   75%
+google/gemma-4-31b-it                                 64/100  ██████     64%
+meta-llama/llama-3.1-8b-instruct                      64/100  ██████     64%
+google/gemma-3-12b-it                                 48/100  █████      48%
