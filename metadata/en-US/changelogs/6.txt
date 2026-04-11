@@ -1,0 +1,2 @@
+- Import pasted text
+- Import text files (thanks @d5c0d3)
