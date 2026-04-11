@@ -134,8 +134,15 @@ class RecipeExtractorService {
     }
   }
 
+  // Public method for text-based import (paste/type recipe text directly).
+  async extractRecipeFromText(text: string): Promise<Recipe> {
+    await this.loadCustomModelConfig();
+    const cleanContent = text.slice(0, 20000);
+    return this.extractRecipe(cleanContent, null);
+  }
+
   // Public method for file-based import.
-  // Reads the file, if HTML file extracts an image and cleans the content, 
+  // Reads the file, if HTML file extracts an image and cleans the content,
   // then delegates to extractRecipe for the actual GPT extraction logic.
   async extractRecipeFromFile(
     filePath: string,

@@ -171,7 +171,7 @@ export default function RecipeList({ navigation }: { navigation: any }) {
                 <Text style={styles.menuText}>Add from website</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.menuItem} onPress={handleAddFromFile}>
-                <Text style={styles.menuText}>Add from file</Text>
+                <Text style={styles.menuText}>Add from text</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.menuItem} onPress={handleAddFromScratch}>
                 <Text style={styles.menuText}>Add from scratch</Text>

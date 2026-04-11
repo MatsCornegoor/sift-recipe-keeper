@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Header from '../components/Header';
 import CustomPopup from '../components/CustomPopup';
@@ -94,6 +94,7 @@ export default function EditWithAI() {
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Header title="Edit with AI" />
       <ContentWrapper>
+        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
         <View style={styles.content}>
           <Text style={[styles.description, { color: colors.text }]}>
             Describe how you'd like to modify "{recipe.name}" and AI will apply the changes for you to review.
@@ -122,6 +123,7 @@ export default function EditWithAI() {
             )}
           </Button>
         </View>
+        </ScrollView>
       </ContentWrapper>
       <CustomPopup
         visible={showPopup}
@@ -137,6 +139,12 @@ export default function EditWithAI() {
 const stylesFactory = () => StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
   content: {
     padding: 16,
