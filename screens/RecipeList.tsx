@@ -58,7 +58,7 @@ export default function RecipeList({ navigation }: { navigation: any }) {
 
   const handleAddFromFile = () => {
     setIsMenuVisible(false);
-    navigation.navigate('AddRecipeFile');
+    navigation.navigate('AddRecipeText');
   };
 
   const handleAddFromScratch = () => {

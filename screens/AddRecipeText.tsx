@@ -29,7 +29,7 @@ const isLikelyBinary = async (filePath: string): Promise<boolean> => {
   }
 };
 
-export default function AddRecipeFile() {
+export default function AddRecipeText() {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [loadingSource, setLoadingSource] = useState<'text' | 'file' | null>(null);
@@ -140,7 +140,7 @@ export default function AddRecipeFile() {
 
   return (
     <View style={styles.flexView}>
-      <Header title="Add from text" />
+      <Header title="Add recipe" />
       <ScrollView
         style={styles.flexView}
         contentContainerStyle={styles.flexGrow}
@@ -150,7 +150,7 @@ export default function AddRecipeFile() {
             {/* Text import section */}
             <Text style={styles.sectionTitle}>Paste recipe text</Text>
             <Text style={styles.hint}>
-              Copy a recipe from anywhere and paste it below. AI will extract and structure it for you.
+              Copy a recipe from anywhere and paste the text below.
             </Text>
             <Input
               style={styles.textArea}
@@ -173,7 +173,7 @@ export default function AddRecipeFile() {
                   <Text style={[styles.buttonText, styles.dotsContainer, { color: colors.background }]}>{dots}</Text>
                 </View>
               ) : (
-                <Text style={[styles.buttonText, { color: colors.background }]}>Import text</Text>
+                <Text style={[styles.buttonText, { color: colors.background }]}>Add recipe</Text>
               )}
             </Button>
 
@@ -187,7 +187,7 @@ export default function AddRecipeFile() {
             {/* File import section */}
             <Text style={styles.sectionTitle}>Import from file</Text>
             <Text style={styles.hint}>
-              Save a recipe page with your browser's "Save Page" feature, then import it here. Useful for paywalled or bot-protected pages.
+              Select a text based file such as .txt, .html, or .md.
             </Text>
             <Button
               onPress={handleFileImport}
@@ -237,11 +237,11 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     marginBottom: 6,
   },
   hint: {
-    fontSize: 13,
-    lineHeight: 19,
-    opacity: 0.5,
     color: colors.text,
-    marginBottom: 12,
+    fontSize: 16,
+    opacity: 0.7,
+    marginBottom: 20,
+    lineHeight: 22,
   },
   textArea: {
     minHeight: 120,
@@ -276,7 +276,7 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   },
   dividerText: {
     marginHorizontal: 12,
-    fontSize: 13,
+    fontSize: 14,
     color: colors.text,
     opacity: 0.4,
   },
