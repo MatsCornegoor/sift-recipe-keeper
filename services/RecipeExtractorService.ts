@@ -134,8 +134,15 @@ class RecipeExtractorService {
     }
   }
 
+  // Public method for text-based import (paste/type recipe text directly).
+  async extractRecipeFromText(text: string): Promise<Recipe> {
+    await this.loadCustomModelConfig();
+    const cleanContent = text.slice(0, 20000);
+    return this.extractRecipe(cleanContent, null);
+  }
+
   // Public method for file-based import.
-  // Reads the file, if HTML file extracts an image and cleans the content, 
+  // Reads the file, if HTML file extracts an image and cleans the content,
   // then delegates to extractRecipe for the actual GPT extraction logic.
   async extractRecipeFromFile(
     filePath: string,
@@ -175,7 +182,6 @@ class RecipeExtractorService {
     extraInstructions?: string
   ): Promise<Recipe> {
       // Prepare GPT prompt for groups schema (v2)
-      // TODO: implement extraInstructions (as advanced model settings?)
     const prompt = `
       Extract recipe information from the following content.
       Your primary rule is to ONLY extract information that is explicitly present in the text.
@@ -214,6 +220,7 @@ class RecipeExtractorService {
         - Cooking Time: Extract from content. If missing, use an empty string "".
         - Servings: Extract from content. If missing, use an empty string "". DO NOT estimate.
         - Grouping: If the recipe has distinct sections with titles (like "Sauce" or "Dough"), create corresponding groups. If there are no such sections, create just one group for ingredients and one for instructions, leaving the 'title' as an empty string. DO NOT make up your own group titles. DO NOT use generic titles like "Ingredients" or "Instructions."
+        ${extraInstructions ? `- ${extraInstructions}` : ''}
 
       Content:
       ${cleanContent}
@@ -237,52 +244,6 @@ class RecipeExtractorService {
     content = content.replace(/\s+/g, ' ').trim();
     // Limit content length
     return content.slice(0, 20000);
-  }
-
-  private extractSectionHints(html: string, cleanContent: string): string[] {
-    const hints: string[] = [];
-
-    try {
-      // Headings from HTML
-      const headingRegex = /<h[1-4][^>]*>(.*?)<\/h[1-4]>/gi;
-      let match: RegExpExecArray | null;
-      while ((match = headingRegex.exec(html)) !== null) {
-        const raw = match[1] || '';
-        const text = raw.replace(/<[^>]*>/g, '').trim();
-        if (!text) continue;
-        const normalized = text.replace(/\s+/g, ' ').trim();
-        if (normalized.length > 2 && normalized.length <= 50) {
-          const lower = normalized.toLowerCase();
-          // Skip generic headings
-          if ([ 
-            'ingredients', 'ingredient', 'instructions', 'method', 'directions', 'notes', 'nutrition', 'equipment', 'let\'s start', 'lets start', 'get started', 'getting started', 'summary', 'recipe summary'
-          ].includes(lower)) continue;
-          // Title case
-          const title = normalized.replace(/\w\S*/g, (w) => w.charAt(0).toUpperCase() + w.slice(1));
-          if (!hints.includes(title)) hints.push(title);
-        }
-        if (hints.length >= 8) break;
-      }
-
-      // Pattern: "For the X:" in text
-      const forTheRegex = /(?:for the|for)\s+([a-zA-Z][a-zA-Z\s\-]{2,40})\s*:/gi;
-      let m2: RegExpExecArray | null;
-      while ((m2 = forTheRegex.exec(cleanContent)) !== null) {
-        const title = (m2[1] || '').trim();
-        if (!title) continue;
-        const norm = title.replace(/\s+/g, ' ').trim();
-        if (norm.length > 2 && norm.length <= 50) {
-          const titled = norm.replace(/\w\S*/g, (w) => w.charAt(0).toUpperCase() + w.slice(1));
-          if (!hints.includes(titled)) hints.push(titled);
-        }
-        if (hints.length >= 8) break;
-      }
-
-    } catch (e) {
-      // ignore
-    }
-
-    return hints.slice(0, 8);
   }
 
   private async callGPTAPI(prompt: string): Promise<string> {
@@ -509,8 +470,7 @@ class RecipeExtractorService {
       const data = JSON.parse(response.slice(start, end + 1));
 
       if (!data.name) {
-        console.error('Recipe name missing in parsed data:', data);
-        throw new Error('No recipe was found on this page. Try a different URL.');
+        data.name = 'No name found';
       }
 
       // Read groups (required), fallback to legacy if absent

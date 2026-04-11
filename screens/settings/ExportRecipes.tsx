@@ -168,16 +168,16 @@ export default function ExportRecipes() {
           data={listData}
           renderItem={renderItem}
           keyExtractor={item => item.id}
-          ListFooterComponent={
-            <Button
-              title="Export Selected Recipes"
-              onPress={handleExport}
-              disabled={selectedRecipes.length === 0}
-              style={[styles.exportButton, { opacity: selectedRecipes.length > 0 ? 1 : 0.5 }]}
-            />
-          }
         />
       </ContentWrapper>
+      <View style={styles.stickyFooter}>
+        <Button
+          title="Export Selected Recipes"
+          onPress={handleExport}
+          disabled={selectedRecipes.length === 0}
+          style={[styles.exportButton, { opacity: selectedRecipes.length > 0 ? 1 : 0.5 }]}
+        />
+      </View>
       <CustomPopup
         visible={showPopup}
         title={popupConfig.title}
@@ -207,8 +207,15 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     marginRight: 16,
     color: colors.text,
   },
+  stickyFooter: {
+    backgroundColor: colors.background,
+    paddingBottom: 16,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.text + '20',
+  },
   exportButton: {
     margin: 16,
+    marginBottom: 0,
   },
 });
  
