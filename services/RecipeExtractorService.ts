@@ -182,7 +182,6 @@ class RecipeExtractorService {
     extraInstructions?: string
   ): Promise<Recipe> {
       // Prepare GPT prompt for groups schema (v2)
-      // TODO: implement extraInstructions (as advanced model settings?)
     const prompt = `
       Extract recipe information from the following content.
       Your primary rule is to ONLY extract information that is explicitly present in the text.
@@ -221,6 +220,7 @@ class RecipeExtractorService {
         - Cooking Time: Extract from content. If missing, use an empty string "".
         - Servings: Extract from content. If missing, use an empty string "". DO NOT estimate.
         - Grouping: If the recipe has distinct sections with titles (like "Sauce" or "Dough"), create corresponding groups. If there are no such sections, create just one group for ingredients and one for instructions, leaving the 'title' as an empty string. DO NOT make up your own group titles. DO NOT use generic titles like "Ingredients" or "Instructions."
+        ${extraInstructions ? `- ${extraInstructions}` : ''}
 
       Content:
       ${cleanContent}
@@ -516,8 +516,7 @@ class RecipeExtractorService {
       const data = JSON.parse(response.slice(start, end + 1));
 
       if (!data.name) {
-        console.error('Recipe name missing in parsed data:', data);
-        throw new Error('No recipe was found on this page. Try a different URL.');
+        data.name = 'No name found';
       }
 
       // Read groups (required), fallback to legacy if absent
