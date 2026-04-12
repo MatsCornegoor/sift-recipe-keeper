@@ -68,8 +68,9 @@ export default function ExportRecipes() {
       const zipPath = await buildRecipeZip(recipesToExport);
 
       if (Platform.OS === 'android') {
-          const downloadPath = `${RNFS.DownloadDirectoryPath}/sift-recipes-${Date.now()}.zip`;
-          await RNFS.moveFile(zipPath, downloadPath);
+        const fileName = zipPath.split('/').pop();
+        const downloadPath = `${RNFS.DownloadDirectoryPath}/${fileName}`;
+        await RNFS.moveFile(zipPath, downloadPath);
       } else {
         await Share.share({ url: `file://${zipPath}` });
         RNFS.unlink(zipPath).catch(() => {});

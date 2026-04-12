@@ -53,35 +53,45 @@ export default function RecipeDetail() {
 
   const [isShareMenuVisible, setIsShareMenuVisible] = useState(false);
 
-  const handleShareUrl = () => {
+  const handleShareRecipeText = async () => {
     setIsShareMenuVisible(false);
-    Share.share({
-      url: recipe.sourceUrl!,   // iOS
-      message: recipe.sourceUrl!, // Android fallback
-    });
+    try {
+      await Share.share({ message: formatRecipeForSharing(recipe!) });
+    } catch (err: any) {
+      if (err?.message && !err.message.includes('cancel') && !err.message.includes('dismiss') && !err.message.includes('did not share')) {
+        console.error('Failed to share recipe text:', err);
+      }
+    }
   };
 
-  const handleShareRecipeText = () => {
+  const handleShareIngredientsText = async () => {
     setIsShareMenuVisible(false);
-    Share.share({ message: formatRecipeForSharing(recipe!) });
-  };
-
-  const handleShareIngredientsText = () => {
-    setIsShareMenuVisible(false);
-    Share.share({ message: formatIngredientsForSharing(recipe!) });
+    try {
+      await Share.share({ message: formatIngredientsForSharing(recipe!) });
+    } catch (err: any) {
+      if (err?.message && !err.message.includes('cancel') && !err.message.includes('dismiss') && !err.message.includes('did not share')) {
+        console.error('Failed to share ingredients text:', err);
+      }
+    }
   };
 
   const handleShareExport = async () => {
     setIsShareMenuVisible(false);
+    let zipPath: string | null = null;
     try {
-      const zipPath = await buildRecipeZip([recipe!]);
+      zipPath = await buildRecipeZip([recipe!]);
       await RNShare.open({
         url: `file://${zipPath}`,
+        // TODO: change type to e.g. 'application/x-sift-recipe' when registering custom MIME type
         type: 'application/zip',
       });
-      RNFS.unlink(zipPath).catch(() => {});
-    } catch (err) {
-      console.error('Failed to share recipe file:', err);
+    } catch (err: any) {
+      // RNShare throws on user cancellation — don't log that as an error
+      if (err?.message && !err.message.includes('cancel') && !err.message.includes('dismiss') && !err.message.includes('did not share')) {
+        console.error('Failed to share recipe file:', err);
+      }
+    } finally {
+      if (zipPath) RNFS.unlink(zipPath).catch(() => {});
     }
   };
 
@@ -167,7 +177,7 @@ export default function RecipeDetail() {
   };
 
   const formatIngredientsForSharing = (recipe: Recipe): string => {
-    const lines: string[] = [recipe.name, ''];
+    const lines: string[] = [recipe.name + ' - Ingredients', ''];
 
     (recipe.ingredientsGroups || []).forEach(group => {
       if (group.title) lines.push(group.title.toUpperCase());
@@ -301,8 +311,8 @@ export default function RecipeDetail() {
 
   return (
     <View style={styles.container}>
-      <Header 
-        title={recipe.name}
+      <Header
+        title={''} 
         rightElement={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <ShareButton />
@@ -327,6 +337,7 @@ export default function RecipeDetail() {
               </View>
             )}
 
+            <Text style={styles.recipeTitle} numberOfLines={3}>{recipe.name}</Text>
             <View style={styles.content}>
               <View style={styles.detailsContainer}>
                 {recipe.cookingTime && (
@@ -400,25 +411,15 @@ export default function RecipeDetail() {
           activeOpacity={1}
           onPress={() => setIsShareMenuVisible(false)}
         >
-          <View style={[styles.menuContainer, { right: 60, top: 80 }]}>
-            {recipe.sourceUrl ? (
-              <TouchableOpacity style={styles.menuItem} onPress={handleShareUrl}>
-                <Text style={styles.menuText}>Source URL</Text>
-              </TouchableOpacity>
-            ) : (
-              <View style={styles.menuItem}>
-                <Text style={[styles.menuText, { opacity: 0.4 }]}>Source URL</Text>
-                <Text style={[styles.menuText, { opacity: 0.4, fontSize: 13 }]}>No source URL saved</Text>
-              </View>
-            )}
-            <TouchableOpacity style={styles.menuItem} onPress={handleShareRecipeText}>
-              <Text style={styles.menuText}>Recipe Text</Text>
-            </TouchableOpacity>
+          <View style={[styles.menuContainer, { right: 20, top: 80 }]}>
             <TouchableOpacity style={styles.menuItem} onPress={handleShareIngredientsText}>
               <Text style={styles.menuText}>Ingredients</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem} onPress={handleShareRecipeText}>
+              <Text style={styles.menuText}>Recipe as text</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.menuItem} onPress={handleShareExport}>
-              <Text style={styles.menuText}>Sift Recipe File</Text>
+              <Text style={styles.menuText}>Recipe as .sift file</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
@@ -495,6 +496,15 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   sectionHeaderRow: {
     marginTop: 24,
   },
+    recipeTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    opacity: 0.7,
+    color: colors.text,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 4,
+},
   sectionTitle: {
     fontSize: 22,
     fontWeight: 'bold',
