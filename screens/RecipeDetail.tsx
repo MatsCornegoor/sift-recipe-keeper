@@ -190,6 +190,16 @@ export default function RecipeDetail() {
   const formatRecipeForSharing = (recipe: Recipe): string => {
     const lines: string[] = [recipe.name, ''];
 
+    // Add recipe details
+    const details: string[] = [];
+    if (recipe.cookingTime) details.push(`Cooking time: ${recipe.cookingTime}`);
+    if (recipe.servings) details.push(`Servings: ${recipe.servings}`);
+    if (recipe.calories) details.push(`Calories: ${recipe.calories}`);
+    if (details.length > 0) {
+      lines.push(details.join(' | '));
+      lines.push('');
+    }
+
     (recipe.ingredientsGroups || []).forEach(group => {
       if (group.title) lines.push(group.title.toUpperCase());
       group.items.forEach(ing => lines.push(`• ${ing.name}`));
