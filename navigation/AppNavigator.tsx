@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AddRecipe from '../screens/AddRecipe';
 import AddRecipeUrl from '../screens/AddRecipeUrl';
 import AddRecipeText from '../screens/AddRecipeText';
+import AddRecipePicture from '../screens/AddRecipePicture';
 import EditRecipe from '../screens/EditRecipe';
 import EditWithAI from '../screens/EditWithAI';
 import RecipeDetail from '../screens/RecipeDetail';
@@ -28,6 +29,7 @@ export default function AppNavigator() {
         <Stack.Screen name="AddRecipe" component={AddRecipe} />
         <Stack.Screen name="AddRecipeUrl" component={AddRecipeUrl} />
         <Stack.Screen name="AddRecipeText" component={AddRecipeText} />
+        <Stack.Screen name="AddRecipePicture" component={AddRecipePicture} />
         <Stack.Screen name="EditRecipe" component={EditRecipe} />
         <Stack.Screen name="EditWithAI" component={EditWithAI} />
         <Stack.Screen name="RecipeDetail" component={RecipeDetail} />

@@ -48,13 +48,20 @@ class RecipeStore {
   }
 
   async addRecipe(recipe: Recipe) {
-    if (recipe.imageUri && !recipe.imageUri.startsWith('file://')) {
-      try {
-        const newPath = await this.copyImageToAppDirectory(recipe.imageUri);
-        recipe.imageUri = newPath;
-      } catch (error) {
-        console.error('Error copying image:', error);
-        recipe.imageUri = null;
+    if (recipe.imageUri) {
+      const permanentDir = RNFS.DocumentDirectoryPath;
+      const isLocal = recipe.imageUri.startsWith('file://') || recipe.imageUri.startsWith('/') || recipe.imageUri.startsWith('content://');
+
+      if (isLocal && !recipe.imageUri.includes(permanentDir)) {
+        try {
+          const newPath = await this.copyImageToAppDirectory(recipe.imageUri);
+          recipe.imageUri = newPath;
+        } catch (error) {
+          console.error('Error copying image:', error);
+          if (!recipe.imageUri.startsWith('file://') && !recipe.imageUri.startsWith('/')) {
+            recipe.imageUri = null;
+          }
+        }
       }
     }
     this.recipes.push(recipe);
@@ -87,13 +94,18 @@ class RecipeStore {
     const index = this.recipes.findIndex(recipe => recipe.id === updatedRecipe.id);
     if (index !== -1) {
       const oldRecipe = this.recipes[index];
-      if (updatedRecipe.imageUri && updatedRecipe.imageUri !== oldRecipe.imageUri && !updatedRecipe.imageUri.startsWith('file://')) {
-        try {
-          const newPath = await this.copyImageToAppDirectory(updatedRecipe.imageUri);
-          updatedRecipe.imageUri = newPath;
-        } catch (error) {
-          console.error('Error copying image:', error);
-          updatedRecipe.imageUri = oldRecipe.imageUri;
+      if (updatedRecipe.imageUri && updatedRecipe.imageUri !== oldRecipe.imageUri) {
+        const permanentDir = RNFS.DocumentDirectoryPath;
+        const isLocal = updatedRecipe.imageUri.startsWith('file://') || updatedRecipe.imageUri.startsWith('/') || updatedRecipe.imageUri.startsWith('content://');
+
+        if (isLocal && !updatedRecipe.imageUri.includes(permanentDir)) {
+          try {
+            const newPath = await this.copyImageToAppDirectory(updatedRecipe.imageUri);
+            updatedRecipe.imageUri = newPath;
+          } catch (error) {
+            console.error('Error copying image:', error);
+            updatedRecipe.imageUri = oldRecipe.imageUri;
+          }
         }
       }
 
@@ -129,14 +141,16 @@ class RecipeStore {
   }
   
   private async copyImageToAppDirectory(uri: string): Promise<string> {
-    const fileName = uri.split('/').pop();
+    const fileName = uri.split('/').pop() || 'image.jpg';
     const imageDir = `${RNFS.DocumentDirectoryPath}/recipe-images`;
     if (!(await RNFS.exists(imageDir))) {
       await RNFS.mkdir(imageDir);
     }
-    const newPath = `file://${imageDir}/${Date.now()}-${fileName}`;
-    await RNFS.copyFile(uri, newPath);
-    return newPath;
+    const destPath = `${imageDir}/${Date.now()}-${fileName}`;
+    const sourcePath = uri.replace(/^file:\/\//, '');
+
+    await RNFS.copyFile(sourcePath, destPath);
+    return `file://${destPath}`;
   }
 }
 

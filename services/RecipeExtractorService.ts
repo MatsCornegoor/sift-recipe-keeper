@@ -172,6 +172,69 @@ class RecipeExtractorService {
     }
   }
 
+  async extractRecipeFromImage(
+    filePath: string,
+    extraInstructions?: string
+  ): Promise<Recipe> {
+    await this.loadCustomModelConfig();
+
+    try {
+      const prompt = `
+        Extract recipe information from the following picture.
+        Your primary rule is to ONLY extract information that is explicitly present in the picture's text.
+        Do not invent, assume, translate, or generate any information.
+        If a value for a field is not found, it should be an empty string "" or an empty array [] for lists.
+        Respond ONLY with a valid JSON object matching this schema exactly.
+
+        {
+          "schemaVersion": 2,
+          "name": "Recipe Name",
+          "ingredientsGroups": [
+            {
+              "title": "Optional group title (e.g., Sauce)",
+              "items": ["ingredient1", "ingredient2"]
+            }
+          ],
+          "instructionGroups": [
+            {
+              "title": "Optional group title (e.g., Sauce)",
+              "items": ["short sub-step 1", "short sub-step 2"]
+            }
+          ],
+          "tags": ["tag1", "tag2"],
+          "cookingTime": "30 min",
+          "calories": "250 kcal",
+          "servings": "4"
+        }
+
+        CRITICAL:
+        - Respond with ONLY the JSON object; no extra text or markdown.
+        - Only extract information from the content. Do not add your own text.
+        - Ingredients: Extract quantities and units as written.
+        - Instructions: Extract instructions as short, granular sub-steps per group. Do not rephrase or create your own text.
+        - Tags: Come up with 3-5 relevant tags for the recipe.
+        - Calories: Extract from content. If missing, use an empty string "". DO NOT estimate.
+        - Cooking Time: Extract from content. If missing, use an empty string "".
+        - Servings: Extract from content. If missing, use an empty string "". DO NOT estimate.
+        - Grouping: If the recipe has distinct sections with titles (like "Sauce" or "Dough"), create corresponding groups.
+          If there are no such sections, create just one group for ingredients and one for instructions, leaving the title as an empty string.
+          DO NOT make up your own group titles.
+          DO NOT use generic titles like "Ingredients" or "Instructions."
+        ${extraInstructions ? `- ${extraInstructions}` : ''}
+      `;
+
+      const gptResponse = await this.callGPTAPI(prompt, filePath);
+
+      const localImageUri =
+        filePath.startsWith('file://') ? filePath : `file://${filePath}`;
+
+      return this.parseGPTResponse(gptResponse, localImageUri);
+    } catch (error) {
+      console.error('Error extracting recipe from image:', error);
+      throw error;
+    }
+  }
+
   // Private method — owns the AI prompt + parse pipeline.
   // Called by both extractRecipeFromUrl (URL flow) and extractRecipeFromFile (file flow).
   // Error handling is done in the public methods
@@ -246,7 +309,21 @@ class RecipeExtractorService {
     return content.slice(0, 20000);
   }
 
-  private async callGPTAPI(prompt: string): Promise<string> {
+  private async fileToDataUrl(filePath: string): Promise<string> {
+    const normalizedPath = filePath.replace(/^file:\/\//, '');
+    const lowerPath = normalizedPath.toLowerCase();
+
+    let mimeType = 'application/octet-stream';
+    if (lowerPath.endsWith('.png')) mimeType = 'image/png';
+    else if (lowerPath.endsWith('.jpg') || lowerPath.endsWith('.jpeg')) mimeType = 'image/jpeg';
+    else if (lowerPath.endsWith('.webp')) mimeType = 'image/webp';
+    else if (lowerPath.endsWith('.gif')) mimeType = 'image/gif';
+
+    const base64 = await RNFS.readFile(normalizedPath, 'base64');
+    return `data:${mimeType};base64,${base64}`;
+  }
+
+  private async callGPTAPI(prompt: string, imagePath?: string): Promise<string> {
     if (!this.customEndpoint || !this.customModel) {
       throw new Error('AI model is not configured. Please configure it in the settings.');
     }
@@ -258,15 +335,44 @@ class RecipeExtractorService {
       supportsResponseFormat: this.customSupportsResponseFormat,
       apiKey: this.customApiKey,
     };
-    return this.callGPTAPIWithModel(customModelConfig, prompt, this.customEndpoint);
-  }
 
-  private async callGPTAPIWithModel(modelConfig: ModelConfig & { apiKey?: string | null }, prompt: string, endpoint: string): Promise<string> {
+    return this.callGPTAPIWithModel(
+      customModelConfig,
+      prompt,
+      this.customEndpoint,
+      imagePath
+    );
+  }
+  private async callGPTAPIWithModel(
+    modelConfig: ModelConfig & { apiKey?: string | null },
+    prompt: string,
+    endpoint: string,
+    imagePath?: string
+  ): Promise<string> {
+    let userContent: any = prompt;
+
+    if (imagePath) {
+      const dataUrl = await this.fileToDataUrl(imagePath);
+
+      userContent = [
+        {
+          type: 'text',
+          text: prompt,
+        },
+        {
+          type: 'image_url',
+          image_url: {
+            url: dataUrl,
+          },
+        },
+      ];
+    }
+
     const requestBody: any = {
       model: modelConfig.model,
       messages: [
         { role: 'system', content: 'You are a recipe extraction assistant. You MUST respond with ONLY valid JSON. Never include explanations, markdown, or any text outside the JSON object. Always format your response as a single JSON object. The response must be parseable by JSON.parse().' },
-        { role: 'user', content: prompt },
+        { role: 'user', content: userContent },
       ],
       temperature: modelConfig.temperature,
       seed: modelConfig.seed,

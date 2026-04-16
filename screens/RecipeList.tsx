@@ -70,6 +70,10 @@ export default function RecipeList({ navigation }: { navigation: any }) {
     navigation.navigate('Settings');
   };
 
+  const handleAddFromPicture = () => {
+    navigation.navigate('AddRecipePicture');
+  };
+
   const filteredRecipes = recipes
     .filter(recipe => {
       const searchLower = searchQuery.toLowerCase();
@@ -172,6 +176,9 @@ export default function RecipeList({ navigation }: { navigation: any }) {
               </TouchableOpacity>
               <TouchableOpacity style={styles.menuItem} onPress={handleAddFromFile}>
                 <Text style={styles.menuText}>Add from text</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.menuItem} onPress={handleAddFromPicture}>
+                <Text style={styles.menuText}>Add from picture</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.menuItem} onPress={handleAddFromScratch}>
                 <Text style={styles.menuText}>Add from scratch</Text>
