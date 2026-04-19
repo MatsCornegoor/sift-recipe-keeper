@@ -32,8 +32,16 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <data android:mimeType="application/x-sift-recipe"/>
-        <data android:mimeType="application/zip"/>
-        <data android:pathSuffix=".sift"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data android:scheme="content" android:mimeType="application/octet-stream" android:pathPattern=".*\\.sift"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data android:scheme="file" android:mimeType="*/*" android:pathPattern=".*\\.sift"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>
