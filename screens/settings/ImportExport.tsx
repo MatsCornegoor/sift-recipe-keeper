@@ -48,28 +48,11 @@ export default function ImportExport() {
 
     try {
       const res = await DocumentPicker.pick({
-        // TODO: replace allFiles with ['application/x-sift-recipe', 'application/zip']
-        // once 'application/x-sift-recipe' is registered in AndroidManifest.xml and Info.plist.
-        // .zip is kept for backward compatibility with older Sift exports.
-        type: [DocumentPicker.types.allFiles],
+        type: ['application/x-sift-recipe', 'application/zip'],
       });
 
       const sourceUri = res[0]?.fileCopyUri ?? res[0]?.uri;
-      const fileName = res[0]?.name ?? '';
 
-      // TODO: remove this check once custom MIME type is registered,
-      // as the picker will then only show .sift and .zip files.
-      // .zip is kept for backward compatibility with older Sift exports.
-      if (!fileName.endsWith('.zip') && !fileName.endsWith('.sift')) {
-        setPopupConfig({
-          title: 'Invalid File',
-          message: 'Please select a valid Sift export file (.sift or .zip).',
-          buttons: [{ text: 'OK', onPress: () => setShowPopup(false) }],
-        });
-        setShowPopup(true);
-        return;
-      }
-      
       if (sourceUri) {
         const tempDir = RNFS.TemporaryDirectoryPath + '/import/';
         if (await RNFS.exists(tempDir)) {

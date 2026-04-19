@@ -82,8 +82,7 @@ export default function RecipeDetail() {
       zipPath = await buildRecipeZip([recipe!]);
       await RNShare.open({
         url: `file://${zipPath}`,
-        // TODO: change type to e.g. 'application/x-sift-recipe' when registering custom MIME type
-        type: 'application/zip',
+        type: 'application/x-sift-recipe',
       });
     } catch (err: any) {
       // RNShare throws on user cancellation — don't log that as an error

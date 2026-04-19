@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mime-info>
+    <mime-type type="application/x-sift-recipe">
+        <glob pattern="*.sift"/>
+    </mime-type>
+</mime-info>
