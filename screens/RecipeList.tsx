@@ -71,6 +71,7 @@ export default function RecipeList({ navigation }: { navigation: any }) {
   };
 
   const handleAddFromPicture = () => {
+    setIsMenuVisible(false);
     navigation.navigate('AddRecipePicture');
   };
 
