@@ -10,6 +10,7 @@ import Header from '../../components/Header';
 import ContentWrapper from '../../components/ContentWrapper';
 import CustomPopup from '../../components/CustomPopup';
 import { Recipe } from '../../models/Recipe';
+import { buildRecipeZip } from '../../services/RecipeExportUtils';
 
 const SELECT_ALL_ID = 'select-all';
 
@@ -63,66 +64,25 @@ export default function ExportRecipes() {
     }
 
     try {
-      const tempDir = RNFS.TemporaryDirectoryPath + '/sift-export';
-      const tempImagesDir = tempDir + '/images';
-      const zipPath = RNFS.TemporaryDirectoryPath + '/recipes-export.zip';
-      
-      if (await RNFS.exists(tempDir)) {
-        await RNFS.unlink(tempDir);
-      }
-      await RNFS.mkdir(tempDir);
-      await RNFS.mkdir(tempImagesDir);
-
       const recipesToExport = recipes.filter(r => selectedRecipes.includes(r.id));
-      
-      const exportRecipes = await Promise.all(recipesToExport.map(async (recipe: Recipe) => {
-        const recipeData = { ...recipe };
-        
-        if (recipe.imageUri && await RNFS.exists(recipe.imageUri)) {
-          const fileName = recipe.imageUri.split('/').pop() || '';
-          const newImagePath = tempImagesDir + '/' + fileName;
-          
-          try {
-            await RNFS.copyFile(recipe.imageUri, newImagePath);
-            recipeData.imageUri = 'images/' + fileName;
-          } catch (error) {
-            console.error('Error copying image:', error);
-            recipeData.imageUri = '';
-          }
-        } else if (recipe.imageUri) {
-          recipeData.imageUri = '';
-        }
-        
-        return recipeData;
-      }));
-
-      const jsonPath = tempDir + '/recipes.json';
-      await RNFS.writeFile(
-        jsonPath,
-        JSON.stringify(exportRecipes, null, 2)
-      );
-
-      await zip(tempDir, zipPath);
+      const zipPath = await buildRecipeZip(recipesToExport);
 
       if (Platform.OS === 'android') {
-        try {
-          const downloadPath = `${RNFS.DownloadDirectoryPath}/sift-recipes-${Date.now()}.zip`;
-          await RNFS.moveFile(zipPath, downloadPath);
-          setPopupConfig({
-            title: 'Export Successful',
-            message: 'Your recipes have been saved to the Downloads folder.',
-            buttons: [{ text: 'OK', onPress: () => setShowPopup(false) }],
-          });
-        } catch (err) {
-          console.warn(err);
-          throw err;
-        }
+        const fileName = zipPath.split('/').pop();
+        const downloadPath = `${RNFS.DownloadDirectoryPath}/${fileName}`;
+        await RNFS.moveFile(zipPath, downloadPath);
       } else {
         await Share.share({ url: `file://${zipPath}` });
+        RNFS.unlink(zipPath).catch(() => {});
       }
 
-      await RNFS.unlink(tempDir);
-
+      setPopupConfig({
+        title: 'Export Successful',
+        message: Platform.OS === 'android'
+          ? 'Your recipes have been saved to the Downloads folder.'
+          : 'Your recipes have been shared successfully.',
+        buttons: [{ text: 'OK', onPress: () => setShowPopup(false) }],
+      });
     } catch (error) {
       console.error('Export error:', error);
       setPopupConfig({

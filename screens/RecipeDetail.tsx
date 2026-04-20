@@ -11,10 +11,19 @@ import {
   Modal,
   Pressable,
   Linking,
-  Clipboard,
+  // 'Clipboard' is deprecated.ts(6385)
+  // Clipboard has been extracted from react-native core and
+  // will be removed in a future release. 
+  // It can now be installed and imported from 
+  // @react-native-clipboard/clipboard instead of 'react-native'.
+  //Clipboard, 
   ToastAndroid,
   useWindowDimensions,
+  Share,
 } from 'react-native';
+// see above 
+import Clipboard from '@react-native-clipboard/clipboard';
+
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RecipeStore from '../store/RecipeStore';
@@ -23,6 +32,9 @@ import { useTheme } from '../hooks/useTheme';
 import Header from '../components/Header';
 import CustomPopup from '../components/CustomPopup';
 import ContentWrapper from '../components/ContentWrapper';
+import RNFS from 'react-native-fs';
+import RNShare from 'react-native-share';
+import { buildRecipeZip } from '../services/RecipeExportUtils';
 
 export default function RecipeDetail() {
   const navigation = useNavigation<any>();
@@ -38,6 +50,50 @@ export default function RecipeDetail() {
     return foundRecipe;
   });
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+
+  const [isShareMenuVisible, setIsShareMenuVisible] = useState(false);
+
+  const handleShareRecipeText = async () => {
+    setIsShareMenuVisible(false);
+    try {
+      await Share.share({ message: formatRecipeForSharing(recipe!) });
+    } catch (err: any) {
+      if (err?.message && !err.message.includes('cancel') && !err.message.includes('dismiss') && !err.message.includes('did not share')) {
+        console.error('Failed to share recipe text:', err);
+      }
+    }
+  };
+
+  const handleShareIngredientsText = async () => {
+    setIsShareMenuVisible(false);
+    try {
+      await Share.share({ message: formatIngredientsForSharing(recipe!) });
+    } catch (err: any) {
+      if (err?.message && !err.message.includes('cancel') && !err.message.includes('dismiss') && !err.message.includes('did not share')) {
+        console.error('Failed to share ingredients text:', err);
+      }
+    }
+  };
+
+  const handleShareExport = async () => {
+    setIsShareMenuVisible(false);
+    let zipPath: string | null = null;
+    try {
+      zipPath = await buildRecipeZip([recipe!]);
+      await RNShare.open({
+        url: `file://${zipPath}`,
+        type: 'application/x-sift-recipe',
+      });
+    } catch (err: any) {
+      // RNShare throws on user cancellation — don't log that as an error
+      if (err?.message && !err.message.includes('cancel') && !err.message.includes('dismiss') && !err.message.includes('did not share')) {
+        console.error('Failed to share recipe file:', err);
+      }
+    } finally {
+      if (zipPath) RNFS.unlink(zipPath).catch(() => {});
+    }
+  };
+
 
   const { colors } = useTheme();
   const { width: windowWidth } = useWindowDimensions();
@@ -118,6 +174,58 @@ export default function RecipeDetail() {
       return next;
     });
   };
+
+  const formatIngredientsForSharing = (recipe: Recipe): string => {
+    const lines: string[] = [recipe.name + ' - Ingredients', ''];
+
+    (recipe.ingredientsGroups || []).forEach(group => {
+      if (group.title) lines.push(group.title.toUpperCase());
+      group.items.forEach(ing => lines.push(`• ${ing.name}`));
+      lines.push('');
+    });
+    return lines.join('\n').trim();
+  };
+
+  const formatRecipeForSharing = (recipe: Recipe): string => {
+    const lines: string[] = [recipe.name, ''];
+
+    // Add recipe details
+    const details: string[] = [];
+    if (recipe.cookingTime) details.push(`Cooking time: ${recipe.cookingTime}`);
+    if (recipe.servings) details.push(`Servings: ${recipe.servings}`);
+    if (recipe.calories) details.push(`Calories: ${recipe.calories}`);
+    if (details.length > 0) {
+      lines.push(details.join(' | '));
+      lines.push('');
+    }
+
+    (recipe.ingredientsGroups || []).forEach(group => {
+      if (group.title) lines.push(group.title.toUpperCase());
+      group.items.forEach(ing => lines.push(`• ${ing.name}`));
+      lines.push('');
+    });
+
+    (recipe.instructionGroups || []).forEach(group => {
+      if (group.title) lines.push(group.title.toUpperCase());
+      group.items.forEach((step, i) => {
+        lines.push(`${i + 1}. ${step}`);
+        lines.push('');
+      });
+    });
+
+    if (recipe.sourceUrl) lines.push(`Source: ${recipe.sourceUrl}`);
+    return lines.join('\n').trim();
+  };
+
+  const ShareButton = () => (
+    <Pressable
+      onPress={() => setIsShareMenuVisible(true)}
+      style={({ pressed }) => ({ padding: 8, opacity: pressed ? 0.7 : 1 })}
+      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+    >
+      <Ionicons name="share-social-outline" size={24} color={colors.tint} />
+    </Pressable>
+  );
 
   const MenuButton = () => (
     <Pressable 
@@ -212,9 +320,14 @@ export default function RecipeDetail() {
 
   return (
     <View style={styles.container}>
-      <Header 
-        title={recipe.name}
-        rightElement={<MenuButton />}
+      <Header
+        title={''} 
+        rightElement={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <ShareButton />
+            <MenuButton />
+          </View>
+        }
       />
       <ScrollView 
         style={{ flex: 1 }}
@@ -233,6 +346,7 @@ export default function RecipeDetail() {
               </View>
             )}
 
+            <Text style={styles.recipeTitle} numberOfLines={3}>{recipe.name}</Text>
             <View style={styles.content}>
               <View style={styles.detailsContainer}>
                 {recipe.cookingTime && (
@@ -294,6 +408,32 @@ export default function RecipeDetail() {
           </View>
         </ContentWrapper>
       </ScrollView>
+
+      <Modal
+        transparent
+        visible={isShareMenuVisible}
+        onRequestClose={() => setIsShareMenuVisible(false)}
+        animationType="fade"
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setIsShareMenuVisible(false)}
+        >
+          <View style={[styles.menuContainer, { right: 20, top: 80 }]}>
+            <TouchableOpacity style={styles.menuItem} onPress={handleShareIngredientsText}>
+              <Text style={styles.menuText}>Ingredients</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem} onPress={handleShareRecipeText}>
+              <Text style={styles.menuText}>Recipe as text</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem} onPress={handleShareExport}>
+              <Text style={styles.menuText}>Recipe as .sift file</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
       <Modal
         transparent
         visible={isMenuVisible}
@@ -365,6 +505,15 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   sectionHeaderRow: {
     marginTop: 24,
   },
+    recipeTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    opacity: 0.7,
+    color: colors.text,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 4,
+},
   sectionTitle: {
     fontSize: 22,
     fontWeight: 'bold',
