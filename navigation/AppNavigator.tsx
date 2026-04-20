@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { navigationRef } from './navigationRef';
 
 import AddRecipe from '../screens/AddRecipe';
 import AddRecipeUrl from '../screens/AddRecipeUrl';
@@ -21,7 +22,7 @@ const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade' }}>
         <Stack.Screen name="Recipes" component={RecipeList} />
         <Stack.Screen name="Settings" component={Settings} />
