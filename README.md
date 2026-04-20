@@ -85,8 +85,8 @@ Endpoint: `https://api.openai.com/v1/chat/completions`
 
 
 ### Recipe Sharing
-- [ ] ZIP archives will get a custom `.sift` extension to auto-open the Sift app when clicked
-- [ ] Recipes will get a share button to easily share a recipe archive with people on messaging apps
+- [X] ZIP archives will get a custom `.sift` extension to auto-open the Sift app when clicked
+- [X] Recipes will get a share button to easily share a recipe archive with people on messaging apps
 
 
 ## Building from Source
