@@ -137,6 +137,11 @@ export default function AiModel() {
             autoCapitalize="none"
             style={styles.input}
           />
+          {endpoint.startsWith('http://') && (
+            <Text style={styles.httpWarning}>
+              Insecure endpoint (HTTP). Your API key will be transmitted unencrypted.
+            </Text>
+          )}
 
           <Text style={styles.label}>Model name</Text>
           <Input
@@ -295,5 +300,12 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     fontSize: 16,
     marginRight: 16,
     color: colors.text,
+  },
+  httpWarning: {
+    fontSize: 13,
+    color: colors.text,
+    marginTop: -10,
+    marginBottom: 16,
+    opacity: 0.7,
   },
 });
