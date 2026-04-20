@@ -225,10 +225,7 @@ class RecipeExtractorService {
 
       const gptResponse = await this.callGPTAPI(prompt, filePath);
 
-      const localImageUri =
-        filePath.startsWith('file://') ? filePath : `file://${filePath}`;
-
-      return this.parseGPTResponse(gptResponse, localImageUri);
+      return this.parseGPTResponse(gptResponse, filePath);
     } catch (error) {
       console.error('Error extracting recipe from image:', error);
       throw error;

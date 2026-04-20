@@ -48,23 +48,26 @@ class RecipeStore {
   }
 
   async addRecipe(recipe: Recipe) {
-    if (recipe.imageUri) {
+    let resolvedImageUri = recipe.imageUri;
+    if (resolvedImageUri) {
       const permanentDir = RNFS.DocumentDirectoryPath;
-      const isLocal = recipe.imageUri.startsWith('file://') || recipe.imageUri.startsWith('/') || recipe.imageUri.startsWith('content://');
+      const isLocal = resolvedImageUri.startsWith('file://') || resolvedImageUri.startsWith('/') || resolvedImageUri.startsWith('content://');
 
-      if (isLocal && !recipe.imageUri.includes(permanentDir)) {
+      if (isLocal && !resolvedImageUri.includes(permanentDir)) {
         try {
-          const newPath = await this.copyImageToAppDirectory(recipe.imageUri);
-          recipe.imageUri = newPath;
+          resolvedImageUri = await this.copyImageToAppDirectory(resolvedImageUri);
         } catch (error) {
           console.error('Error copying image:', error);
-          if (!recipe.imageUri.startsWith('file://') && !recipe.imageUri.startsWith('/')) {
-            recipe.imageUri = null;
+          if (!resolvedImageUri.startsWith('file://') && !resolvedImageUri.startsWith('/')) {
+            resolvedImageUri = null;
           }
         }
       }
     }
-    this.recipes.push(recipe);
+    const toStore = resolvedImageUri !== recipe.imageUri
+      ? { ...recipe, imageUri: resolvedImageUri } as Recipe
+      : recipe;
+    this.recipes.push(toStore);
     await this.saveRecipes();
     this.notifyListeners();
     return { success: true };
@@ -94,22 +97,40 @@ class RecipeStore {
     const index = this.recipes.findIndex(recipe => recipe.id === updatedRecipe.id);
     if (index !== -1) {
       const oldRecipe = this.recipes[index];
-      if (updatedRecipe.imageUri && updatedRecipe.imageUri !== oldRecipe.imageUri) {
-        const permanentDir = RNFS.DocumentDirectoryPath;
-        const isLocal = updatedRecipe.imageUri.startsWith('file://') || updatedRecipe.imageUri.startsWith('/') || updatedRecipe.imageUri.startsWith('content://');
+      let resolvedImageUri = updatedRecipe.imageUri;
 
-        if (isLocal && !updatedRecipe.imageUri.includes(permanentDir)) {
+      if (resolvedImageUri && resolvedImageUri !== oldRecipe.imageUri) {
+        const permanentDir = RNFS.DocumentDirectoryPath;
+        const isLocal = resolvedImageUri.startsWith('file://') || resolvedImageUri.startsWith('/') || resolvedImageUri.startsWith('content://');
+
+        if (isLocal && !resolvedImageUri.includes(permanentDir)) {
           try {
-            const newPath = await this.copyImageToAppDirectory(updatedRecipe.imageUri);
-            updatedRecipe.imageUri = newPath;
+            resolvedImageUri = await this.copyImageToAppDirectory(resolvedImageUri);
           } catch (error) {
             console.error('Error copying image:', error);
-            updatedRecipe.imageUri = oldRecipe.imageUri;
+            resolvedImageUri = oldRecipe.imageUri;
+          }
+        }
+
+        if (resolvedImageUri !== oldRecipe.imageUri) {
+          const oldUri = oldRecipe.imageUri || '';
+          if (oldUri && oldUri.includes(permanentDir)) {
+            const oldPath = oldUri.replace(/^file:\/\//, '');
+            try {
+              if (await RNFS.exists(oldPath)) {
+                await RNFS.unlink(oldPath);
+              }
+            } catch (error) {
+              console.error('Error deleting old image:', error);
+            }
           }
         }
       }
 
-      this.recipes[index] = updatedRecipe;
+      const toStore = resolvedImageUri !== updatedRecipe.imageUri
+        ? { ...updatedRecipe, imageUri: resolvedImageUri } as Recipe
+        : updatedRecipe;
+      this.recipes[index] = toStore;
       await this.saveRecipes();
       this.notifyListeners();
     }

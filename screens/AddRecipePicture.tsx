@@ -92,9 +92,6 @@ export default function AddRecipeImage() {
 
   const handleTakePhoto = async () => {
     try {
-      setLoading(true);
-      setLoadingSource('camera');
-
       const result = await launchCamera({
         mediaType: 'photo',
         cameraType: 'back',
@@ -116,6 +113,9 @@ export default function AddRecipeImage() {
         return;
       }
 
+      setLoading(true);
+      setLoadingSource('camera');
+
       const fileName = asset.fileName || `camera_${Date.now()}.jpg`;
       const filePath = await normalizePickedFilePath(asset.uri, fileName);
 
@@ -134,9 +134,6 @@ export default function AddRecipeImage() {
 
   const handleSelectImage = async () => {
     try {
-      setLoading(true);
-      setLoadingSource('file');
-
       const res = await DocumentPicker.pick({
         type: [DocumentPicker.types.images],
         copyTo: 'cachesDirectory',
@@ -145,6 +142,10 @@ export default function AddRecipeImage() {
       const file = res[0];
       const fileName = file.name ?? `image_${Date.now()}.jpg`;
       const fileUri = file.fileCopyUri ?? file.uri;
+
+      setLoading(true);
+      setLoadingSource('file');
+
       const filePath = await normalizePickedFilePath(fileUri, fileName);
 
       setSelectedImage({
