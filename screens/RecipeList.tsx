@@ -1,9 +1,9 @@
-import { View, TouchableOpacity, StyleSheet, Text, Modal, TextInput, useWindowDimensions, Pressable } from 'react-native';
-import { useEffect, useMemo, useState, useCallback } from 'react';
+import { View, TouchableOpacity, StyleSheet, Text, Modal, TextInput, useWindowDimensions, Pressable, Animated } from 'react-native';
+import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import RecipeGrid from '../components/RecipeGrid';
 import RecipeStore from '../store/RecipeStore';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Menu, Search, Plus, ArrowRight } from 'lucide-react-native';
 import { Recipe } from '../models/Recipe';
 import { useTheme } from '../hooks/useTheme';
 import Header from '../components/Header';
@@ -16,6 +16,7 @@ export default function RecipeList({ navigation }: { navigation: any }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [showAiPopup, setShowAiPopup] = useState(false);
   const [visionEnabled, setVisionEnabled] = useState(false);
+  const fabRotation = useRef(new Animated.Value(0)).current;
 
   const { width } = useWindowDimensions();
   const numColumns = width > 600 ? 3 : width > 300 ? 2 : 1;
@@ -59,18 +60,38 @@ export default function RecipeList({ navigation }: { navigation: any }) {
     checkAiSettings();
   }, [recipes]);
 
-  const handleAddFromUrl = () => {
+  const openMenu = () => {
+    setIsMenuVisible(true);
+    Animated.spring(fabRotation, {
+      toValue: 1,
+      useNativeDriver: true,
+      tension: 120,
+      friction: 8,
+    }).start();
+  };
+
+  const closeMenu = () => {
     setIsMenuVisible(false);
+    Animated.spring(fabRotation, {
+      toValue: 0,
+      useNativeDriver: true,
+      tension: 120,
+      friction: 8,
+    }).start();
+  };
+
+  const handleAddFromUrl = () => {
+    closeMenu();
     navigation.navigate('AddRecipeUrl');
   };
 
   const handleAddFromFile = () => {
-    setIsMenuVisible(false);
+    closeMenu();
     navigation.navigate('AddRecipeText');
   };
 
   const handleAddFromScratch = () => {
-    setIsMenuVisible(false);
+    closeMenu();
     navigation.navigate('AddRecipe');
   };
 
@@ -117,13 +138,13 @@ export default function RecipeList({ navigation }: { navigation: any }) {
             style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Ionicons name="menu" style={styles.menuIcon} size={32} color={colors.tint} />
+            <Menu size={28} color={colors.tint} style={styles.menuIcon} />
           </Pressable>
         }
       />
       <View style={styles.container}>
         <View style={styles.searchContainer}>
-          <Ionicons name="search" size={20} color={colors.deleteButton} style={styles.searchIcon} />
+          <Search size={20} color={colors.deleteButton} style={styles.searchIcon} />
           <TextInput
             style={styles.searchInput}
             placeholder="Search recipes..."
@@ -142,11 +163,13 @@ export default function RecipeList({ navigation }: { navigation: any }) {
           padding={padding}
         />
         
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.fab}
-          onPress={() => setIsMenuVisible(true)}
+          onPress={openMenu}
         >
-          <Ionicons name="add" size={24} color={colors.background} />
+          <Animated.View style={{ transform: [{ rotate: fabRotation.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '45deg'] }) }] }}>
+            <Plus size={24} color={colors.background} />
+          </Animated.View>
         </TouchableOpacity>
 
         {recipes.length === 0 && (
@@ -155,12 +178,7 @@ export default function RecipeList({ navigation }: { navigation: any }) {
               <Text style={styles.tooltipText}>
                 Add your first recipe
               </Text>
-              <Ionicons 
-                name="arrow-forward" 
-                size={14} 
-                color={colors.text} 
-                style={styles.arrowIcon}
-              />
+              <ArrowRight size={14} color={colors.text} style={styles.arrowIcon} />
             </View>
           </View>
         )}
@@ -168,13 +186,13 @@ export default function RecipeList({ navigation }: { navigation: any }) {
         <Modal
           transparent
           visible={isMenuVisible}
-          onRequestClose={() => setIsMenuVisible(false)}
+          onRequestClose={closeMenu}
           animationType="fade"
         >
           <TouchableOpacity 
             style={styles.modalOverlay}
             activeOpacity={1}
-            onPress={() => setIsMenuVisible(false)}
+            onPress={closeMenu}
           >
             <View style={[styles.menuContainer, { 
               bottom: 90,

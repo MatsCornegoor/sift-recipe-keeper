@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Platform, Share } from 'react-native';
 import Button from '../../components/ui/Button';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { CheckSquare, Square } from 'lucide-react-native';
 import RNFS from 'react-native-fs';
 import { zip } from 'react-native-zip-archive';
 import RecipeStore from '../../store/RecipeStore';
@@ -103,11 +103,10 @@ export default function ExportRecipes() {
         style={styles.recipeItem}
         onPress={() => handleToggleRecipe(item.id)}
       >
-        <Ionicons 
-          name={isSelected ? 'checkbox' : 'square-outline'} 
-          size={25} 
-          color={isSelected ? colors.tint : colors.text} 
-        />
+        {isSelected
+          ? <CheckSquare size={25} color={colors.tint} />
+          : <Square size={25} color={colors.text} />
+        }
         <Text style={styles.recipeTitle}>{item.name}</Text>
       </TouchableOpacity>
     );

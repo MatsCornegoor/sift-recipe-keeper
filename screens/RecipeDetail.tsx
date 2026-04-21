@@ -11,12 +11,6 @@ import {
   Modal,
   Pressable,
   Linking,
-  // 'Clipboard' is deprecated.ts(6385)
-  // Clipboard has been extracted from react-native core and
-  // will be removed in a future release. 
-  // It can now be installed and imported from 
-  // @react-native-clipboard/clipboard instead of 'react-native'.
-  //Clipboard, 
   ToastAndroid,
   useWindowDimensions,
   Share,
@@ -25,7 +19,7 @@ import {
 import Clipboard from '@react-native-clipboard/clipboard';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Share2, MoreVertical, Clock, Flame, Users, Link2 } from 'lucide-react-native';
 import RecipeStore from '../store/RecipeStore';
 import { Recipe } from '../models/Recipe';
 import { useTheme } from '../hooks/useTheme';
@@ -220,10 +214,10 @@ export default function RecipeDetail() {
   const ShareButton = () => (
     <Pressable
       onPress={() => setIsShareMenuVisible(true)}
-      style={({ pressed }) => ({ padding: 8, opacity: pressed ? 0.7 : 1 })}
+      style={({ pressed }) => ({ padding: 8, right: -5, opacity: pressed ? 0.7 : 1 })}
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
     >
-      <Ionicons name="share-social-outline" size={24} color={colors.tint} />
+      <Share2 size={23} color={colors.tint} />
     </Pressable>
   );
 
@@ -233,10 +227,11 @@ export default function RecipeDetail() {
       style={({ pressed }) => ({ 
         padding: 8,
         opacity: pressed ? 0.7 : 1,
+        right: -10
       })}
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
     >
-      <Ionicons name="ellipsis-vertical" size={24} color={colors.tint} />
+      <MoreVertical size={23} color={colors.tint} />
     </Pressable>
   );
 
@@ -269,15 +264,11 @@ export default function RecipeDetail() {
                 const isChecked = checkedIngredients.has(ingredient.id);
                 return (
                   <View key={ingredient.id} style={styles.ingredientRow}>
-                    <TouchableOpacity 
+                    <TouchableOpacity
                       onPress={() => handleIngredientCheck(ingredient.id)}
                       style={styles.checkboxContainer}
                     >
-                      <Ionicons 
-                        name={isChecked ? 'checkbox' : 'square-outline'} 
-                        size={25} 
-                        color={isChecked ? colors.tint : colors.text} 
-                      />
+                      <View style={[styles.circle, isChecked && { backgroundColor: colors.tint, borderColor: colors.tint }]} />
                     </TouchableOpacity>
                     <Text style={[styles.ingredient, isChecked && styles.checkedIngredient]}>
                       {ingredient.name}
@@ -351,25 +342,25 @@ export default function RecipeDetail() {
               <View style={styles.detailsContainer}>
                 {recipe.cookingTime && (
                   <View style={styles.detailItem}>
-                    <Ionicons name="time-outline" size={16} color={colors.text} style={styles.detailIcon} />
+                    <Clock size={16} color={colors.text} style={styles.detailIcon} />
                     <Text style={styles.detailText}>{recipe.cookingTime}</Text>
                   </View>
                 )}
                 {recipe.calories && (
                   <View style={styles.detailItem}>
-                    <Ionicons name="flame-outline" size={16} color={colors.text} style={styles.detailIcon} />
+                    <Flame size={16} color={colors.text} style={styles.detailIcon} />
                     <Text style={styles.detailText}>{recipe.calories}</Text>
                   </View>
                 )}
                 {recipe.servings && (
                   <View style={styles.detailItem}>
-                    <Ionicons name="people-outline" size={16} color={colors.text} style={styles.detailIcon} />
+                    <Users size={16} color={colors.text} style={styles.detailIcon} />
                     <Text style={styles.detailText}>{recipe.servings}</Text>
                   </View>
                 )}
                 {recipe.sourceUrl && (
                   <View style={styles.detailItem}>
-                    <Ionicons name="link-outline" size={16} color={colors.tint} style={styles.detailIcon} />
+                    <Link2 size={16} color={colors.tint} style={styles.detailIcon} />
                     <TouchableOpacity 
                       onPress={async () => {
                         await Clipboard.setString(recipe.sourceUrl!);
@@ -505,7 +496,7 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   sectionHeaderRow: {
     marginTop: 24,
   },
-    recipeTitle: {
+  recipeTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     opacity: 0.7,
@@ -513,7 +504,7 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 4,
-},
+  },
   sectionTitle: {
     fontSize: 22,
     fontWeight: 'bold',
@@ -552,10 +543,19 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   ingredientRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 14,
   },
   checkboxContainer: {
     marginRight: 12,
+  },
+  circle: {
+    width: 19,
+    height: 19,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: colors.text,
+    opacity: 0.5,
+    backgroundColor: 'transparent',
   },
   ingredient: {
     fontSize: 16,
@@ -577,6 +577,7 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginRight: 12,
+    marginTop: 1,
     minWidth: 24,
     color: colors.tint,
   },
@@ -629,7 +630,7 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   },
   detailIcon: {
     marginRight: 4,
-    opacity: 0.6,
+    opacity: 0.8,
   },
   detailText: {
     fontSize: 14,

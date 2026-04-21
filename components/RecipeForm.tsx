@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 import { useTheme } from '../hooks/useTheme';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Plus, XCircle } from 'lucide-react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import GroupsEditor, { GroupDraft } from './GroupsEditor';
 import CustomPopup from './CustomPopup';
@@ -372,7 +372,7 @@ export default function RecipeForm({ mode, initialRecipe, onSave, onCancel }: Re
             style={{ height: 48, flex: 1 }}
           />
           <TouchableOpacity style={styles.addButton} onPress={handleAddTag}>
-            <Ionicons name="add" size={24} color={colors.background} />
+            <Plus size={24} color={colors.background} />
           </TouchableOpacity>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tagsScrollContainer} contentContainerStyle={styles.tagsContainer}>
@@ -380,7 +380,7 @@ export default function RecipeForm({ mode, initialRecipe, onSave, onCancel }: Re
             <View key={tag} style={styles.tagContainer}> 
               <Text style={styles.tagText}>{tag}</Text>
               <TouchableOpacity style={styles.tagDeleteButton} onPress={() => handleDeleteTag(tag)}>
-                <Ionicons name="close-circle" size={24} color={colors.deleteButton} style={styles.tagDeleteIcon} />
+                <XCircle size={24} color={colors.deleteButton} style={styles.tagDeleteIcon} />
               </TouchableOpacity>
             </View>
           ))}

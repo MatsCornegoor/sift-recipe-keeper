@@ -1,6 +1,6 @@
 import { View, Text, Pressable, StyleSheet, Platform, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { ChevronLeft } from 'lucide-react-native';
 import { useTheme } from '../hooks/useTheme';
 
 type HeaderProps = {
@@ -26,7 +26,7 @@ export default function Header({ title, showBack = true, showLogo = false, right
             ]}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Ionicons name="chevron-back" size={28} color={colors.tint} />
+            <ChevronLeft size={28} color={colors.tint} />
           </Pressable>
         )}
       </View>

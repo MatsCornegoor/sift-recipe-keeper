@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@/hooks/useTheme';
 import Header from '@/components/Header';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Info, Settings2, Palette, ArrowLeftRight, ChevronRight } from 'lucide-react-native';
 import ContentWrapper from '@/components/ContentWrapper';
 import { AppNavigationProp } from '@/navigation/types';
 
@@ -14,7 +14,7 @@ export default function Settings() {
   const styles = useMemo(() => stylesFactory(colors), [colors]);
 
   const renderSettingsItem = (
-    icon: string,
+    icon: React.ReactNode,
     label: string,
     onPress: () => void,
     showArrow = true
@@ -24,10 +24,10 @@ export default function Settings() {
       onPress={onPress}
     >
       <View style={styles.settingsItemContent}>
-        <Ionicons name={icon as any} size={22} color={colors.text} style={styles.settingsIcon} />
+        <View style={styles.settingsIcon}>{icon}</View>
         <Text style={styles.settingsLabel}>{label}</Text>
       </View>
-      {showArrow && <Ionicons name="chevron-forward" size={22} color={colors.text} />}
+      {showArrow && <ChevronRight size={22} color={colors.text} />}
     </TouchableOpacity>
   );
 
@@ -40,16 +40,16 @@ export default function Settings() {
       >
         <ContentWrapper>
           <View style={styles.container}>
-            {renderSettingsItem('information-circle-outline', 'How Sift works', () =>
+            {renderSettingsItem(<Info size={22} color={colors.text} />, 'How Sift works', () =>
               navigation.navigate('About')
             )}
-             {renderSettingsItem('cog-outline', 'AI setup', () =>
+            {renderSettingsItem(<Settings2 size={22} color={colors.text} />, 'AI setup', () =>
               navigation.navigate('AiModel')
             )}
-            {renderSettingsItem('color-palette-outline', 'Appearance', () =>
+            {renderSettingsItem(<Palette size={22} color={colors.text} />, 'Appearance', () =>
               navigation.navigate('Appearance')
             )}
-            {renderSettingsItem('swap-horizontal-outline', 'Import/Export', () =>
+            {renderSettingsItem(<ArrowLeftRight size={22} color={colors.text} />, 'Import/Export', () =>
               navigation.navigate('ImportExport')
             )}
           </View>
