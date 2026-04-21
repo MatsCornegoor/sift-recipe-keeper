@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, ViewStyle, StyleProp } from 'react-native';
 import { useTheme } from '../../hooks/useTheme';
 
 interface ButtonProps {
@@ -7,7 +7,7 @@ interface ButtonProps {
   onPress: () => void;
   variant?: 'primary' | 'secondary';
   disabled?: boolean;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   children?: React.ReactNode;
 }
 
