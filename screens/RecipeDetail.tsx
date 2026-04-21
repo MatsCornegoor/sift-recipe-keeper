@@ -11,12 +11,6 @@ import {
   Modal,
   Pressable,
   Linking,
-  // 'Clipboard' is deprecated.ts(6385)
-  // Clipboard has been extracted from react-native core and
-  // will be removed in a future release. 
-  // It can now be installed and imported from 
-  // @react-native-clipboard/clipboard instead of 'react-native'.
-  //Clipboard, 
   ToastAndroid,
   useWindowDimensions,
   Share,
@@ -25,7 +19,7 @@ import {
 import Clipboard from '@react-native-clipboard/clipboard';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Share2, MoreVertical, CheckSquare, Square, Clock, Flame, Users, Link } from 'lucide-react-native';
+import { Share2, MoreVertical, CheckSquare, Square, Clock, Flame, Users, Link2 } from 'lucide-react-native';
 import RecipeStore from '../store/RecipeStore';
 import { Recipe } from '../models/Recipe';
 import { useTheme } from '../hooks/useTheme';
@@ -368,7 +362,7 @@ export default function RecipeDetail() {
                 )}
                 {recipe.sourceUrl && (
                   <View style={styles.detailItem}>
-                    <Link size={16} color={colors.tint} style={styles.detailIcon} />
+                    <Link2 size={16} color={colors.tint} style={styles.detailIcon} />
                     <TouchableOpacity 
                       onPress={async () => {
                         await Clipboard.setString(recipe.sourceUrl!);
@@ -504,7 +498,7 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   sectionHeaderRow: {
     marginTop: 24,
   },
-    recipeTitle: {
+  recipeTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     opacity: 0.7,
@@ -512,7 +506,7 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 4,
-},
+  },
   sectionTitle: {
     fontSize: 22,
     fontWeight: 'bold',
@@ -628,7 +622,7 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   },
   detailIcon: {
     marginRight: 4,
-    opacity: 0.6,
+    opacity: 0.8,
   },
   detailText: {
     fontSize: 14,
