@@ -1,5 +1,6 @@
 import { View, TouchableOpacity, StyleSheet, Text, Modal, TextInput, useWindowDimensions, Pressable } from 'react-native';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import RecipeGrid from '../components/RecipeGrid';
 import RecipeStore from '../store/RecipeStore';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -14,6 +15,7 @@ export default function RecipeList({ navigation }: { navigation: any }) {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showAiPopup, setShowAiPopup] = useState(false);
+  const [visionEnabled, setVisionEnabled] = useState(false);
 
   const { width } = useWindowDimensions();
   const numColumns = width > 600 ? 3 : width > 300 ? 2 : 1;
@@ -31,6 +33,12 @@ export default function RecipeList({ navigation }: { navigation: any }) {
     RecipeStore.addListener(setRecipes);
     return () => RecipeStore.removeListener(setRecipes);
   }, []);
+
+  useFocusEffect(useCallback(() => {
+    AsyncStorage.getItem('ai_model_supports_vision').then(val => {
+      setVisionEnabled(val === 'true');
+    });
+  }, []));
 
   useEffect(() => {
     const checkAiSettings = async () => {
@@ -68,6 +76,11 @@ export default function RecipeList({ navigation }: { navigation: any }) {
 
   const handleOpenSettings = () => {
     navigation.navigate('Settings');
+  };
+
+  const handleAddFromPicture = () => {
+    setIsMenuVisible(false);
+    navigation.navigate('AddRecipePicture');
   };
 
   const filteredRecipes = recipes
@@ -173,6 +186,11 @@ export default function RecipeList({ navigation }: { navigation: any }) {
               <TouchableOpacity style={styles.menuItem} onPress={handleAddFromFile}>
                 <Text style={styles.menuText}>Add from text</Text>
               </TouchableOpacity>
+              {visionEnabled && (
+                <TouchableOpacity style={styles.menuItem} onPress={handleAddFromPicture}>
+                  <Text style={styles.menuText}>Add from picture</Text>
+                </TouchableOpacity>
+              )}
               <TouchableOpacity style={styles.menuItem} onPress={handleAddFromScratch}>
                 <Text style={styles.menuText}>Add from scratch</Text>
               </TouchableOpacity>

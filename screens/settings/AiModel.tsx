@@ -16,6 +16,7 @@ export default function AiModel() {
   const [seed, setSeed] = useState('1997');
   const [temperature, setTemperature] = useState('0.1');
   const [supportsResponseFormat, setSupportsResponseFormat] = useState(true);
+  const [supportsVision, setSupportsVision] = useState(false);
   const [advancedExpanded, setAdvancedExpanded] = useState(false);
   const chevronRotation = useRef(new Animated.Value(0)).current;
   const [isTesting, setIsTesting] = useState(false);
@@ -44,12 +45,14 @@ export default function AiModel() {
       const savedSeed = await AsyncStorage.getItem('ai_model_seed');
       const savedTemperature = await AsyncStorage.getItem('ai_model_temperature');
       const savedSupportsResponseFormat = await AsyncStorage.getItem('ai_model_supports_response_format');
+      const savedSupportsVision = await AsyncStorage.getItem('ai_model_supports_vision');
       if (savedEndpoint) setEndpoint(savedEndpoint);
       if (savedModel) setModel(savedModel);
       if (savedApiKey) setApiKey(savedApiKey);
       if (savedSeed) setSeed(savedSeed);
       if (savedTemperature) setTemperature(savedTemperature);
       if (savedSupportsResponseFormat !== null) setSupportsResponseFormat(savedSupportsResponseFormat === 'true');
+      if (savedSupportsVision !== null) setSupportsVision(savedSupportsVision === 'true');
     } catch (error) {
       console.error('Failed to load AI model settings', error);
     }
@@ -90,6 +93,7 @@ export default function AiModel() {
         await AsyncStorage.setItem('ai_model_seed', seed);
         await AsyncStorage.setItem('ai_model_temperature', temperature);
         await AsyncStorage.setItem('ai_model_supports_response_format', String(supportsResponseFormat));
+        await AsyncStorage.setItem('ai_model_supports_vision', String(supportsVision));
         setPopupConfig({
           title: 'Success',
           message: 'Settings saved and connection is working.',
@@ -212,6 +216,16 @@ export default function AiModel() {
               <Switch
                 value={supportsResponseFormat}
                 onValueChange={setSupportsResponseFormat}
+                trackColor={{ false: colors.deleteButton, true: colors.tint }}
+                thumbColor={colors.inputBackground}
+              />
+            </View>
+
+            <View style={styles.switchRow}>
+              <Text style={styles.label}>Supports vision (image import)</Text>
+              <Switch
+                value={supportsVision}
+                onValueChange={setSupportsVision}
                 trackColor={{ false: colors.deleteButton, true: colors.tint }}
                 thumbColor={colors.inputBackground}
               />

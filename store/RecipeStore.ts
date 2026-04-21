@@ -48,16 +48,26 @@ class RecipeStore {
   }
 
   async addRecipe(recipe: Recipe) {
-    if (recipe.imageUri && !recipe.imageUri.startsWith('file://')) {
-      try {
-        const newPath = await this.copyImageToAppDirectory(recipe.imageUri);
-        recipe.imageUri = newPath;
-      } catch (error) {
-        console.error('Error copying image:', error);
-        recipe.imageUri = null;
+    let resolvedImageUri = recipe.imageUri;
+    if (resolvedImageUri) {
+      const permanentDir = RNFS.DocumentDirectoryPath;
+      const isLocal = resolvedImageUri.startsWith('file://') || resolvedImageUri.startsWith('/') || resolvedImageUri.startsWith('content://');
+
+      if (isLocal && !resolvedImageUri.includes(permanentDir)) {
+        try {
+          resolvedImageUri = await this.copyImageToAppDirectory(resolvedImageUri);
+        } catch (error) {
+          console.error('Error copying image:', error);
+          if (!resolvedImageUri.startsWith('file://') && !resolvedImageUri.startsWith('/')) {
+            resolvedImageUri = null;
+          }
+        }
       }
     }
-    this.recipes.push(recipe);
+    const toStore = resolvedImageUri !== recipe.imageUri
+      ? { ...recipe, imageUri: resolvedImageUri } as Recipe
+      : recipe;
+    this.recipes.push(toStore);
     await this.saveRecipes();
     this.notifyListeners();
     return { success: true };
@@ -87,17 +97,40 @@ class RecipeStore {
     const index = this.recipes.findIndex(recipe => recipe.id === updatedRecipe.id);
     if (index !== -1) {
       const oldRecipe = this.recipes[index];
-      if (updatedRecipe.imageUri && updatedRecipe.imageUri !== oldRecipe.imageUri && !updatedRecipe.imageUri.startsWith('file://')) {
-        try {
-          const newPath = await this.copyImageToAppDirectory(updatedRecipe.imageUri);
-          updatedRecipe.imageUri = newPath;
-        } catch (error) {
-          console.error('Error copying image:', error);
-          updatedRecipe.imageUri = oldRecipe.imageUri;
+      let resolvedImageUri = updatedRecipe.imageUri;
+
+      if (resolvedImageUri && resolvedImageUri !== oldRecipe.imageUri) {
+        const permanentDir = RNFS.DocumentDirectoryPath;
+        const isLocal = resolvedImageUri.startsWith('file://') || resolvedImageUri.startsWith('/') || resolvedImageUri.startsWith('content://');
+
+        if (isLocal && !resolvedImageUri.includes(permanentDir)) {
+          try {
+            resolvedImageUri = await this.copyImageToAppDirectory(resolvedImageUri);
+          } catch (error) {
+            console.error('Error copying image:', error);
+            resolvedImageUri = oldRecipe.imageUri;
+          }
+        }
+
+        if (resolvedImageUri !== oldRecipe.imageUri) {
+          const oldUri = oldRecipe.imageUri || '';
+          if (oldUri && oldUri.includes(permanentDir)) {
+            const oldPath = oldUri.replace(/^file:\/\//, '');
+            try {
+              if (await RNFS.exists(oldPath)) {
+                await RNFS.unlink(oldPath);
+              }
+            } catch (error) {
+              console.error('Error deleting old image:', error);
+            }
+          }
         }
       }
 
-      this.recipes[index] = updatedRecipe;
+      const toStore = resolvedImageUri !== updatedRecipe.imageUri
+        ? { ...updatedRecipe, imageUri: resolvedImageUri } as Recipe
+        : updatedRecipe;
+      this.recipes[index] = toStore;
       await this.saveRecipes();
       this.notifyListeners();
     }
@@ -129,14 +162,16 @@ class RecipeStore {
   }
   
   private async copyImageToAppDirectory(uri: string): Promise<string> {
-    const fileName = uri.split('/').pop();
+    const fileName = uri.split('/').pop() || 'image.jpg';
     const imageDir = `${RNFS.DocumentDirectoryPath}/recipe-images`;
     if (!(await RNFS.exists(imageDir))) {
       await RNFS.mkdir(imageDir);
     }
-    const newPath = `file://${imageDir}/${Date.now()}-${fileName}`;
-    await RNFS.copyFile(uri, newPath);
-    return newPath;
+    const destPath = `${imageDir}/${Date.now()}-${fileName}`;
+    const sourcePath = uri.replace(/^file:\/\//, '');
+
+    await RNFS.copyFile(sourcePath, destPath);
+    return `file://${destPath}`;
   }
 }
 
