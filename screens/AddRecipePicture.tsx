@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Image,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import DocumentPicker from 'react-native-document-picker';
@@ -19,21 +18,15 @@ import CustomPopup from '../components/CustomPopup';
 import ContentWrapper from '../components/ContentWrapper';
 import Button from '../components/ui/Button';
 
-type SelectedImage = {
-  uri: string;
-  fileName: string;
-};
-
 export default function AddRecipeImage() {
   const navigation = useNavigation();
   const { colors } = useTheme();
   const styles = useMemo(() => stylesFactory(colors), [colors]);
 
   const [loading, setLoading] = useState(false);
-  const [loadingSource, setLoadingSource] = useState<'camera' | 'file' | 'import' | null>(null);
+  const [loadingSource, setLoadingSource] = useState<'camera' | 'file' | null>(null);
   const [dots, setDots] = useState('');
   const [showPopup, setShowPopup] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<SelectedImage | null>(null);
 
   const [popupConfig, setPopupConfig] = useState<{
     title: string;
@@ -90,6 +83,12 @@ export default function AddRecipeImage() {
     return filePath;
   };
 
+  const importFromUri = async (uri: string) => {
+    const recipe = await RecipeExtractorService.extractRecipeFromImage(uri);
+    await RecipeStore.addRecipe(recipe);
+    navigation.goBack();
+  };
+
   const handleTakePhoto = async () => {
     try {
       const result = await launchCamera({
@@ -118,14 +117,10 @@ export default function AddRecipeImage() {
 
       const fileName = asset.fileName || `camera_${Date.now()}.jpg`;
       const filePath = await normalizePickedFilePath(asset.uri, fileName);
-
-      setSelectedImage({
-        uri: filePath,
-        fileName,
-      });
+      await importFromUri(filePath);
     } catch (error) {
       console.error('Camera import error:', error);
-      showError('Failed to take a photo. Please try again.');
+      showError('Failed to import recipe from photo. Please try again.');
     } finally {
       setLoading(false);
       setLoadingSource(null);
@@ -147,37 +142,11 @@ export default function AddRecipeImage() {
       setLoadingSource('file');
 
       const filePath = await normalizePickedFilePath(fileUri, fileName);
-
-      setSelectedImage({
-        uri: filePath,
-        fileName,
-      });
+      await importFromUri(filePath);
     } catch (error) {
       if (DocumentPicker.isCancel(error)) return;
       console.error('Image picker error:', error);
-      showError('Failed to select an image. Please try again.');
-    } finally {
-      setLoading(false);
-      setLoadingSource(null);
-    }
-  };
-
-  const handleImageImport = async () => {
-    if (!selectedImage) return;
-
-    setLoading(true);
-    setLoadingSource('import');
-
-    try {
-      const recipe = await RecipeExtractorService.extractRecipeFromImage(
-        selectedImage.uri,
-      );
-
-      await RecipeStore.addRecipe(recipe);
-      navigation.goBack();
-    } catch (error) {
-      console.error('Image import error:', error);
-      showError('Failed to extract recipe from image. Please try again.');
+      showError('Failed to import recipe from image. Please try again.');
     } finally {
       setLoading(false);
       setLoadingSource(null);
@@ -206,7 +175,7 @@ export default function AddRecipeImage() {
             >
               {loading && loadingSource === 'camera' ? (
                 <View style={styles.loadingContainer}>
-                  <Text style={[styles.buttonText, { color: colors.background }]}>Opening camera</Text>
+                  <Text style={[styles.buttonText, { color: colors.background }]}>Adding recipe</Text>
                   <Text style={[styles.buttonText, styles.dotsContainer, { color: colors.background }]}>{dots}</Text>
                 </View>
               ) : (
@@ -232,40 +201,13 @@ export default function AddRecipeImage() {
             >
               {loading && loadingSource === 'file' ? (
                 <View style={styles.loadingContainer}>
-                  <Text style={[styles.buttonText, { color: colors.background }]}>Selecting image</Text>
+                  <Text style={[styles.buttonText, { color: colors.background }]}>Adding recipe</Text>
                   <Text style={[styles.buttonText, styles.dotsContainer, { color: colors.background }]}>{dots}</Text>
                 </View>
               ) : (
                 <Text style={[styles.buttonText, { color: colors.background }]}>Select image</Text>
               )}
             </Button>
-
-            {selectedImage && (
-              <View style={styles.previewWrapper}>
-                <Text style={styles.sectionTitle}>Selected image</Text>
-                <Image
-                  source={{ uri: selectedImage.uri }}
-                  style={styles.previewImage}
-                  resizeMode="cover"
-                />
-                <Text style={styles.fileName}>{selectedImage.fileName}</Text>
-
-                <Button
-                  onPress={handleImageImport}
-                  disabled={loading}
-                  style={styles.importButton}
-                >
-                  {loading && loadingSource === 'import' ? (
-                    <View style={styles.loadingContainer}>
-                      <Text style={[styles.buttonText, { color: colors.background }]}>Adding</Text>
-                      <Text style={[styles.buttonText, styles.dotsContainer, { color: colors.background }]}>{dots}</Text>
-                    </View>
-                  ) : (
-                    <Text style={[styles.buttonText, { color: colors.background }]}>Add recipe</Text>
-                  )}
-                </Button>
-              </View>
-            )}
           </View>
         </ContentWrapper>
       </ScrollView>
@@ -311,9 +253,6 @@ const stylesFactory = (colors: any) =>
     button: {
       marginBottom: 4,
     },
-    importButton: {
-      marginTop: 16,
-    },
     buttonText: {
       fontSize: 16,
       fontWeight: '600',
@@ -341,21 +280,5 @@ const stylesFactory = (colors: any) =>
       fontSize: 14,
       color: colors.text,
       opacity: 0.4,
-    },
-    previewWrapper: {
-      marginTop: 24,
-    },
-    previewImage: {
-      width: '100%',
-      height: 220,
-      borderRadius: 12,
-      backgroundColor: colors.card || '#ddd',
-      marginTop: 8,
-    },
-    fileName: {
-      marginTop: 10,
-      color: colors.text,
-      opacity: 0.7,
-      fontSize: 14,
     },
   });
