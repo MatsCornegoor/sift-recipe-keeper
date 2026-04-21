@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Animated, Linking } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { ChevronDown } from 'lucide-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '@/hooks/useTheme';
 import Header from '@/components/Header';
@@ -181,7 +181,7 @@ export default function AiModel() {
               rotate: chevronRotation.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] }),
             }],
           }}>
-            <Ionicons name="chevron-down" size={18} color={colors.text} style={{ opacity: 0.5 }} />
+            <ChevronDown size={18} color={colors.text} style={{ opacity: 0.5 }} />
           </Animated.View>
         </TouchableOpacity>
 

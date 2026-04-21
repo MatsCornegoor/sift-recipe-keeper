@@ -25,7 +25,7 @@ import {
 import Clipboard from '@react-native-clipboard/clipboard';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Share2, MoreVertical, CheckSquare, Square, Clock, Flame, Users, Link } from 'lucide-react-native';
 import RecipeStore from '../store/RecipeStore';
 import { Recipe } from '../models/Recipe';
 import { useTheme } from '../hooks/useTheme';
@@ -223,7 +223,7 @@ export default function RecipeDetail() {
       style={({ pressed }) => ({ padding: 8, opacity: pressed ? 0.7 : 1 })}
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
     >
-      <Ionicons name="share-social-outline" size={24} color={colors.tint} />
+      <Share2 size={24} color={colors.tint} />
     </Pressable>
   );
 
@@ -236,7 +236,7 @@ export default function RecipeDetail() {
       })}
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
     >
-      <Ionicons name="ellipsis-vertical" size={24} color={colors.tint} />
+      <MoreVertical size={24} color={colors.tint} />
     </Pressable>
   );
 
@@ -273,11 +273,10 @@ export default function RecipeDetail() {
                       onPress={() => handleIngredientCheck(ingredient.id)}
                       style={styles.checkboxContainer}
                     >
-                      <Ionicons 
-                        name={isChecked ? 'checkbox' : 'square-outline'} 
-                        size={25} 
-                        color={isChecked ? colors.tint : colors.text} 
-                      />
+                      {isChecked
+                        ? <CheckSquare size={25} color={colors.tint} />
+                        : <Square size={25} color={colors.text} />
+                      }
                     </TouchableOpacity>
                     <Text style={[styles.ingredient, isChecked && styles.checkedIngredient]}>
                       {ingredient.name}
@@ -351,25 +350,25 @@ export default function RecipeDetail() {
               <View style={styles.detailsContainer}>
                 {recipe.cookingTime && (
                   <View style={styles.detailItem}>
-                    <Ionicons name="time-outline" size={16} color={colors.text} style={styles.detailIcon} />
+                    <Clock size={16} color={colors.text} style={styles.detailIcon} />
                     <Text style={styles.detailText}>{recipe.cookingTime}</Text>
                   </View>
                 )}
                 {recipe.calories && (
                   <View style={styles.detailItem}>
-                    <Ionicons name="flame-outline" size={16} color={colors.text} style={styles.detailIcon} />
+                    <Flame size={16} color={colors.text} style={styles.detailIcon} />
                     <Text style={styles.detailText}>{recipe.calories}</Text>
                   </View>
                 )}
                 {recipe.servings && (
                   <View style={styles.detailItem}>
-                    <Ionicons name="people-outline" size={16} color={colors.text} style={styles.detailIcon} />
+                    <Users size={16} color={colors.text} style={styles.detailIcon} />
                     <Text style={styles.detailText}>{recipe.servings}</Text>
                   </View>
                 )}
                 {recipe.sourceUrl && (
                   <View style={styles.detailItem}>
-                    <Ionicons name="link-outline" size={16} color={colors.tint} style={styles.detailIcon} />
+                    <Link size={16} color={colors.tint} style={styles.detailIcon} />
                     <TouchableOpacity 
                       onPress={async () => {
                         await Clipboard.setString(recipe.sourceUrl!);

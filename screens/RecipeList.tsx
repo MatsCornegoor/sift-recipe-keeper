@@ -2,7 +2,7 @@ import { View, TouchableOpacity, StyleSheet, Text, Modal, TextInput, useWindowDi
 import { useEffect, useMemo, useState } from 'react';
 import RecipeGrid from '../components/RecipeGrid';
 import RecipeStore from '../store/RecipeStore';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Menu, Search, Plus, ArrowRight } from 'lucide-react-native';
 import { Recipe } from '../models/Recipe';
 import { useTheme } from '../hooks/useTheme';
 import Header from '../components/Header';
@@ -104,13 +104,13 @@ export default function RecipeList({ navigation }: { navigation: any }) {
             style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Ionicons name="menu" style={styles.menuIcon} size={32} color={colors.tint} />
+            <Menu size={32} color={colors.tint} style={styles.menuIcon} />
           </Pressable>
         }
       />
       <View style={styles.container}>
         <View style={styles.searchContainer}>
-          <Ionicons name="search" size={20} color={colors.deleteButton} style={styles.searchIcon} />
+          <Search size={20} color={colors.deleteButton} style={styles.searchIcon} />
           <TextInput
             style={styles.searchInput}
             placeholder="Search recipes..."
@@ -133,7 +133,7 @@ export default function RecipeList({ navigation }: { navigation: any }) {
           style={styles.fab}
           onPress={() => setIsMenuVisible(true)}
         >
-          <Ionicons name="add" size={24} color={colors.background} />
+          <Plus size={24} color={colors.background} />
         </TouchableOpacity>
 
         {recipes.length === 0 && (
@@ -142,12 +142,7 @@ export default function RecipeList({ navigation }: { navigation: any }) {
               <Text style={styles.tooltipText}>
                 Add your first recipe
               </Text>
-              <Ionicons 
-                name="arrow-forward" 
-                size={14} 
-                color={colors.text} 
-                style={styles.arrowIcon}
-              />
+              <ArrowRight size={14} color={colors.text} style={styles.arrowIcon} />
             </View>
           </View>
         )}

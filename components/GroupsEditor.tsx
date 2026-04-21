@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Plus } from 'lucide-react-native';
 import { NestableDraggableFlatList } from 'react-native-draggable-flatlist';
 import { useTheme } from '../hooks/useTheme';
 
@@ -112,7 +112,7 @@ export default function GroupsEditor({
         )}
       />
       <TouchableOpacity onPress={() => onAddItemRequest?.(group?.id ?? '')} style={styles.addItemButton}>
-        <Ionicons name="add" size={24} color={colors.background} />
+        <Plus size={24} color={colors.background} />
       </TouchableOpacity>
     </View>
   );
