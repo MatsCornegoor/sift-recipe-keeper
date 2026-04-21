@@ -200,5 +200,4 @@ if (rnVersion < versionToNumber(0, 75, 0)) {
     applyNativeModulesAppBuildGradle(project)
 }
 
-apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 apply from: new File(["node", "--print", "require.resolve('react-native-config/package.json')"].execute(null, rootDir).text.trim(), "../android/dotenv.gradle")
