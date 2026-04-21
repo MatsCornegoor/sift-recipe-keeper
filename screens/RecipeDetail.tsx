@@ -577,6 +577,7 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginRight: 12,
+    marginTop: 1,
     minWidth: 24,
     color: colors.tint,
   },
