@@ -104,7 +104,7 @@ export default function RecipeList({ navigation }: { navigation: any }) {
             style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Menu size={32} color={colors.tint} style={styles.menuIcon} />
+            <Menu size={28} color={colors.tint} style={styles.menuIcon} />
           </Pressable>
         }
       />
