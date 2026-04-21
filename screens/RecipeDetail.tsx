@@ -19,7 +19,7 @@ import {
 import Clipboard from '@react-native-clipboard/clipboard';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Share2, MoreVertical, CheckSquare, Square, Clock, Flame, Users, Link2 } from 'lucide-react-native';
+import { Share2, MoreVertical, Clock, Flame, Users, Link2 } from 'lucide-react-native';
 import RecipeStore from '../store/RecipeStore';
 import { Recipe } from '../models/Recipe';
 import { useTheme } from '../hooks/useTheme';
@@ -214,10 +214,10 @@ export default function RecipeDetail() {
   const ShareButton = () => (
     <Pressable
       onPress={() => setIsShareMenuVisible(true)}
-      style={({ pressed }) => ({ padding: 8, opacity: pressed ? 0.7 : 1 })}
+      style={({ pressed }) => ({ padding: 8, right: -5, opacity: pressed ? 0.7 : 1 })}
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
     >
-      <Share2 size={24} color={colors.tint} />
+      <Share2 size={23} color={colors.tint} />
     </Pressable>
   );
 
@@ -227,10 +227,11 @@ export default function RecipeDetail() {
       style={({ pressed }) => ({ 
         padding: 8,
         opacity: pressed ? 0.7 : 1,
+        right: -10
       })}
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
     >
-      <MoreVertical size={24} color={colors.tint} />
+      <MoreVertical size={23} color={colors.tint} />
     </Pressable>
   );
 
@@ -263,14 +264,11 @@ export default function RecipeDetail() {
                 const isChecked = checkedIngredients.has(ingredient.id);
                 return (
                   <View key={ingredient.id} style={styles.ingredientRow}>
-                    <TouchableOpacity 
+                    <TouchableOpacity
                       onPress={() => handleIngredientCheck(ingredient.id)}
                       style={styles.checkboxContainer}
                     >
-                      {isChecked
-                        ? <CheckSquare size={25} color={colors.tint} />
-                        : <Square size={25} color={colors.text} />
-                      }
+                      <View style={[styles.circle, isChecked && { backgroundColor: colors.tint, borderColor: colors.tint }]} />
                     </TouchableOpacity>
                     <Text style={[styles.ingredient, isChecked && styles.checkedIngredient]}>
                       {ingredient.name}
@@ -545,10 +543,19 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   ingredientRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 14,
   },
   checkboxContainer: {
     marginRight: 12,
+  },
+  circle: {
+    width: 19,
+    height: 19,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: colors.text,
+    opacity: 0.5,
+    backgroundColor: 'transparent',
   },
   ingredient: {
     fontSize: 16,
