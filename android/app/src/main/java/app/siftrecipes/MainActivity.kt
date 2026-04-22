@@ -1,5 +1,6 @@
 package app.siftrecipes
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 
@@ -21,6 +22,11 @@ class MainActivity : ReactActivity() {
    * rendering of the component.
    */
   override fun getMainComponentName(): String = "sift-recipe-keeper"
+
+  override fun onNewIntent(intent: Intent) {
+    super.onNewIntent(intent)
+    setIntent(intent)
+  }
 
   /**
    * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]
