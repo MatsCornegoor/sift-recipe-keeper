@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import { Linking, NativeModules } from 'react-native';
+import { DeviceEventEmitter, Linking, NativeModules } from 'react-native';
 
 const { ShareIntent } = NativeModules;
 import AppNavigator from './navigation/AppNavigator';
@@ -72,7 +72,11 @@ function AppContent() {
     });
 
     const sub = Linking.addEventListener('url', ({ url }) => handleUrl(url));
-    return () => sub.remove();
+    const shareSub = DeviceEventEmitter.addListener('ShareIntentUrl', handleSharedUrl);
+    return () => {
+      sub.remove();
+      shareSub.remove();
+    };
   }, []);
 
   const handleConfirm = async () => {
