@@ -1,9 +1,12 @@
 package app.siftrecipes
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 
 import com.facebook.react.ReactActivity
+import com.facebook.react.ReactApplication
+import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
@@ -21,6 +24,21 @@ class MainActivity : ReactActivity() {
    * rendering of the component.
    */
   override fun getMainComponentName(): String = "sift-recipe-keeper"
+
+  override fun onNewIntent(intent: Intent) {
+    super.onNewIntent(intent)
+    setIntent(intent)
+    if (intent.action == Intent.ACTION_SEND && intent.type == "text/plain") {
+      val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
+      if (sharedText != null) {
+        val reactContext = (application as ReactApplication)
+          .reactNativeHost.reactInstanceManager.currentReactContext
+        reactContext?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+          ?.emit("ShareIntentUrl", sharedText)
+        intent.action = null
+      }
+    }
+  }
 
   /**
    * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]

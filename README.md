@@ -31,19 +31,19 @@ Sift works with any provider that supports the OpenAI API format. Below are test
 
 Endpoint: `https://openrouter.ai/api/v1/chat/completions`
 
-| Model name | Response format | Est. price |
-|---|---|---|
-| **Good quality, best balance between accuracy and price** | | |
-| `mistralai/mistral-small-3.2-24b-instruct` | On | $0.000425 |
-| `google/gemma-3-27b-it` | On | $0.000400 |
-| `qwen/qwen3-coder-30b-a3b-instruct` | On | $0.000480 |
-| **Great quality, but more expensive** | | |
-| `google/gemini-2.5-flash` | On | $0.003400 |
-| **Medium quality, cheap, but prone to mistakes** | | |
-| `meta-llama/llama-3.1-8b-instruct` | On | $0.000110 |
-| `google/gemma-3-12b-it` | On | $0.000250 |
-| **Free, might be unstable and have rate limits** | | |
-| `arcee-ai/trinity-large-preview:free` | On | $0.000000 |
+| Model name | Response format | Images | Est. price |
+|---|---|---|---|
+| **Good quality, best balance between accuracy and price** | | | |
+| `mistralai/mistral-small-3.2-24b-instruct` | On | Yes | $0.000425 |
+| `google/gemma-3-27b-it` | On | Yes | $0.000400 |
+| `qwen/qwen3-coder-30b-a3b-instruct` | On | No | $0.000480 |
+| **Great quality, but more expensive** | | | |
+| `google/gemini-2.5-flash` | On | Yes | $0.003400 |
+| **Medium quality, cheap, but prone to mistakes** | | | |
+| `meta-llama/llama-3.1-8b-instruct` | On | No | $0.000110 |
+| `google/gemma-3-12b-it` | On | Yes | $0.000250 |
+| **Free, might be unstable and have rate limits** | | | |
+| `arcee-ai/trinity-large-preview:free` | On | No | $0.000000 |
 
 
 
@@ -51,42 +51,14 @@ Endpoint: `https://openrouter.ai/api/v1/chat/completions`
 
 Endpoint: `https://api.openai.com/v1/chat/completions`
 
-| Model name | Response format | Est. price |
-|---|---|---|
-| **Good quality, best balance between accuracy and price** | | |
-| `gpt-5.4-nano` | On | $0.001850 |
-| `gpt-4o-mini` | On | $0.001050 |
-| **Great quality, but more expensive** | | |
-| `gpt-5.4-mini` | On | $0.006750 |
+| Model name | Response format | Images | Est. price |
+|---|---|---|---|
+| **Good quality, best balance between accuracy and price** | | | |
+| `gpt-5.4-nano` | On | Yes | $0.001850 |
+| `gpt-4o-mini` | On | Yes | $0.001050 |
+| **Great quality, but more expensive** | | | |
+| `gpt-5.4-mini` | On | Yes | $0.006750 |
 
-
-
-
-## Roadmap
-
-
-### Documentation Improvements
-- [X] Short and clear documentation
-- [X] List with supported models + estimated pricing
-- [X] Collaboration guidelines
-
-
-### UX Improvements
-- [X] Improved introduction flow
-- [ ] Multilayer menu to keep interface clean, but add extra functions
-- [X] Clear error messages
-
-### Edit with AI
-- [X] Option to edit a imported recipe using AI (make guten free, convert to metric, make for 8 people etc)
-- [X] Keep track of servings for easy conversion
-
-### Import via Share Action
-- [ ] By clicking the share link option in e.g. a web browser, users can send a URL directly to the Sift app for easy imports
-
-
-### Recipe Sharing
-- [X] ZIP archives will get a custom `.sift` extension to auto-open the Sift app when clicked
-- [X] Recipes will get a share button to easily share a recipe archive with people on messaging apps
 
 
 ## Building from Source

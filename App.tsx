@@ -1,6 +1,8 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import { Linking } from 'react-native';
+import { DeviceEventEmitter, Linking, NativeModules } from 'react-native';
+
+const { ShareIntent } = NativeModules;
 import AppNavigator from './navigation/AppNavigator';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ThemeProvider, useTheme } from './hooks/useTheme';
@@ -54,8 +56,27 @@ function AppContent() {
       if (url) handleUrl(url);
     });
 
+    const handleSharedUrl = (sharedUrl: string) => {
+      const navigate = () => {
+        if (navigationRef.isReady()) {
+          navigationRef.navigate('AddRecipeUrl' as any, { initialUrl: sharedUrl });
+        } else {
+          setTimeout(navigate, 100);
+        }
+      };
+      navigate();
+    };
+
+    ShareIntent?.getSharedUrl().then((sharedUrl: string | null) => {
+      if (sharedUrl) handleSharedUrl(sharedUrl);
+    });
+
     const sub = Linking.addEventListener('url', ({ url }) => handleUrl(url));
-    return () => sub.remove();
+    const shareSub = DeviceEventEmitter.addListener('ShareIntentUrl', handleSharedUrl);
+    return () => {
+      sub.remove();
+      shareSub.remove();
+    };
   }, []);
 
   const handleConfirm = async () => {

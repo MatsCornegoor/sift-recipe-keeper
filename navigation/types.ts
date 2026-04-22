@@ -3,7 +3,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 export type RootStackParamList = {
   Main: undefined;
   AddRecipe: undefined;
-  AddRecipeUrl: undefined;
+  AddRecipeUrl: { initialUrl?: string } | undefined;
   EditRecipe: { recipeId: string };
   RecipeDetail: { recipeId: string };
   About: undefined;
