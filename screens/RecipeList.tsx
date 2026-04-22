@@ -9,14 +9,15 @@ import { useTheme } from '../hooks/useTheme';
 import Header from '../components/Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import IntroFlow from '../components/IntroFlow';
+import { useMenuAnimation } from '../hooks/useMenuAnimation';
 
 export default function RecipeList({ navigation }: { navigation: any }) {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showAiPopup, setShowAiPopup] = useState(false);
   const [visionEnabled, setVisionEnabled] = useState(false);
   const fabRotation = useRef(new Animated.Value(0)).current;
+  const menu = useMenuAnimation();
 
   const { width } = useWindowDimensions();
   const numColumns = width > 600 ? 3 : width > 300 ? 2 : 1;
@@ -61,7 +62,7 @@ export default function RecipeList({ navigation }: { navigation: any }) {
   }, [recipes]);
 
   const openMenu = () => {
-    setIsMenuVisible(true);
+    menu.open();
     Animated.spring(fabRotation, {
       toValue: 1,
       useNativeDriver: true,
@@ -71,7 +72,7 @@ export default function RecipeList({ navigation }: { navigation: any }) {
   };
 
   const closeMenu = () => {
-    setIsMenuVisible(false);
+    menu.close();
     Animated.spring(fabRotation, {
       toValue: 0,
       useNativeDriver: true,
@@ -81,18 +82,15 @@ export default function RecipeList({ navigation }: { navigation: any }) {
   };
 
   const handleAddFromUrl = () => {
-    closeMenu();
-    navigation.navigate('AddRecipeUrl');
+    menu.close(() => navigation.navigate('AddRecipeUrl'));
   };
 
   const handleAddFromFile = () => {
-    closeMenu();
-    navigation.navigate('AddRecipeText');
+    menu.close(() => navigation.navigate('AddRecipeText'));
   };
 
   const handleAddFromScratch = () => {
-    closeMenu();
-    navigation.navigate('AddRecipe');
+    menu.close(() => navigation.navigate('AddRecipe'));
   };
 
   const handleOpenSettings = () => {
@@ -100,8 +98,7 @@ export default function RecipeList({ navigation }: { navigation: any }) {
   };
 
   const handleAddFromPicture = () => {
-    setIsMenuVisible(false);
-    navigation.navigate('AddRecipePicture');
+    menu.close(() => navigation.navigate('AddRecipePicture'));
   };
 
   const filteredRecipes = recipes
@@ -166,6 +163,7 @@ export default function RecipeList({ navigation }: { navigation: any }) {
         <TouchableOpacity
           style={styles.fab}
           onPress={openMenu}
+          activeOpacity={1}
         >
           <Animated.View style={{ transform: [{ rotate: fabRotation.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '45deg'] }) }] }}>
             <Plus size={24} color={colors.background} />
@@ -185,18 +183,20 @@ export default function RecipeList({ navigation }: { navigation: any }) {
 
         <Modal
           transparent
-          visible={isMenuVisible}
+          visible={menu.isVisible}
           onRequestClose={closeMenu}
-          animationType="fade"
         >
-          <TouchableOpacity 
-            style={styles.modalOverlay}
-            activeOpacity={1}
-            onPress={closeMenu}
-          >
-            <View style={[styles.menuContainer, { 
+          <Animated.View style={[styles.modalOverlay, { opacity: menu.opacity }]}>
+            <TouchableOpacity
+              style={StyleSheet.absoluteFill}
+              activeOpacity={1}
+              onPress={closeMenu}
+            />
+            <Animated.View style={[styles.menuContainer, {
               bottom: 90,
-              right: 20 
+              right: 20,
+              opacity: menu.opacity,
+              transform: [{ scale: menu.scale }],
             }]}>
               <TouchableOpacity style={styles.menuItem} onPress={handleAddFromUrl}>
                 <Text style={styles.menuText}>Add from website</Text>
@@ -212,8 +212,8 @@ export default function RecipeList({ navigation }: { navigation: any }) {
               <TouchableOpacity style={styles.menuItem} onPress={handleAddFromScratch}>
                 <Text style={styles.menuText}>Add from scratch</Text>
               </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
+            </Animated.View>
+          </Animated.View>
         </Modal>
         <IntroFlow
           visible={showAiPopup}

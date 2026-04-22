@@ -14,6 +14,7 @@ import {
   ToastAndroid,
   useWindowDimensions,
   Share,
+  Animated,
 } from 'react-native';
 // see above 
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -23,6 +24,7 @@ import { Share2, MoreVertical, Clock, Flame, Users, Link2 } from 'lucide-react-n
 import RecipeStore from '../store/RecipeStore';
 import { Recipe } from '../models/Recipe';
 import { useTheme } from '../hooks/useTheme';
+import { useMenuAnimation } from '../hooks/useMenuAnimation';
 import Header from '../components/Header';
 import CustomPopup from '../components/CustomPopup';
 import ContentWrapper from '../components/ContentWrapper';
@@ -43,12 +45,11 @@ export default function RecipeDetail() {
     }
     return foundRecipe;
   });
-  const [isMenuVisible, setIsMenuVisible] = useState(false);
-
-  const [isShareMenuVisible, setIsShareMenuVisible] = useState(false);
+  const editMenu = useMenuAnimation();
+  const shareMenu = useMenuAnimation();
 
   const handleShareRecipeText = async () => {
-    setIsShareMenuVisible(false);
+    shareMenu.close();
     try {
       await Share.share({ message: formatRecipeForSharing(recipe!) });
     } catch (err: any) {
@@ -59,7 +60,7 @@ export default function RecipeDetail() {
   };
 
   const handleShareIngredientsText = async () => {
-    setIsShareMenuVisible(false);
+    shareMenu.close();
     try {
       await Share.share({ message: formatIngredientsForSharing(recipe!) });
     } catch (err: any) {
@@ -70,7 +71,7 @@ export default function RecipeDetail() {
   };
 
   const handleShareExport = async () => {
-    setIsShareMenuVisible(false);
+    shareMenu.close();
     let zipPath: string | null = null;
     try {
       zipPath = await buildRecipeZip([recipe!]);
@@ -123,7 +124,7 @@ export default function RecipeDetail() {
   }, [recipe.id]);
 
   const handleDelete = () => {
-    setIsMenuVisible(false);
+    editMenu.close();
     setPopupConfig({
       title: 'Delete Recipe',
       message: 'Are you sure you want to delete this recipe?',
@@ -148,13 +149,11 @@ export default function RecipeDetail() {
   };
 
   const handleEdit = () => {
-    setIsMenuVisible(false);
-    navigation.navigate('EditRecipe', { id: recipe.id });
+    editMenu.close(() => navigation.navigate('EditRecipe', { id: recipe.id }));
   };
 
   const handleEditWithAI = () => {
-    setIsMenuVisible(false);
-    navigation.navigate('EditWithAI', { id: recipe.id });
+    editMenu.close(() => navigation.navigate('EditWithAI', { id: recipe.id }));
   };
 
   const handleIngredientCheck = (ingredientId: string) => {
@@ -213,7 +212,7 @@ export default function RecipeDetail() {
 
   const ShareButton = () => (
     <Pressable
-      onPress={() => setIsShareMenuVisible(true)}
+      onPress={shareMenu.open}
       style={({ pressed }) => ({ padding: 8, right: -5, opacity: pressed ? 0.7 : 1 })}
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
     >
@@ -222,9 +221,9 @@ export default function RecipeDetail() {
   );
 
   const MenuButton = () => (
-    <Pressable 
-      onPress={() => setIsMenuVisible(true)}
-      style={({ pressed }) => ({ 
+    <Pressable
+      onPress={editMenu.open}
+      style={({ pressed }) => ({
         padding: 8,
         opacity: pressed ? 0.7 : 1,
         right: -10
@@ -400,18 +399,10 @@ export default function RecipeDetail() {
         </ContentWrapper>
       </ScrollView>
 
-      <Modal
-        transparent
-        visible={isShareMenuVisible}
-        onRequestClose={() => setIsShareMenuVisible(false)}
-        animationType="fade"
-      >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setIsShareMenuVisible(false)}
-        >
-          <View style={[styles.menuContainer, { right: 20, top: 80 }]}>
+      <Modal transparent visible={shareMenu.isVisible} onRequestClose={() => shareMenu.close()}>
+        <Animated.View style={[styles.modalOverlay, { opacity: shareMenu.opacity }]}>
+          <TouchableOpacity style={StyleSheet.absoluteFill} activeOpacity={1} onPress={() => shareMenu.close()} />
+          <Animated.View style={[styles.menuContainer, { right: 20, top: 80, opacity: shareMenu.opacity, transform: [{ scale: shareMenu.scale }] }]}>
             <TouchableOpacity style={styles.menuItem} onPress={handleShareIngredientsText}>
               <Text style={styles.menuText}>Ingredients</Text>
             </TouchableOpacity>
@@ -421,30 +412,14 @@ export default function RecipeDetail() {
             <TouchableOpacity style={styles.menuItem} onPress={handleShareExport}>
               <Text style={styles.menuText}>Recipe as .sift file</Text>
             </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
+          </Animated.View>
+        </Animated.View>
       </Modal>
 
-      <Modal
-        transparent
-        visible={isMenuVisible}
-        onRequestClose={() => setIsMenuVisible(false)}
-        animationType="fade"
-      >
-        <TouchableOpacity 
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setIsMenuVisible(false)}
-        >
-          <View style={[styles.menuContainer, { 
-            bottom: Platform.select({
-              ios: 'auto',
-              android: 'auto',
-              default: 'auto'
-            }),
-            right: 20,
-            top: 80,
-          }]}> 
+      <Modal transparent visible={editMenu.isVisible} onRequestClose={() => editMenu.close()}>
+        <Animated.View style={[styles.modalOverlay, { opacity: editMenu.opacity }]}>
+          <TouchableOpacity style={StyleSheet.absoluteFill} activeOpacity={1} onPress={() => editMenu.close()} />
+          <Animated.View style={[styles.menuContainer, { right: 20, top: 80, opacity: editMenu.opacity, transform: [{ scale: editMenu.scale }] }]}>
             <TouchableOpacity style={styles.menuItem} onPress={handleEdit}>
               <Text style={styles.menuText}>Edit manually</Text>
             </TouchableOpacity>
@@ -454,8 +429,8 @@ export default function RecipeDetail() {
             <TouchableOpacity style={styles.menuItem} onPress={handleDelete}>
               <Text style={[styles.menuText, styles.deleteMenuText]}>Delete</Text>
             </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
+          </Animated.View>
+        </Animated.View>
       </Modal>
 
       <CustomPopup
@@ -543,10 +518,12 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   ingredientRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 14,
+    marginBottom: 20,
   },
   checkboxContainer: {
-    marginRight: 12,
+    marginRight: 8,
+    padding: 12,
+    margin: -12,
   },
   circle: {
     width: 19,
