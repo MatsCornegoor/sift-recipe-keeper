@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList, Platform, Share } f
 import Button from '../../components/ui/Button';
 import { CheckSquare, Square } from 'lucide-react-native';
 import RNFS from 'react-native-fs';
-import { zip } from 'react-native-zip-archive';
 import RecipeStore from '../../store/RecipeStore';
 import { useTheme } from '../../hooks/useTheme';
 import Header from '../../components/Header';

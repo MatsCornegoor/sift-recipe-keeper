@@ -44,7 +44,7 @@ export default function ImportExport() {
 
     try {
       const res = await DocumentPicker.pick({
-        type: ['application/x-sift-recipe', 'application/zip'],
+        type: [DocumentPicker.types.allFiles],
       });
 
       const sourceUri = res[0]?.fileCopyUri ?? res[0]?.uri;
