@@ -27,7 +27,6 @@
       {
         "label": "Free, might be unstable and have rate limits",
         "models": [
-          "arcee-ai/trinity-large-preview:free"
         ]
       }
     ]
