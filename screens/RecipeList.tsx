@@ -43,6 +43,14 @@ export default function RecipeList({ navigation }: { navigation: any }) {
   }, []));
 
   useEffect(() => {
+    const unsub = navigation.addListener('blur', () => {
+      menu.close();
+      fabRotation.setValue(0);
+    });
+    return unsub;
+  }, [navigation]);
+
+  useEffect(() => {
     const checkAiSettings = async () => {
       if (recipes.length === 0) {
         try {
