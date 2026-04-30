@@ -1,0 +1,4 @@
+- Recipe share button (thanks @d5c0d3)
+- Recipe image import (thanks @D3to)
+- Allow HTTP endpoints (thanks @jairo-litman)
+- Improved UI
