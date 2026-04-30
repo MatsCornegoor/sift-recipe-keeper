@@ -6,28 +6,20 @@
       {
         "label": "Good quality, best balance between accuracy and price",
         "models": [
+          "mistralai/mistral-small-2603",
           "mistralai/mistral-small-3.2-24b-instruct",
-          "google/gemma-3-27b-it",
-          "qwen/qwen3-coder-30b-a3b-instruct"
+          "minimax/minimax-m2.5",
+          "stepfun/step-3.5-flash",
+          "google/gemma-4-31b-it",
+          "google/gemini-2.5-flash-lite",
+          "qwen/qwen3.6-35b-a3b"
         ]
       },
       {
         "label": "Great quality, but more expensive",
         "models": [
-          "google/gemini-2.5-flash"
-        ]
-      },
-      {
-        "label": "Medium quality, cheap, but prone to mistakes",
-        "models": [
-          "meta-llama/llama-3.1-8b-instruct",
-          "google/gemma-3-12b-it"
-        ]
-      },
-      {
-        "label": "Free, might be unstable and have rate limits",
-        "models": [
-          "arcee-ai/trinity-large-preview:free"
+          "google/gemini-2.5-flash",
+          "moonshotai/kimi-k2.6"
         ]
       }
     ]
