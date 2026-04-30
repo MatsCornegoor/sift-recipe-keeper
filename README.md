@@ -36,14 +36,10 @@ Endpoint: `https://openrouter.ai/api/v1/chat/completions`
 | **Good quality, best balance between accuracy and price** | | | |
 | `mistralai/mistral-small-2603` | On | Yes | $0.001050 |
 | `mistralai/mistral-small-3.2-24b-instruct` | On | Yes | $0.000425 |
-| `minimax/minimax-m2.5` | On | No | $0.001600 |
-| `stepfun/step-3.5-flash` | On | No | $0.000600 |
-| `google/gemma-4-31b-it` | On | Yes | $0.000770 |
 | `google/gemini-2.5-flash-lite` | On | Yes | $0.000700 |
-| `qwen/qwen3.6-35b-a3b` | On | Yes | $0.001449 |
 | **Great quality, but more expensive** | | | |
 | `google/gemini-2.5-flash` | On | Yes | $0.003400 |
-| `moonshotai/kimi-k2.6` | On | Yes | $0.005750 |
+| `qwen/qwen3.6-35b-a3b` | On | Yes | $0.001449 |
 
 
 
