@@ -7,6 +7,7 @@
     "reset-project": "node ./scripts/reset-project.js",
     "android": "react-native run-android",
     "android:clean": "cd android && ./gradlew clean && cd .. && react-native run-android",
+    "build": "cd android && ./gradlew assembleRelease",
     "supported-models": "node ./model-tools/scripts/supportedModels.js"
   },
   "jest": {

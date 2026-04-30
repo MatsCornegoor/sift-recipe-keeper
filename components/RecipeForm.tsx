@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 import { useTheme } from '../hooks/useTheme';
 import { Plus, XCircle } from 'lucide-react-native';
@@ -20,9 +20,17 @@ export interface RecipeFormProps {
   initialRecipe?: Recipe;
   onSave: (recipe: Recipe) => void;
   onCancel?: () => void;
+  onDirtyChange?: (dirty: boolean) => void;
 }
 
-export default function RecipeForm({ mode, initialRecipe, onSave, onCancel }: RecipeFormProps) {
+export interface RecipeFormHandle {
+  submit: () => void;
+}
+
+const RecipeForm = forwardRef<RecipeFormHandle, RecipeFormProps>(function RecipeForm(
+  { mode, initialRecipe, onSave, onCancel, onDirtyChange },
+  ref,
+) {
   const { colors } = useTheme();
 
   const [name, setName] = useState(initialRecipe?.name ?? '');
@@ -210,6 +218,16 @@ export default function RecipeForm({ mode, initialRecipe, onSave, onCancel }: Re
     return output;
   };
 
+  const mountedRef = useRef(false);
+  useEffect(() => {
+    if (mountedRef.current) {
+      onDirtyChange?.(true);
+    } else {
+      mountedRef.current = true;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [name, imageUri, ingredientGroups, instructionGroups, cookingTime, calories, servings, sourceUrl, tags]);
+
   const handleSave = () => {
     if (!name.trim()) {
       setPopupConfig({
@@ -247,6 +265,10 @@ export default function RecipeForm({ mode, initialRecipe, onSave, onCancel }: Re
 
     onSave(recipe);
   };
+
+  const handleSaveRef = useRef(handleSave);
+  handleSaveRef.current = handleSave;
+  useImperativeHandle(ref, () => ({ submit: () => handleSaveRef.current() }), []);
 
   const handleAddImage = async () => {
     const result = await launchImageLibrary({ mediaType: 'photo', quality: 0.8 });
@@ -434,5 +456,6 @@ export default function RecipeForm({ mode, initialRecipe, onSave, onCancel }: Re
       />
     </View>
   );
-}
- 
+});
+
+export default RecipeForm;
