@@ -1,5 +1,5 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import React, { useMemo } from 'react';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { navigationRef } from './navigationRef';
 
@@ -22,9 +22,31 @@ import { useTheme } from '../hooks/useTheme';
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
+  const { colors, isDarkMode } = useTheme();
+
+  const navTheme = useMemo(() => {
+    const base = isDarkMode ? DarkTheme : DefaultTheme;
+    return {
+      ...base,
+      colors: {
+        ...base.colors,
+        background: colors.background,
+        card: colors.background,
+        text: colors.text,
+        border: colors.inputBorder,
+      },
+    };
+  }, [isDarkMode, colors]);
+
   return (
-    <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade' }}>
+    <NavigationContainer ref={navigationRef} theme={navTheme}>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+          animation: 'fade',
+          contentStyle: { backgroundColor: colors.background },
+        }}
+      >
         <Stack.Screen name="Recipes" component={RecipeList} />
         <Stack.Screen name="Settings" component={Settings} />
         <Stack.Screen name="AddRecipe" component={AddRecipe} />

@@ -211,7 +211,7 @@ class RecipeExtractorService {
         - Respond with ONLY the JSON object; no extra text or markdown.
         - Only extract information from the content. Do not add your own text.
         - Ingredients: Extract quantities and units as written.
-        - Instructions: Extract instructions as short, granular sub-steps per group. Do not rephrase or create your own text.
+        - Instructions: Preserve the EXACT step count of the original. Each step in the source = one item in the output. Do NOT split a step into sub-steps. Do NOT merge steps. Do not rephrase or create your own text.
         - Tags: Come up with 3-5 relevant tags for the recipe.
         - Calories: Extract from content. If missing, use an empty string "". DO NOT estimate.
         - Cooking Time: Extract from content. If missing, use an empty string "".
@@ -274,7 +274,7 @@ class RecipeExtractorService {
         - Respond with ONLY the JSON object; no extra text or markdown.
         - Only extract information from the content. Do not add your own text.
         - Ingredients: Extract quantities and units as written.
-        - Instructions: Extract instructions as short, granular sub-steps per group. Do not rephrase or create your own text.
+        - Instructions: Preserve the EXACT step count of the original. Each step in the source = one item in the output. Do NOT split a step into sub-steps. Do NOT merge steps. Do not rephrase or create your own text.
         - Tags: Come up with 3-5 relevant tags for the recipe.
         - Calories: Extract from content. If missing, use an empty string "". DO NOT estimate.
         - Cooking Time: Extract from content. If missing, use an empty string "".
@@ -525,14 +525,8 @@ class RecipeExtractorService {
         if (!item || typeof item !== 'string') continue;
         const lines = item.split(/\r?\n+/).map(s => s.trim()).filter(Boolean);
         for (const line of lines) {
-          const parts = line
-            .split(/(?=(?:\d+\.\s|\d+\)\s|[-*•]\s))/) // Corrected regex for escaped characters
-            .map(s => s.trim())
-            .filter(Boolean);
-          for (let part of parts) {
-            part = part.replace(/^(?:\d+\.\s|\d+\)\s|[-*•]\s)/, '').trim();
-            if (part) substeps.push(part);
-          }
+          const stripped = line.replace(/^(?:\d+\.\s|\d+\)\s|[-*•]\s)/, '').trim();
+          if (stripped) substeps.push(stripped);
         }
       }
 

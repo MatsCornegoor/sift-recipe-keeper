@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import RNFS from 'react-native-fs';
 import RecipeExtractorService from '../services/RecipeExtractorService';
 import RecipeStore from '../store/RecipeStore';
 import { useTheme } from '../hooks/useTheme';
+import { useLoadingDots } from '../hooks/useLoadingDots';
 import Header from '../components/Header';
 import CustomPopup from '../components/CustomPopup';
 import ContentWrapper from '../components/ContentWrapper';
@@ -33,7 +34,7 @@ export default function AddRecipeText() {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [loadingSource, setLoadingSource] = useState<'text' | 'file' | null>(null);
-  const [dots, setDots] = useState('');
+  const dots = useLoadingDots(loading);
   const { colors } = useTheme();
   const [showPopup, setShowPopup] = useState(false);
   const [recipeText, setRecipeText] = useState('');
@@ -48,26 +49,6 @@ export default function AddRecipeText() {
   });
 
   const styles = useMemo(() => stylesFactory(colors), [colors]);
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (loading) {
-      interval = setInterval(() => {
-        setDots(prev => {
-          if (prev === '') return '.';
-          if (prev === '.') return '..';
-          if (prev === '..') return '...';
-          return '';
-        });
-      }, 400);
-    }
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-      setDots('');
-    };
-  }, [loading]);
 
   const showError = (message: string) => {
     setPopupConfig({

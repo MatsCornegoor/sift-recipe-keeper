@@ -21,6 +21,7 @@ export interface RecipeFormProps {
   onSave: (recipe: Recipe) => void;
   onCancel?: () => void;
   onDirtyChange?: (dirty: boolean) => void;
+  hideSubmitButton?: boolean;
 }
 
 export interface RecipeFormHandle {
@@ -28,7 +29,7 @@ export interface RecipeFormHandle {
 }
 
 const RecipeForm = forwardRef<RecipeFormHandle, RecipeFormProps>(function RecipeForm(
-  { mode, initialRecipe, onSave, onCancel, onDirtyChange },
+  { mode, initialRecipe, onSave, onCancel, onDirtyChange, hideSubmitButton },
   ref,
 ) {
   const { colors } = useTheme();
@@ -418,10 +419,12 @@ const RecipeForm = forwardRef<RecipeFormHandle, RecipeFormProps>(function Recipe
           style={{ height: 48, marginBottom: 16 }}
         />
 
-        {onCancel && (
+        {!hideSubmitButton && onCancel && (
           <Button variant="secondary" title="Cancel" onPress={onCancel} style={{ marginTop: 24 }} />
         )}
-        <Button title={mode === 'add' ? 'Save Recipe' : 'Save Changes'} onPress={handleSave} style={{ marginTop: 12 }} />
+        {!hideSubmitButton && (
+          <Button title={mode === 'add' ? 'Save Recipe' : 'Save Changes'} onPress={handleSave} style={{ marginTop: 12 }} />
+        )}
 
       <CustomPopup visible={showPopup} title={popupConfig.title} message={popupConfig.message} buttons={popupConfig.buttons} onClose={() => setShowPopup(false)} />
       <TextInputPopup

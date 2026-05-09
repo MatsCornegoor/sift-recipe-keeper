@@ -5,6 +5,7 @@ import { DeviceEventEmitter, Linking, NativeModules } from 'react-native';
 const { ShareIntent } = NativeModules;
 import AppNavigator from './navigation/AppNavigator';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { PortalProvider } from '@gorhom/portal';
 import { ThemeProvider, useTheme } from './hooks/useTheme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import KeepAwake from 'react-native-keep-awake';
@@ -97,17 +98,19 @@ function AppContent() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.background }}>
-      <AppNavigator />
-      <CustomPopup
-        visible={pendingImport !== null}
-        title="Import recipes"
-        message={`Do you want to import ${count} ${count === 1 ? 'recipe' : 'recipes'}?`}
-        buttons={[
-          { text: 'Cancel', onPress: handleCancel, style: 'cancel' },
-          { text: 'Yes', onPress: handleConfirm },
-        ]}
-        onClose={handleCancel}
-      />
+      <PortalProvider>
+        <AppNavigator />
+        <CustomPopup
+          visible={pendingImport !== null}
+          title="Import recipes"
+          message={`Do you want to import ${count} ${count === 1 ? 'recipe' : 'recipes'}?`}
+          buttons={[
+            { text: 'Cancel', onPress: handleCancel, style: 'cancel' },
+            { text: 'Yes', onPress: handleConfirm },
+          ]}
+          onClose={handleCancel}
+        />
+      </PortalProvider>
     </GestureHandlerRootView>
   );
 }

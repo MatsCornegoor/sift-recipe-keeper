@@ -14,6 +14,7 @@
     "preset": "react-native"
   },
   "dependencies": {
+    "@gorhom/portal": "^1.0.14",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-clipboard/clipboard": "^1.16.3",
     "@react-native-community/netinfo": "^11.4.1",

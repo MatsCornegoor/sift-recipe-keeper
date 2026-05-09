@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Modal, View, Text, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from 'react-native';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, BackHandler, Keyboard } from 'react-native';
+import { Portal } from '@gorhom/portal';
 import { useTheme } from '@/hooks/useTheme';
 
 interface TextInputPopupProps {
@@ -29,9 +30,15 @@ export default function TextInputPopup({
   deleteText = 'Delete',
 }: TextInputPopupProps) {
   const { colors } = useTheme();
+  const inputRef = useRef<TextInput>(null);
   const [value, setValue] = useState(initialValue);
-  const [selectedType, setSelectedType] = useState<'item' | 'header'>('item');
-  const [isFocused, setIsFocused] = useState(false);
+  const [selectedType, setSelectedType] = useState<'item' | 'header'>(initialType || 'item');
+  const [inputHeight, setInputHeight] = useState(48);
+
+  const LINE_HEIGHT = 22;
+  const BASE_HEIGHT = 48;
+  const MAX_LINES = 6;
+  const MAX_HEIGHT = BASE_HEIGHT + (MAX_LINES - 1) * LINE_HEIGHT;
 
   const styles = useMemo(() => stylesFactory(colors), [colors]);
 
@@ -39,9 +46,30 @@ export default function TextInputPopup({
     if (visible) {
       setValue(initialValue);
       setSelectedType(initialType || 'item');
-      setIsFocused(false);
+      setInputHeight(BASE_HEIGHT);
+      const tryFocus = (n: number = 100) => {
+        if (!inputRef.current) return;
+        inputRef.current.focus();
+        if (inputRef.current.isFocused()) {
+          inputRef.current.setSelection(initialValue.length, initialValue.length);
+        } else if (n > 0) {
+          requestAnimationFrame(() => tryFocus(n - 1));
+        }
+      };
+      requestAnimationFrame(() => tryFocus());
+    } else {
+      Keyboard.dismiss();
     }
   }, [visible, initialValue, initialType]);
+
+  useEffect(() => {
+    if (!visible) return;
+    const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+      onCancel?.();
+      return true;
+    });
+    return () => sub.remove();
+  }, [visible, onCancel]);
 
   const handleConfirm = () => {
     onConfirm(value, selectedType);
@@ -49,78 +77,87 @@ export default function TextInputPopup({
 
   const effectivePlaceholder = selectedType === 'header' ? 'Enter header title' : placeholder;
 
-  return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
-      <TouchableWithoutFeedback onPress={onCancel}>
-        <View style={styles.overlay}>
-          <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.kav}>
-            <TouchableWithoutFeedback>
-              <View style={styles.sheet}>
+  if (!visible) return null;
 
-                <View style={styles.tabsRow}>
-                  <TouchableOpacity
-                    onPress={() => setSelectedType('item')}
-                    style={[
-                      styles.tab,
-                      {
-                        backgroundColor:
-                          selectedType === 'item'
-                            ? colors.background === '#FFFFFF'
-                              ? colors.inputBackground
-                              : `${colors.tint}33`
-                            : colors.cardBackground,
-                        opacity: selectedType === 'item' ? 1 : 0.5,
-                      },
-                    ]}
-                  >
-                    <Text style={styles.tabText}>Item</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => setSelectedType('header')}
-                    style={[
-                      styles.tab,
-                      {
-                        backgroundColor:
-                          selectedType === 'header'
-                            ? colors.background === '#FFFFFF'
-                              ? colors.inputBackground
-                              : `${colors.tint}33`
-                            : colors.cardBackground,
-                        opacity: selectedType === 'header' ? 1 : 0.5,
-                      },
-                    ]}
-                  >
-                    <Text style={styles.tabText}>Header</Text>
-                  </TouchableOpacity>
-                </View>
-                <TextInput
-                  autoFocus
-                  onFocus={() => setIsFocused(true)}
-                  style={styles.input}
-                  placeholder={effectivePlaceholder}
-                  placeholderTextColor={colors.placeholderText}
-                  value={value}
-                  onChangeText={setValue}
-                  returnKeyType="done"
-                  onSubmitEditing={handleConfirm}
-                  selection={isFocused ? undefined : { start: initialValue.length, end: initialValue.length }}
-                />
-                <View style={styles.buttonsRow}>
-                  {onDelete ? (
-                    <TouchableOpacity style={styles.button} onPress={onDelete}>
-                      <Text style={styles.buttonText}>{deleteText}</Text>
+  return (
+    <Portal>
+      <View style={StyleSheet.absoluteFill}>
+        <TouchableWithoutFeedback onPress={onCancel}>
+          <View style={styles.overlay}>
+            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.kav}>
+              <TouchableWithoutFeedback>
+                <View style={styles.sheet}>
+
+                  <View style={styles.tabsRow}>
+                    <TouchableOpacity
+                      onPress={() => setSelectedType('item')}
+                      style={[
+                        styles.tab,
+                        {
+                          backgroundColor:
+                            selectedType === 'item'
+                              ? colors.background === '#FFFFFF'
+                                ? colors.inputBackground
+                                : `${colors.tint}33`
+                              : colors.cardBackground,
+                          opacity: selectedType === 'item' ? 1 : 0.5,
+                        },
+                      ]}
+                    >
+                      <Text style={styles.tabText}>Item</Text>
                     </TouchableOpacity>
-                  ) : null}
-                  <TouchableOpacity style={[styles.button, styles.confirm]} onPress={handleConfirm}>
-                    <Text style={[styles.buttonText, { color: colors.background }]}>{confirmText}</Text>
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => setSelectedType('header')}
+                      style={[
+                        styles.tab,
+                        {
+                          backgroundColor:
+                            selectedType === 'header'
+                              ? colors.background === '#FFFFFF'
+                                ? colors.inputBackground
+                                : `${colors.tint}33`
+                              : colors.cardBackground,
+                          opacity: selectedType === 'header' ? 1 : 0.5,
+                        },
+                      ]}
+                    >
+                      <Text style={styles.tabText}>Header</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <TextInput
+                    ref={inputRef}
+                    style={[styles.input, { height: inputHeight }]}
+                    placeholder={effectivePlaceholder}
+                    placeholderTextColor={colors.placeholderText}
+                    defaultValue={initialValue}
+                    onChangeText={setValue}
+                    multiline
+                    textAlignVertical="top"
+                    scrollEnabled
+                    onContentSizeChange={(e) => {
+                      const raw = e.nativeEvent.contentSize.height;
+                      const lines = Math.max(1, Math.ceil((raw - (BASE_HEIGHT - LINE_HEIGHT)) / LINE_HEIGHT));
+                      const snapped = Math.min(MAX_HEIGHT, BASE_HEIGHT + (lines - 1) * LINE_HEIGHT);
+                      if (snapped !== inputHeight) setInputHeight(snapped);
+                    }}
+                  />
+                  <View style={styles.buttonsRow}>
+                    {onDelete ? (
+                      <TouchableOpacity style={styles.button} onPress={onDelete}>
+                        <Text style={styles.buttonText}>{deleteText}</Text>
+                      </TouchableOpacity>
+                    ) : null}
+                    <TouchableOpacity style={[styles.button, styles.confirm]} onPress={handleConfirm}>
+                      <Text style={[styles.buttonText, { color: colors.background }]}>{confirmText}</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-            </TouchableWithoutFeedback>
-          </KeyboardAvoidingView>
-        </View>
-      </TouchableWithoutFeedback>
-    </Modal>
+              </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
+    </Portal>
   );
 }
 
@@ -173,10 +210,13 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 12,
+    paddingVertical: 13,
     fontSize: 16,
-    height: 48,
+    lineHeight: 22,
     borderColor: colors.inputBorder,
     color: colors.text,
+    includeFontPadding: false,
+    textAlignVertical: 'top',
   },
   buttonsRow: {
     flexDirection: 'row',
@@ -199,4 +239,3 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     color: colors.text,
   },
 });
- 

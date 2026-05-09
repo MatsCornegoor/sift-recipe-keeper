@@ -17,6 +17,8 @@ export default function ExportRecipes() {
   const { colors } = useTheme();
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [selectedRecipes, setSelectedRecipes] = useState<string[]>([]);
+  const [exporting, setExporting] = useState(false);
+  const [dots, setDots] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const [popupConfig, setPopupConfig] = useState<{
     title: string;
@@ -33,6 +35,24 @@ export default function ExportRecipes() {
   useEffect(() => {
     setRecipes(RecipeStore.getAllRecipes());
   }, []);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (exporting) {
+      interval = setInterval(() => {
+        setDots(prev => {
+          if (prev === '') return '.';
+          if (prev === '.') return '..';
+          if (prev === '..') return '...';
+          return '';
+        });
+      }, 400);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+      setDots('');
+    };
+  }, [exporting]);
 
   const handleToggleRecipe = (recipeId: string) => {
     if (recipeId === SELECT_ALL_ID) {
@@ -62,6 +82,7 @@ export default function ExportRecipes() {
       return;
     }
 
+    setExporting(true);
     try {
       const recipesToExport = recipes.filter(r => selectedRecipes.includes(r.id));
       const zipPath = await buildRecipeZip(recipesToExport);
@@ -89,6 +110,8 @@ export default function ExportRecipes() {
         message: 'There was an error exporting your recipes. Please try again.',
         buttons: [{ text: 'OK', onPress: () => setShowPopup(false) }],
       });
+    } finally {
+      setExporting(false);
     }
     setShowPopup(true);
   };
@@ -130,11 +153,19 @@ export default function ExportRecipes() {
       </ContentWrapper>
       <View style={styles.stickyFooter}>
         <Button
-          title="Export Selected Recipes"
           onPress={handleExport}
-          disabled={selectedRecipes.length === 0}
+          disabled={selectedRecipes.length === 0 || exporting}
           style={[styles.exportButton, { opacity: selectedRecipes.length > 0 ? 1 : 0.5 }]}
-        />
+        >
+          {exporting ? (
+            <View style={styles.loadingContainer}>
+              <Text style={[styles.buttonText, { color: colors.background }]}>Exporting</Text>
+              <Text style={[styles.buttonText, styles.dotsContainer, { color: colors.background }]}>{dots}</Text>
+            </View>
+          ) : (
+            <Text style={[styles.buttonText, { color: colors.background }]}>Export Selected Recipes</Text>
+          )}
+        </Button>
       </View>
       <CustomPopup
         visible={showPopup}
@@ -174,6 +205,16 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   exportButton: {
     margin: 16,
     marginBottom: 0,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  loadingContainer: {
+    flexDirection: 'row',
+  },
+  dotsContainer: {
+    width: 24,
   },
 });
  

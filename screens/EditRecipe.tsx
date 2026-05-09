@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View } from 'react-native';
+import { View, Pressable, Text, StyleSheet } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Header from '../components/Header';
 import RecipeForm, { RecipeFormHandle } from '../components/RecipeForm';
@@ -71,8 +71,19 @@ export default function EditRecipe() {
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={{ flex: 1, backgroundColor: colors.background }}>
-        <Header title="Edit recipe" />
-        <NestableScrollContainer style={{ flex: 1, backgroundColor: colors.background }}>
+        <Header
+          title="Edit recipe"
+          rightElement={
+            <Pressable
+              onPress={() => formRef.current?.submit()}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
+            >
+              <Text style={[styles.saveText, { color: colors.tint }]}>Save</Text>
+            </Pressable>
+          }
+        />
+        <NestableScrollContainer keyboardShouldPersistTaps="handled" style={{ flex: 1, backgroundColor: colors.background }}>
           <ContentWrapper>
             <RecipeForm
               ref={formRef}
@@ -81,6 +92,7 @@ export default function EditRecipe() {
               onSave={handleSave}
               onCancel={handleCancel}
               onDirtyChange={(d) => { dirtyRef.current = d; }}
+              hideSubmitButton
             />
           </ContentWrapper>
         </NestableScrollContainer>
@@ -98,3 +110,10 @@ export default function EditRecipe() {
     </GestureHandlerRootView>
   );
 }
+
+const styles = StyleSheet.create({
+  saveText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+});
