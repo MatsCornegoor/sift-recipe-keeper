@@ -9,6 +9,7 @@ import Input from '../components/ui/Input';
 import RecipeStore from '../store/RecipeStore';
 import RecipeExtractorService from '../services/RecipeExtractorService';
 import { useTheme } from '../hooks/useTheme';
+import { useLoadingDots } from '../hooks/useLoadingDots';
 
 const PLACEHOLDER_SUGGESTIONS = [
   'Make this recipe vegan',
@@ -32,7 +33,7 @@ export default function EditWithAI() {
   const [prompt, setPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
-  const [dots, setDots] = useState('');
+  const dots = useLoadingDots(isLoading);
   const [showPopup, setShowPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -50,24 +51,6 @@ export default function EditWithAI() {
     }, 3000);
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isLoading) {
-      interval = setInterval(() => {
-        setDots(prev => {
-          if (prev === '') return '.';
-          if (prev === '.') return '..';
-          if (prev === '..') return '...';
-          return '';
-        });
-      }, 400);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-      setDots('');
-    };
-  }, [isLoading]);
 
   const handleApply = async () => {
     if (!prompt.trim() || !recipe) return;

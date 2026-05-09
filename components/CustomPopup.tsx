@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Modal,
   Dimensions,
+  ScrollView,
 } from 'react-native';
 
 import { useTheme } from '@/hooks/useTheme';
@@ -37,6 +38,25 @@ export default function CustomPopup({
   const styles = useMemo(() => stylesFactory(colors), [colors]);
 
   const isInfo = type === 'info';
+  const lines = message.split('\n');
+  const isScrollable = lines.length > 15;
+
+  const messageBody = (
+    <View style={styles.messageContainer}>
+      {lines.map((paragraph, index) => (
+        <Text
+          key={index}
+          style={[
+            styles.message,
+            paragraph.trim() === '' && styles.emptyLine,
+            index > 0 && styles.lineSpacing
+          ]}
+        >
+          {paragraph}
+        </Text>
+      ))}
+    </View>
+  );
 
   return (
     <Modal
@@ -48,20 +68,13 @@ export default function CustomPopup({
       <View style={styles.overlay}>
         <View style={styles.popup}>
           <Text style={styles.title}>{title}</Text>
-          <View style={styles.messageContainer}>
-            {message.split('\n').map((paragraph, index) => (
-              <Text 
-                key={index} 
-                style={[
-                  styles.message, 
-                  paragraph.trim() === '' && styles.emptyLine,
-                  index > 0 && styles.lineSpacing
-                ]}
-              >
-                {paragraph}
-              </Text>
-            ))}
-          </View>
+          {isScrollable ? (
+            <ScrollView style={styles.scrollableMessage}>
+              {messageBody}
+            </ScrollView>
+          ) : (
+            messageBody
+          )}
           <View style={[styles.buttonContainer, isInfo && styles.buttonContainerInfo]}>
             {buttons.map((button, index) => (
               <TouchableOpacity
@@ -116,6 +129,10 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   },
   messageContainer: {
     marginBottom: 20,
+  },
+  scrollableMessage: {
+    maxHeight: 390,
+    marginBottom: 4,
   },
   message: {
     fontSize: 16,

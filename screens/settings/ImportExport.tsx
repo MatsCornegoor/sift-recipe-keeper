@@ -4,6 +4,7 @@ import Button from '../../components/ui/Button';
 import DocumentPicker from 'react-native-document-picker';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../hooks/useTheme';
+import { useLoadingDots } from '../../hooks/useLoadingDots';
 import Header from '../../components/Header';
 import ContentWrapper from '../../components/ContentWrapper';
 import CustomPopup from '../../components/CustomPopup';
@@ -14,6 +15,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 export default function ImportExport() {
   const { colors } = useTheme();
   const navigation = useNavigation<NativeStackNavigationProp<SettingsStackParamList>>();
+  const [importing, setImporting] = useState(false);
+  const dots = useLoadingDots(importing);
   const [showPopup, setShowPopup] = useState(false);
   const [popupConfig, setPopupConfig] = useState<{
     title: string;
@@ -50,6 +53,7 @@ export default function ImportExport() {
       const sourceUri = res[0]?.fileCopyUri ?? res[0]?.uri;
 
       if (sourceUri) {
+        setImporting(true);
         await importSiftFile(sourceUri);
 
         setPopupConfig({
@@ -75,6 +79,8 @@ export default function ImportExport() {
         });
         setShowPopup(true);
       }
+    } finally {
+      setImporting(false);
     }
   };
 
@@ -92,8 +98,17 @@ export default function ImportExport() {
             </Text>
 
             <View style={styles.actionsContainer}>
-              <Button title="Export recipes" onPress={handleExportPress} />
-              <Button title="Import recipes" onPress={handleImport} />
+              <Button title="Export recipes" onPress={handleExportPress} disabled={importing} />
+              <Button onPress={handleImport} disabled={importing}>
+                {importing ? (
+                  <View style={styles.loadingContainer}>
+                    <Text style={[styles.buttonText, { color: colors.background }]}>Importing</Text>
+                    <Text style={[styles.buttonText, styles.dotsContainer, { color: colors.background }]}>{dots}</Text>
+                  </View>
+                ) : (
+                  <Text style={[styles.buttonText, { color: colors.background }]}>Import recipes</Text>
+                )}
+              </Button>
             </View>
           </View>
         </ContentWrapper>
@@ -131,6 +146,16 @@ const stylesFactory = (colors: any) => StyleSheet.create({
   },
   actionsContainer: {
     gap: 16,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  loadingContainer: {
+    flexDirection: 'row',
+  },
+  dotsContainer: {
+    width: 24,
   },
 });
  

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/types';
@@ -6,6 +6,7 @@ import NetInfo from '@react-native-community/netinfo';
 import RecipeExtractorService from '../services/RecipeExtractorService';
 import RecipeStore from '../store/RecipeStore';
 import { useTheme } from '../hooks/useTheme';
+import { useLoadingDots } from '../hooks/useLoadingDots';
 import Header from '../components/Header';
 import CustomPopup from '../components/CustomPopup';
 import ContentWrapper from '../components/ContentWrapper';
@@ -25,7 +26,7 @@ export default function AddRecipeUrl() {
   const [loading, setLoading] = useState(false);
   const { colors } = useTheme();
   const [showPopup, setShowPopup] = useState(false);
-  const [dots, setDots] = useState('');
+  const dots = useLoadingDots(loading);
   const [popupConfig, setPopupConfig] = useState<{
     title: string;
     message: string;
@@ -37,26 +38,6 @@ export default function AddRecipeUrl() {
   });
 
   const styles = useMemo(() => stylesFactory(colors), [colors]);
-  
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (loading) {
-      interval = setInterval(() => {
-        setDots(prev => {
-          if (prev === '') return '.';
-          if (prev === '.') return '..';
-          if (prev === '..') return '...';
-          return '';
-        });
-      }, 400); // Change dots every 400ms
-    }
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-      setDots('');
-    };
-  }, [loading]);
 
   const handleExtractRecipe = async () => {
     if (!url.trim()) {
