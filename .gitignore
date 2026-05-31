@@ -57,3 +57,6 @@ ios/
 android/app/gradle.properties
 
 PLAN.md
+
+# Agent stuff
+.claude/
