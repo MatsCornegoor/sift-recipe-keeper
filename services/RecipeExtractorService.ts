@@ -10,6 +10,8 @@ interface ModelConfig {
   temperature: number;
   seed: number;
   supportsResponseFormat?: boolean;
+  reasoningEffort?: string;
+  reasoningParam?: string;
 }
 
 class RecipeExtractorService {
@@ -21,6 +23,8 @@ class RecipeExtractorService {
   private customSeed: number = 1997;
   private customTemperature: number = 0.1;
   private customSupportsResponseFormat: boolean = true;
+  private customReasoningEffort: string = 'none';
+  private customReasoningParam: string = 'reasoning_effort';
 
   constructor() {
   }
@@ -33,6 +37,8 @@ class RecipeExtractorService {
       const seed = await AsyncStorage.getItem('ai_model_seed');
       const temperature = await AsyncStorage.getItem('ai_model_temperature');
       const supportsResponseFormat = await AsyncStorage.getItem('ai_model_supports_response_format');
+      const reasoningEffort = await AsyncStorage.getItem('ai_model_reasoning_effort');
+      const reasoningParam = await AsyncStorage.getItem('ai_model_reasoning_param');
 
       if (endpoint && model) {
         this.customEndpoint = endpoint;
@@ -41,6 +47,8 @@ class RecipeExtractorService {
         if (seed !== null) this.customSeed = parseInt(seed, 10);
         if (temperature !== null) this.customTemperature = parseFloat(temperature);
         if (supportsResponseFormat !== null) this.customSupportsResponseFormat = supportsResponseFormat === 'true';
+        if (reasoningEffort !== null) this.customReasoningEffort = reasoningEffort;
+        if (reasoningParam) this.customReasoningParam = reasoningParam;
       }
     } catch (error) {
       console.error('Failed to load custom AI model config:', error);
@@ -320,6 +328,44 @@ class RecipeExtractorService {
     return `data:${mimeType};base64,${base64}`;
   }
 
+  // Adds the configured reasoning-effort value to a request body, at the
+  // (possibly nested) path given by `reasoningParam`. No-op when the effort is
+  // unset or 'none'. Public so the settings "Save & Test" check can validate
+  // the same payload that extraction sends.
+  applyReasoningEffort(requestBody: any, reasoningEffort?: string, reasoningParam?: string): void {
+    if (!reasoningEffort || reasoningEffort === 'none') return;
+    const paramPath = (reasoningParam || 'reasoning_effort').trim();
+    if (!paramPath) return;
+    this.setNestedValue(requestBody, paramPath, this.coerceValue(reasoningEffort));
+  }
+
+  // Assigns `value` to a (possibly nested) key on `obj`, given a dot-separated
+  // path. e.g. 'reasoning_effort' -> { reasoning_effort: value },
+  // 'reasoning.effort' -> { reasoning: { effort: value } }.
+  private setNestedValue(obj: any, path: string, value: any): void {
+    const keys = path.split('.').map(k => k.trim()).filter(Boolean);
+    if (keys.length === 0) return;
+    let target = obj;
+    for (let i = 0; i < keys.length - 1; i++) {
+      const key = keys[i];
+      if (typeof target[key] !== 'object' || target[key] === null) {
+        target[key] = {};
+      }
+      target = target[key];
+    }
+    target[keys[keys.length - 1]] = value;
+  }
+
+  // Coerces a string reasoning value so numeric budgets (e.g. '2048') are sent
+  // as numbers and booleans as booleans, while named levels stay strings.
+  private coerceValue(value: string): string | number | boolean {
+    const trimmed = value.trim();
+    if (/^-?\d+$/.test(trimmed)) return parseInt(trimmed, 10);
+    if (trimmed === 'true') return true;
+    if (trimmed === 'false') return false;
+    return value;
+  }
+
   private async callGPTAPI(prompt: string, imagePath?: string): Promise<string> {
     if (!this.customEndpoint || !this.customModel) {
       throw new Error('AI model is not configured. Please configure it in the settings.');
@@ -330,6 +376,8 @@ class RecipeExtractorService {
       temperature: this.customTemperature,
       seed: this.customSeed,
       supportsResponseFormat: this.customSupportsResponseFormat,
+      reasoningEffort: this.customReasoningEffort,
+      reasoningParam: this.customReasoningParam,
       apiKey: this.customApiKey,
     };
 
@@ -380,6 +428,8 @@ class RecipeExtractorService {
       requestBody.response_format = { type: 'json_object' };
     }
 
+    this.applyReasoningEffort(requestBody, modelConfig.reasoningEffort, modelConfig.reasoningParam);
+
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
     if (modelConfig.apiKey) {
         headers['Authorization'] = `Bearer ${modelConfig.apiKey}`;
@@ -392,7 +442,8 @@ class RecipeExtractorService {
     });
 
     if (!response.ok) {
-      throw new Error(`The AI service returned an error (HTTP ${response.status}). Please check your endpoint and API key.`);
+      const errorBody = await response.text().catch(() => '');
+      throw new Error(`The AI service returned an error (HTTP ${response.status}). Please check your endpoint and API key.${errorBody ? `\n\n${errorBody}` : ''}`);
     }
 
     const data = await response.json();
