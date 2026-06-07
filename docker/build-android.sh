@@ -12,7 +12,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # Build the toolchain image on first run (or when it's been removed).
 if ! docker image inspect "$IMAGE" >/dev/null 2>&1; then
   echo "==> Building $IMAGE image (first run only, downloads the Android SDK)..."
-  docker build -f "$REPO_ROOT/docker/Dockerfile.android" -t "$IMAGE" "$REPO_ROOT/docker"
+  docker build --platform linux/amd64 -f "$REPO_ROOT/docker/Dockerfile.android" -t "$IMAGE" "$REPO_ROOT/docker"
 fi
 
 HOST_UID="$(id -u)"
@@ -26,9 +26,10 @@ GRADLE_ARGS="$*"
 # The container runs as root, so Gradle/AGP can auto-install SDK packages. We
 # chown the Gradle-generated dirs back to the host user afterwards (always, even
 # if the build fails) so they aren't left root-owned in the working tree.
-docker run --rm \
+docker run --rm --platform linux/amd64 \
   -v "$REPO_ROOT":/app \
   -v sift-gradle-cache:/root/.gradle \
+  -v sift-android-gradle-cache:/app/android/.gradle \
   "$IMAGE" \
   bash -c "./gradlew assembleRelease --no-daemon ${GRADLE_ARGS}; status=\$?; chown -R ${HOST_UID}:${HOST_GID} /app/android /app/node_modules; exit \$status"
 

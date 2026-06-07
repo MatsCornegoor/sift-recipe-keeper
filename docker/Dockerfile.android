@@ -1,7 +1,7 @@
 # Build image for the Sift Android release APK.
 # Bundles JDK 17 + the exact Android SDK/NDK versions this project pins
 # (see android/build.gradle): compileSdk 34, build-tools 34.0.0, NDK 25.2.9519653.
-FROM eclipse-temurin:17-jdk-jammy
+FROM --platform=linux/amd64 eclipse-temurin:17-jdk-jammy
 
 ENV ANDROID_HOME=/opt/android-sdk \
     ANDROID_SDK_ROOT=/opt/android-sdk
