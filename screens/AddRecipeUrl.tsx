@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/types';
@@ -12,6 +12,10 @@ import CustomPopup from '../components/CustomPopup';
 import ContentWrapper from '../components/ContentWrapper';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
+import InstagramExtractor from '../components/instagramExtractor';
+import { Recipe } from '../models/Recipe';
+
+const isInstagramUrl = (url: string) => /instagram\.com\/(p|reel|tv)\//.test(url);
 
 // This helper function checks for a live internet connection in a privacy-friendly way.
 const checkInternetConnection = async () => {
@@ -26,6 +30,7 @@ export default function AddRecipeUrl() {
   const [loading, setLoading] = useState(false);
   const { colors } = useTheme();
   const [showPopup, setShowPopup] = useState(false);
+  const [showInstagramExtractor, setShowInstagramExtractor] = useState(false);
   const dots = useLoadingDots(loading);
   const [popupConfig, setPopupConfig] = useState<{
     title: string;
@@ -39,6 +44,29 @@ export default function AddRecipeUrl() {
 
   const styles = useMemo(() => stylesFactory(colors), [colors]);
 
+  const showError = useCallback((message: string) => {
+    setPopupConfig({
+      title: 'Could not import recipe',
+      message,
+      buttons: [{ text: 'OK', onPress: () => setShowPopup(false) }],
+    });
+    setShowPopup(true);
+  }, []);
+
+  const handleInstagramSuccess = useCallback(async (recipe: Recipe) => {
+    recipe.sourceUrl = url.trim();
+    await RecipeStore.addRecipe(recipe);
+    setShowInstagramExtractor(false);
+    setLoading(false);
+    navigation.goBack();
+  }, [url, navigation]);
+
+  const handleInstagramError = useCallback((error: Error) => {
+    setShowInstagramExtractor(false);
+    setLoading(false);
+    showError(error.message);
+  }, [showError]);
+
   const handleExtractRecipe = async () => {
     if (!url.trim()) {
       setPopupConfig({
@@ -50,7 +78,6 @@ export default function AddRecipeUrl() {
       return;
     }
 
-    // Check internet connectivity
     const isConnected = await checkInternetConnection();
     if (!isConnected) {
       setPopupConfig({
@@ -63,6 +90,12 @@ export default function AddRecipeUrl() {
     }
 
     setLoading(true);
+
+    if (isInstagramUrl(url)) {
+      setShowInstagramExtractor(true);
+      return;
+    }
+
     try {
       const recipe = await RecipeExtractorService.extractRecipeFromUrl(url);
       recipe.sourceUrl = url.trim();
@@ -70,13 +103,7 @@ export default function AddRecipeUrl() {
       navigation.goBack();
     } catch (error) {
       console.error('Failed to extract recipe from URL:', error);
-      const message = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
-      setPopupConfig({
-        title: 'Could not import recipe',
-        message,
-        buttons: [{ text: 'OK', onPress: () => setShowPopup(false) }],
-      });
-      setShowPopup(true);
+      showError(error instanceof Error ? error.message : 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -120,6 +147,13 @@ export default function AddRecipeUrl() {
         buttons={popupConfig.buttons}
         onClose={() => setShowPopup(false)}
       />
+      {showInstagramExtractor && (
+        <InstagramExtractor
+          url={url}
+          onSuccess={handleInstagramSuccess}
+          onError={handleInstagramError}
+        />
+      )}
     </View>
   );
 }

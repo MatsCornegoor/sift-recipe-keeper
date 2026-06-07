@@ -134,6 +134,12 @@ class RecipeExtractorService {
     }
   }
 
+  async extractRecipeFromInstagramData(caption: string, imageUrl: string | null): Promise<Recipe> {
+    await this.loadCustomModelConfig();
+    const localImageUri = imageUrl ? await this.downloadAndSaveImage(imageUrl) : null;
+    return this.extractRecipe(caption.slice(0, 20000), localImageUri);
+  }
+
   // Public method for text-based import (paste/type recipe text directly).
   async extractRecipeFromText(text: string): Promise<Recipe> {
     await this.loadCustomModelConfig();
