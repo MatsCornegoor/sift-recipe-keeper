@@ -7,6 +7,9 @@ import Header from '@/components/Header';
 import CustomPopup from '@/components/CustomPopup';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import RecipeExtractorService from '@/services/RecipeExtractorService';
+
+const EFFORT_PRESETS = ['none', 'minimal', 'low', 'medium', 'high'];
 
 export default function AiModel() {
   const { colors } = useTheme();
@@ -17,6 +20,9 @@ export default function AiModel() {
   const [temperature, setTemperature] = useState('0.1');
   const [supportsResponseFormat, setSupportsResponseFormat] = useState(true);
   const [supportsVision, setSupportsVision] = useState(false);
+  const [reasoningEffort, setReasoningEffort] = useState('none');
+  const [customEffort, setCustomEffort] = useState(false);
+  const [reasoningParam, setReasoningParam] = useState('reasoning_effort');
   const [advancedExpanded, setAdvancedExpanded] = useState(false);
   const chevronRotation = useRef(new Animated.Value(0)).current;
   const [isTesting, setIsTesting] = useState(false);
@@ -46,6 +52,8 @@ export default function AiModel() {
       const savedTemperature = await AsyncStorage.getItem('ai_model_temperature');
       const savedSupportsResponseFormat = await AsyncStorage.getItem('ai_model_supports_response_format');
       const savedSupportsVision = await AsyncStorage.getItem('ai_model_supports_vision');
+      const savedReasoningEffort = await AsyncStorage.getItem('ai_model_reasoning_effort');
+      const savedReasoningParam = await AsyncStorage.getItem('ai_model_reasoning_param');
       if (savedEndpoint) setEndpoint(savedEndpoint);
       if (savedModel) setModel(savedModel);
       if (savedApiKey) setApiKey(savedApiKey);
@@ -53,6 +61,11 @@ export default function AiModel() {
       if (savedTemperature) setTemperature(savedTemperature);
       if (savedSupportsResponseFormat !== null) setSupportsResponseFormat(savedSupportsResponseFormat === 'true');
       if (savedSupportsVision !== null) setSupportsVision(savedSupportsVision === 'true');
+      if (savedReasoningEffort !== null) {
+        setReasoningEffort(savedReasoningEffort);
+        setCustomEffort(!EFFORT_PRESETS.includes(savedReasoningEffort));
+      }
+      if (savedReasoningParam) setReasoningParam(savedReasoningParam);
     } catch (error) {
       console.error('Failed to load AI model settings', error);
     }
@@ -77,13 +90,18 @@ export default function AiModel() {
         headers['Authorization'] = `Bearer ${apiKey}`;
       }
 
+      // Mirror the reasoning param that extraction sends, so the test surfaces
+      // errors from an unsupported reasoning effort / parameter.
+      const testBody: any = {
+        model: model,
+        messages: [{ role: 'user', content: 'test' }],
+      };
+      RecipeExtractorService.applyReasoningEffort(testBody, reasoningEffort, reasoningParam);
+
       const response = await fetch(endpoint, {
         method: 'POST',
         headers,
-        body: JSON.stringify({
-          model: model,
-          messages: [{ role: 'user', content: 'test' }],
-        }),
+        body: JSON.stringify(testBody),
       });
 
       if (response.ok) {
@@ -94,6 +112,8 @@ export default function AiModel() {
         await AsyncStorage.setItem('ai_model_temperature', temperature);
         await AsyncStorage.setItem('ai_model_supports_response_format', String(supportsResponseFormat));
         await AsyncStorage.setItem('ai_model_supports_vision', String(supportsVision));
+        await AsyncStorage.setItem('ai_model_reasoning_effort', reasoningEffort);
+        await AsyncStorage.setItem('ai_model_reasoning_param', reasoningParam.trim());
         setPopupConfig({
           title: 'Success',
           message: 'Settings saved and connection is working.',
@@ -211,6 +231,59 @@ export default function AiModel() {
               style={styles.input}
             />
 
+            <Text style={styles.label}>Reasoning effort</Text>
+            <View style={styles.segmentedControl}>
+              {EFFORT_PRESETS.map((level) => {
+                const selected = !customEffort && reasoningEffort === level;
+                return (
+                  <TouchableOpacity
+                    key={level}
+                    style={[styles.segment, selected && styles.segmentSelected]}
+                    onPress={() => { setCustomEffort(false); setReasoningEffort(level); }}
+                  >
+                    <Text style={[styles.segmentText, selected && styles.segmentTextSelected]}>
+                      {level === 'none' ? 'Off' : level.charAt(0).toUpperCase() + level.slice(1)}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+              <TouchableOpacity
+                style={[styles.segment, customEffort && styles.segmentSelected]}
+                onPress={() => {
+                  setCustomEffort(true);
+                  if (EFFORT_PRESETS.includes(reasoningEffort)) setReasoningEffort('');
+                }}
+              >
+                <Text style={[styles.segmentText, customEffort && styles.segmentTextSelected]}>Custom</Text>
+              </TouchableOpacity>
+            </View>
+            {customEffort && (
+              <Input
+                value={reasoningEffort}
+                onChangeText={setReasoningEffort}
+                placeholder="e.g. xhigh or 2048"
+                autoCapitalize="none"
+                style={styles.input}
+              />
+            )}
+            <Text style={styles.httpWarning}>
+              Only applies to reasoning models. Leave Off for models that don't support it.
+              Numeric values (e.g. token budgets) are sent as numbers.
+            </Text>
+
+            <Text style={styles.label}>Reasoning parameter</Text>
+            <Input
+              value={reasoningParam}
+              onChangeText={setReasoningParam}
+              placeholder="reasoning_effort"
+              autoCapitalize="none"
+              style={styles.input}
+            />
+            <Text style={styles.httpWarning}>
+              The request field that carries the effort value. Use a dot-separated path for nested
+              shapes — e.g. "reasoning.effort" sends {`{ "reasoning": { "effort": ... } }`}.
+            </Text>
+
             <View style={styles.switchRow}>
               <Text style={styles.label}>Supports response format</Text>
               <Switch
@@ -302,6 +375,32 @@ const stylesFactory = (colors: any) => StyleSheet.create({
     fontSize: 15,
     color: colors.text,
     opacity: 0.7,
+  },
+  segmentedControl: {
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: colors.inputBorder,
+    borderRadius: 8,
+    overflow: 'hidden',
+    marginBottom: 16,
+  },
+  segment: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.inputBackground,
+  },
+  segmentSelected: {
+    backgroundColor: colors.tint,
+  },
+  segmentText: {
+    fontSize: 13,
+    color: colors.text,
+  },
+  segmentTextSelected: {
+    color: colors.background,
+    fontWeight: '600',
   },
   switchRow: {
     flexDirection: 'row',
