@@ -8,6 +8,7 @@
     "android": "react-native run-android",
     "android:clean": "cd android && ./gradlew clean && cd .. && react-native run-android",
     "build": "cd android && ./gradlew assembleRelease",
+    "build:docker": "bash docker/build-android.sh",
     "supported-models": "node ./model-tools/scripts/supportedModels.js"
   },
   "jest": {

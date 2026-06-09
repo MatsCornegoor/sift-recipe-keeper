@@ -142,7 +142,19 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.release
+            // Use the release keystore when one is configured (via MYAPP_RELEASE_*
+            // in local-gradle.properties); otherwise fall back to the debug key so
+            // contributors can build a release locally without a signing key.
+            signingConfig localProperties.getProperty('MYAPP_RELEASE_STORE_FILE') != null
+                ? signingConfigs.release
+                : signingConfigs.debug
+            // Opt-in (./gradlew assembleRelease -PsideBySide): build under a
+            // distinct application id so it can be installed alongside the
+            // published app for local testing. No-op for normal release builds.
+            if (project.hasProperty('sideBySide')) {
+                applicationIdSuffix '.dev'
+                versionNameSuffix '-dev'
+            }
             shrinkResources (findProperty('android.enableShrinkResourcesInReleaseBuilds')?.toBoolean() ?: false)
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"

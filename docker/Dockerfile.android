@@ -1,0 +1,31 @@
+# Build image for the Sift Android release APK.
+# Bundles JDK 17 + the exact Android SDK/NDK versions this project pins
+# (see android/build.gradle): compileSdk 34, build-tools 34.0.0, NDK 25.2.9519653.
+FROM --platform=linux/amd64 eclipse-temurin:17-jdk-jammy
+
+ENV ANDROID_HOME=/opt/android-sdk \
+    ANDROID_SDK_ROOT=/opt/android-sdk
+ENV PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        unzip curl git ca-certificates && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y --no-install-recommends nodejs && \
+    rm -rf /var/lib/apt/lists/*
+
+# Android command-line tools
+RUN mkdir -p "$ANDROID_HOME/cmdline-tools" && \
+    curl -fsSL https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o /tmp/clt.zip && \
+    unzip -q /tmp/clt.zip -d "$ANDROID_HOME/cmdline-tools" && \
+    mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest" && \
+    rm /tmp/clt.zip
+
+# SDK packages required by React Native 0.74.5
+RUN yes | sdkmanager --licenses >/dev/null && \
+    sdkmanager --install \
+        "platform-tools" \
+        "platforms;android-34" \
+        "build-tools;34.0.0" \
+        "ndk;25.2.9519653" >/dev/null
+
+WORKDIR /app/android
